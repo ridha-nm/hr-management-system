@@ -1,0 +1,47 @@
+[
+  {
+    "id": "TEAM001",
+    "name": "Engineering Team",
+    "department": "Engineering",
+    "lead": "EMP001",
+    "members": [
+      "EMP001"
+    ]
+  },
+  {
+    "id": "TEAM002",
+    "name": "Business Development Team",
+    "department": "Business Development",
+    "lead": "EMP002",
+    "members": [
+      "EMP002"
+    ]
+  },
+  {
+    "id": "TEAM003",
+    "name": "CSM Team",
+    "department": "CSM",
+    "lead": "EMP003",
+    "members": [
+      "EMP003"
+    ]
+  },
+  {
+    "id": "TEAM004",
+    "name": "Product Development Team",
+    "department": "Product",
+    "lead": "EMP005",
+    "members": [
+      "EMP005"
+    ]
+  },
+  {
+    "id": "TEAM005",
+    "name": "Data Science Team",
+    "department": "Data Science",
+    "lead": "EMP004",
+    "members": [
+      "EMP004"
+    ]
+  }
+]

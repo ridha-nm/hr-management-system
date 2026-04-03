@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pantas HR | Employee Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --primary-light: #3b82f6;
+      --secondary: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      
+      --bg-main: #f8fafc;
+      --bg-sidebar: #1e293b;
+      --bg-sidebar-header: #ffffff;
+      --bg-card: #ffffff;
+      --bg-hover: #f1f5f9;
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-inverse: #f8fafc;
+      
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 300px;
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar-header {
+      background: var(--bg-sidebar-header);
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .sidebar-brand-logo {
+      height: 48px;
+      width: auto;
+    }
+
+    .sidebar-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-brand-text h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar-brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem 1rem;
+    }
+
+    .nav-section { margin-bottom: 1.5rem; }
+
+    .nav-section-title {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 0 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .nav-item { margin-bottom: 0.25rem; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,0.08);
+      color: white;
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .nav-icon { font-size: 1.25rem; width: 24px; text-align: center; }
+
+    .nav-badge {
+      margin-left: auto;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      font-weight: 700;
+    }
+
+    .nav-badge.live {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .sidebar-user {
+      padding: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .user-details { flex: 1; }
+    .user-name { font-size: 0.875rem; font-weight: 600; color: white; }
+    .user-role { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 300px;
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-welcome {
+      color: rgba(255,255,255,0.9);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.8);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      padding: 0 3rem;
+      margin-top: -2rem;
+      position: relative;
+      z-index: 20;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-icon.blue { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); }
+    .stat-icon.green { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); }
+    .stat-icon.purple { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); }
+    .stat-icon.orange { background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .stat-change {
+      font-size: 0.75rem;
+      color: var(--success);
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 3rem;
+    }
+
+    .section-header {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    /* Agent Grid */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .agent-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .agent-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .agent-card.live {
+      border-color: var(--success);
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    }
+
+    .agent-card.planned {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .agent-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .agent-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+    }
+
+    .agent-card.live .agent-icon {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .agent-card.planned .agent-icon {
+      background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    }
+
+    .agent-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .agent-status.live {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .agent-status.planned {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-muted);
+    }
+
+    .agent-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .agent-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .agent-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+    }
+
+    .agent-link:hover { text-decoration: underline; }
+
+    /* Sections */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Top Bar */
+    .top-bar {
+      display: none;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Employee Table */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 1rem;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .employee-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .employee-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .employee-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .employee-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .employee-email {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-badge.active {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand" style="flex-direction: column; gap: 0.5rem; padding: 0.75rem;">
+        <img src="/pantas-logo.png" alt="Pantas" class="sidebar-brand-logo" style="height: 48px; display: block; margin: 0 auto;" onerror="this.style.display='none'">
+        <p style="font-size: 0.625rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; margin: 0.5rem 0 0 0;">Employee Management System</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <div class="nav-item">
+          <button class="nav-link active" onclick="showSection('dashboard')">
+            <span class="nav-icon">📊</span>
+            Dashboard
+          </button>
+        </div>
+        <div class="nav-item">
+          <button class="nav-link" onclick="showSection('employees')">
+            <span class="nav-icon">👥</span>
+            Employees
+          </button>
+        </div>
+        <div class="nav-item">
+          <button class="nav-link" onclick="showSection('departments')">
+            <span class="nav-icon">🏢</span>
+            Departments
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">AI Agents</div>
+        <div class="nav-item">
+          <a href="/chat.html" class="nav-link">
+            <span class="nav-icon">🛂</span>
+            EP Application
+            <span class="nav-badge live">LIVE</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">📋</span>
+            Onboarding
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">🏖️</span>
+            Leave
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">🎯</span>
+            Interview
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Company</div>
+        <div class="nav-item">
+          <button class="nav-link" onclick="showSection('agents')">
+            <span class="nav-icon">🤖</span>
+            All Agents
+          </button>
+        </div>
+        <div class="nav-item">
+          <button class="nav-link" onclick="showSection('settings')">
+            <span class="nav-icon">⚙️</span>
+            Settings
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-user" style="cursor: pointer;" onclick="showSection('settings')">
+      <div class="user-avatar">👤</div>
+      <div class="user-details">
+        <div class="user-name" id="sidebarName">Test User</div>
+        <div class="user-role" id="sidebarRole">Sustainability Analyst</div>
+      </div>
+      <div class="user-actions">
+        <button class="icon-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.25rem;" title="Edit Profile">⚙️</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-content">
+        <p class="hero-welcome">Welcome back,</p>
+        <h1 class="hero-title">Employee Management System</h1>
+        <p class="hero-subtitle">Manage your workforce, track performance, and automate HR processes with AI-powered agents.</p>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon blue">👥</div>
+        <div class="stat-label">Total Employees</div>
+        <div class="stat-value" id="statTotal">32</div>
+        <div class="stat-change">↑ 2 this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">✅</div>
+        <div class="stat-label">Active Today</div>
+        <div class="stat-value" id="statActive">28</div>
+        <div class="stat-change">87.5% attendance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple">🛂</div>
+        <div class="stat-label">EP Applications</div>
+        <div class="stat-value" id="statEP">3</div>
+        <div class="stat-change">1 pending approval</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon orange">📊</div>
+        <div class="stat-label">Departments</div>
+        <div class="stat-value" id="statDepts">5</div>
+        <div class="stat-change">All staffed</div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Dashboard Section -->
+      <section class="section active" id="dashboardSection">
+        <div class="section-header">
+          <h2 class="section-title">Overview</h2>
+          <p class="section-subtitle">Quick insights into your organization</p>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3 class="card-title">Recent Employees</h3>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recentEmployeesTable">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Quick Actions</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <a href="/chat.html" class="btn btn-primary">
+                <span>🛂</span>
+                EP Application Agent
+              </a>
+              <button class="btn btn-secondary">
+                <span>➕</span>
+                Add Employee
+              </button>
+              <button class="btn btn-secondary">
+                <span>📊</span>
+                View Reports
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Agents Section -->
+        <div class="section-header">
+          <h2 class="section-title">AI Agents</h2>
+          <p class="section-subtitle">Automated HR assistants for various tasks</p>
+        </div>
+
+        <div class="agent-grid" id="agentsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Employees Section -->
+      <section class="section" id="employeesSection">
+        <div class="section-header">
+          <h2 class="section-title">Employees</h2>
+          <p class="section-subtitle">Manage your workforce</p>
+        </div>
+        <div class="card">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>ID</th>
+                  <th>Department</th>
+                  <th>Designation</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="employeesTable">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Departments Section -->
+      <section class="section" id="departmentsSection">
+        <div class="section-header">
+          <h2 class="section-title">Departments</h2>
+          <p class="section-subtitle">Organization structure</p>
+        </div>
+        <div class="agent-grid" id="departmentsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Agents Section -->
+      <section class="section" id="agentsSection">
+        <div class="section-header">
+          <h2 class="section-title">All AI Agents</h2>
+          <p class="section-subtitle">Complete suite of HR automation tools</p>
+        </div>
+        <div class="agent-grid" id="allAgentsGrid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section class="section" id="settingsSection">
+        <div class="section-header">
+          <h2 class="section-title">Profile Settings</h2>
+          <p class="section-subtitle">Manage your personal information</p>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Profile Card -->
+          <div class="card">
+            <h3 class="card-title">Profile Picture</h3>
+            <div style="text-align: center; padding: 2rem 0;">
+              <div id="profileAvatar" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 1.5rem; cursor: pointer; transition: all 0.3s;" onclick="document.getElementById('avatarUpload').click()">
+                👤
+              </div>
+              <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Click to upload profile picture</p>
+              <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+              <button class="btn btn-secondary" onclick="removeAvatar()">Remove Picture</button>
+            </div>
+          </div>
+
+          <!-- Profile Form -->
+          <div class="card">
+            <h3 class="card-title">Personal Information</h3>
+            <form id="profileForm" onsubmit="saveProfile(event)" style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Full Name</label>
+                <input type="text" id="profileName" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif;" required>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Email Address</label>
+                <input type="email" id="profileEmail" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-hover); cursor: not-allowed;" disabled>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">🔒 Email cannot be changed. Contact admin for updates.</p>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Phone Number</label>
+                <input type="tel" id="profilePhone" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Department</label>
+                <select id="profileDepartment" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif; background: white;">
+                  <option value="Engineering">Engineering</option>
+                  <option value="Business Development">Business Development</option>
+                  <option value="Product">Product</option>
+                  <option value="CSM">CSM</option>
+                  <option value="Data Science">Data Science</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Team</label>
+                <select id="profileTeam" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-hover); cursor: not-allowed;" disabled>
+                  <option value="">Select a team...</option>
+                  <option value="Business Development Team">Business Development Team</option>
+                  <option value="Engineering Team">Engineering Team</option>
+                  <option value="Data Science Team">Data Science Team</option>
+                  <option value="Product Development Team">Product Development Team</option>
+                </select>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">🔒 Team changes require admin approval</p>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Designation</label>
+                <input type="text" id="profileDesignation" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+              </div>
+
+              <div style="display: flex; gap: 1rem; padding-top: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                  💾 Save Changes
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="loadProfile()">
+                  ↩️ Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Admin Section -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <h3 class="card-title">🔐 Admin Settings</h3>
+          <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Team assignments and employee management require admin privileges.</p>
+          <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" onclick="showSection('employees')">
+              👥 Manage Employees
+            </button>
+            <button class="btn btn-secondary" onclick="alert('Admin panel coming soon...')">
+              ⚙️ Admin Panel
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const API_URL = '/platform/api';
+    let employees = [];
+    let departments = [];
+
+    // Agent definitions
+    const agents = [
+      {
+        id: 'ep',
+        name: 'EP Application Agent',
+        icon: '🛂',
+        desc: 'Automate Employment Pass applications for Malaysia. Handle documentation, compliance, and form generation.',
+        status: 'live',
+        statusText: 'Live',
+        url: '/chat.html'
+      },
+      {
+        id: 'onboarding',
+        name: 'Onboarding Agent',
+        icon: '🎉',
+        desc: '16-step automated onboarding workflow. IT setup, meetings, buddy assignment, and documentation.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'leave',
+        name: 'Leave Agent',
+        icon: '🏖️',
+        desc: 'Automated leave application and approval workflow. Balance tracking and team calendar.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'interview',
+        name: 'Interview Agent',
+        icon: '🎯',
+        desc: 'Schedule and coordinate interviews. Auto-scheduling, feedback collection, and candidate communication.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'payroll',
+        name: 'Payroll Agent',
+        icon: '💰',
+        desc: 'Salary processing, tax calculations, EPF/SOCSO, and payslip generation.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'expense',
+        name: 'Expense Agent',
+        icon: '💳',
+        desc: 'Expense claims, advances, and multi-level approval workflows.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'performance',
+        name: 'Performance Agent',
+        icon: '📊',
+        desc: 'OKR/KRA tracking, 360 feedback, and appraisal cycle management.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'talent',
+        name: 'Talent Scout Agent',
+        icon: '🎯',
+        desc: 'Recruitment automation, resume parsing, and candidate evaluation.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'it',
+        name: 'IT Support Agent',
+        icon: '💻',
+        desc: 'IT equipment requests, support tickets, and asset management.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'facility',
+        name: 'Facility Agent',
+        icon: '🏢',
+        desc: 'Room booking, desk allocation, and facility management.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'attendance',
+        name: 'Attendance Agent',
+        icon: '✅',
+        desc: 'Geolocation check-in/out, shift management, and attendance reports.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      },
+      {
+        id: 'engagement',
+        name: 'Engagement Agent',
+        icon: '💝',
+        desc: 'Employee surveys, recognition programs, and team engagement activities.',
+        status: 'planned',
+        statusText: 'Planned',
+        url: null
+      }
+    ];
+
+    // Department icons
+    const deptIcons = {
+      'Business Development': '📈',
+      'Product': '🚀',
+      'CSM': '💼',
+      'Engineering': '💻',
+      'Data Science': '📊'
+    };
+
+    // Show section
+    function showSection(section) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+      
+      const targetSection = document.getElementById(section + 'Section');
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+      
+      event.target.closest('.nav-link')?.classList.add('active');
+    }
+
+    // Render agent card
+    function renderAgentCard(agent) {
+      const isLive = agent.status === 'live';
+      return `
+        <div class="agent-card ${agent.status}" ${isLive ? `onclick="window.location.href='${agent.url}'"` : ''}>
+          <div class="agent-header">
+            <div class="agent-icon">${agent.icon}</div>
+            <span class="agent-status ${agent.status}">${agent.statusText}</span>
+          </div>
+          <h3 class="agent-name">${agent.name}</h3>
+          <p class="agent-desc">${agent.desc}</p>
+          ${isLive ? `<a href="${agent.url}" class="agent-link">Launch Agent →</a>` : ''}
+        </div>
+      `;
+    }
+
+    // Load data
+    async function loadData() {
+      try {
+        const [empRes, deptRes] = await Promise.all([
+          fetch(API_URL + '/employees'),
+          fetch(API_URL + '/departments')
+        ]);
+        
+        employees = await empRes.json();
+        departments = await deptRes.json();
+        
+        // Update stats
+        document.getElementById('statTotal').textContent = employees.length;
+        document.getElementById('statActive').textContent = Math.floor(employees.length * 0.875);
+        document.getElementById('statDepts').textContent = departments.length;
+        
+        // Render recent employees
+        const recentTbody = document.getElementById('recentEmployeesTable');
+        recentTbody.innerHTML = employees.slice(0, 5).map(emp => `
+          <tr>
+            <td>
+              <div class="employee-cell">
+                <div class="employee-avatar">${emp.avatar || '👤'}</div>
+                <div class="employee-info">
+                  <span class="employee-name">${emp.name}</span>
+                  <span class="employee-email">${emp.email}</span>
+                </div>
+              </div>
+            </td>
+            <td>${emp.department}</td>
+            <td>${emp.designation}</td>
+            <td><span class="status-badge active">${emp.status}</span></td>
+          </tr>
+        `).join('');
+        
+        // Render employees table
+        const empTbody = document.getElementById('employeesTable');
+        empTbody.innerHTML = employees.map(emp => `
+          <tr>
+            <td>
+              <div class="employee-cell">
+                <div class="employee-avatar">${emp.avatar || '👤'}</div>
+                <div class="employee-info">
+                  <span class="employee-name">${emp.name}</span>
+                  <span class="employee-email">${emp.email}</span>
+                </div>
+              </div>
+            </td>
+            <td>${emp.id}</td>
+            <td>${emp.department}</td>
+            <td>${emp.designation}</td>
+            <td>${emp.location}</td>
+            <td><span class="status-badge active">${emp.status}</span></td>
+          </tr>
+        `).join('');
+        
+        // Render departments
+        const deptGrid = document.getElementById('departmentsGrid');
+        deptGrid.innerHTML = departments.map(dept => `
+          <div class="agent-card">
+            <div class="agent-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">${deptIcons[dept.name] || '🏢'}</div>
+            <h3 class="agent-name">${dept.name}</h3>
+            <p class="agent-desc">${dept.headcount} employees</p>
+          </div>
+        `).join('');
+        
+        // Render agents
+        document.getElementById('agentsGrid').innerHTML = agents.slice(0, 4).map(renderAgentCard).join('');
+        document.getElementById('allAgentsGrid').innerHTML = agents.map(renderAgentCard).join('');
+        
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    }
+
+    // ========== PROFILE MANAGEMENT ==========
+    let currentProfile = null;
+    let avatarDataUrl = null;
+
+    // Load profile data
+    function loadProfile() {
+      // Use tester profile as current user (Demo Mode)
+      currentProfile = {
+        id: 'EMP999',
+        name: 'Test User',
+        email: 'test@pantas.com',
+        department: 'Engineering',
+        designation: 'Sustainability Analyst',
+        phone: '+60 12-999-8888',
+        team: 'Engineering Team',
+        avatar: null
+      };
+
+      // Load from localStorage if available
+      const saved = localStorage.getItem('userProfile');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          currentProfile = { ...currentProfile, ...parsed };
+        } catch (e) {
+          console.error('Error loading saved profile:', e);
+        }
+      }
+
+      // Populate form
+      document.getElementById('profileName').value = currentProfile.name || '';
+      document.getElementById('profileEmail').value = currentProfile.email || '';
+      document.getElementById('profilePhone').value = currentProfile.phone || '';
+      document.getElementById('profileDepartment').value = currentProfile.department || 'Engineering';
+      document.getElementById('profileTeam').value = currentProfile.team || '';
+      document.getElementById('profileDesignation').value = currentProfile.designation || '';
+
+      // Load avatar
+      if (currentProfile.avatar) {
+        document.getElementById('profileAvatar').innerHTML = `<img src="${currentProfile.avatar}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+      } else {
+        document.getElementById('profileAvatar').innerHTML = '👤';
+      }
+
+      // Update sidebar
+      document.getElementById('sidebarName').textContent = currentProfile.name || 'Test User';
+      document.getElementById('sidebarRole').textContent = currentProfile.designation || 'Employee';
+    }
+
+    // Save profile
+    function saveProfile(event) {
+      event.preventDefault();
+
+      const updatedProfile = {
+        name: document.getElementById('profileName').value,
+        phone: document.getElementById('profilePhone').value,
+        department: document.getElementById('profileDepartment').value,
+        designation: document.getElementById('profileDesignation').value,
+        avatar: avatarDataUrl || currentProfile?.avatar || null
+        // Email and team are not editable
+      };
+
+      // Save to current profile
+      currentProfile = { ...currentProfile, ...updatedProfile };
+
+      // Save to localStorage
+      localStorage.setItem('userProfile', JSON.stringify(currentProfile));
+
+      // Update sidebar
+      document.getElementById('sidebarName').textContent = currentProfile.name;
+      document.getElementById('sidebarRole').textContent = currentProfile.designation;
+
+      // Show success message
+      showToast('✅ Profile updated successfully!');
+
+      // Update avatar display
+      if (currentProfile.avatar) {
+        document.getElementById('profileAvatar').innerHTML = `<img src="${currentProfile.avatar}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+      }
+    }
+
+    // Handle avatar upload
+    function handleAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('⚠️ File size must be less than 5MB');
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        showToast('⚠️ Please select an image file');
+        return;
+      }
+
+      // Read file as data URL
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        avatarDataUrl = e.target.result;
+        document.getElementById('profileAvatar').innerHTML = `<img src="${avatarDataUrl}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+        showToast('✅ Profile picture updated!');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Remove avatar
+    function removeAvatar() {
+      avatarDataUrl = null;
+      if (currentProfile) {
+        currentProfile.avatar = null;
+        localStorage.setItem('userProfile', JSON.stringify(currentProfile));
+      }
+      document.getElementById('profileAvatar').innerHTML = '👤';
+      document.getElementById('avatarUpload').value = '';
+      showToast('✅ Profile picture removed');
+    }
+
+    // Show toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) {
+        // Create toast if it doesn't exist
+        const toastDiv = document.createElement('div');
+        toastDiv.id = 'toast';
+        toastDiv.style.cssText = `
+          position: fixed;
+          bottom: 2rem;
+          right: 2rem;
+          background: var(--bg-sidebar);
+          color: white;
+          padding: 1rem 1.5rem;
+          border-radius: 8px;
+          box-shadow: var(--shadow-lg);
+          font-size: 0.875rem;
+          font-weight: 500;
+          z-index: 1000;
+          animation: slideIn 0.3s ease;
+        `;
+        document.body.appendChild(toastDiv);
+        setTimeout(() => {
+          toastDiv.remove();
+        }, 3000);
+      } else {
+        toast.textContent = message;
+        toast.style.display = 'block';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    // Initialize
+    loadData();
+    loadProfile();
+  </script>
+</body>
+</html>

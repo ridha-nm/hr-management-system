@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pantas HR | EP Application Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #3b82f6;
+      --secondary: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #06b6d4;
+
+      --bg-main: #f1f5f9;
+      --bg-sidebar: #0f172a;
+      --bg-card: #ffffff;
+      --bg-hover: #e2e8f0;
+
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-inverse: #f8fafc;
+
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--bg-sidebar);
+      color: var(--text-inverse);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-brand-logo {
+      height: 32px;
+      width: auto;
+    }
+
+    .sidebar-brand-text h1 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .sidebar-brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1rem 0.75rem;
+    }
+
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-section-title {
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-item {
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-inverse);
+    }
+
+    .nav-link.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .nav-icon {
+      font-size: 1.125rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      font-weight: 600;
+    }
+
+    .nav-badge.live {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .sidebar-user {
+      padding: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .user-details {
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 280px;
+      min-height: 100vh;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .breadcrumb-separator {
+      color: var(--text-muted);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 2rem;
+    }
+
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-description {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-change {
+      font-size: 0.75rem;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .stat-change.negative {
+      color: var(--danger);
+    }
+
+    /* Feature Cards */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-description {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .feature-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .feature-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Process Timeline */
+    .timeline-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .timeline {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+    }
+
+    .timeline-phase {
+      flex: 0 0 200px;
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .timeline-phase.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .timeline-phase-number {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-phase-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-phase-duration {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    /* Demo Banner */
+    .demo-banner {
+      background: linear-gradient(135deg, var(--warning), #f97316);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .demo-banner-icon {
+      font-size: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <img src="/pantas-logo.png" alt="Pantas" class="sidebar-brand-logo" onerror="this.style.display='none'">
+        <div class="sidebar-brand-text">
+          <h1>Pantas HR</h1>
+          <p>Team of Agents</p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <div class="nav-item">
+          <a href="/" class="nav-link active">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/platform" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>HR Platform</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">AI Agents</div>
+        <div class="nav-item">
+          <a href="/chat.html" class="nav-link">
+            <span class="nav-icon">🤖</span>
+            <span>EP Agent</span>
+            <span class="nav-badge live">LIVE</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">📋</span>
+            <span>Onboarding</span>
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">🏖️</span>
+            <span>Leave</span>
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">🎯</span>
+            <span>Interview</span>
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Company</div>
+        <div class="nav-item">
+          <a href="/platform" class="nav-link">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/platform" class="nav-link">
+            <span class="nav-icon">👪</span>
+            <span>Employees</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">👤</div>
+      <div class="user-details">
+        <div class="user-name">Guest User</div>
+        <div class="user-role">Demo Mode</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="breadcrumb">
+        <span>Home</span>
+        <span class="breadcrumb-separator">/</span>
+        <span>EP Application Agent</span>
+      </div>
+      <div class="top-actions">
+        <a href="/chat.html" class="btn btn-primary">
+          <span>🚀</span>
+          Launch EP Agent
+        </a>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Demo Banner -->
+      <div class="demo-banner">
+        <span class="demo-banner-icon">ℹ️</span>
+        <span>Both EP Agent and HR Platform now run on a single port! Access HR Platform at <strong>/platform</strong></span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">EP Application Agent</h1>
+        <p class="page-description">Automate your Employment Pass (EP) application process with AI-powered guidance</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Success Rate</div>
+          <div class="stat-value">100%</div>
+          <div class="stat-change">
+            <span>↑</span>
+            Compliance maintained
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Time Saved</div>
+          <div class="stat-value">5x</div>
+          <div class="stat-change">
+            <span>↑</span>
+            Faster processing
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Auto-Fill</div>
+          <div class="stat-value">Yes</div>
+          <div class="stat-change">
+            <span>✓</span>
+            CSV/Excel support
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Duration</div>
+          <div class="stat-value">8-12</div>
+          <div class="stat-change negative">
+            <span>⏱️</span>
+            Weeks average
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3 class="feature-title">Phase-by-Phase Guidance</h3>
+          <p class="feature-description">Step-by-step guidance through all 5 phases of the EP application process, from company documents to final submission.</p>
+          <a href="/chat.html" class="feature-link">Start Phase 1 →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3 class="feature-title">Document Management</h3>
+          <p class="feature-description">Download company documents (SSM, DBKL), fill templates, and upload candidate documents with automatic validation.</p>
+          <a href="/chat.html" class="feature-link">View Documents →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3 class="feature-title">Auto-Fill Forms</h3>
+          <p class="feature-description">Upload CSV/Excel interview templates and let the bot automatically fill official MyFutureJobs forms.</p>
+          <a href="/chat.html" class="feature-link">Try Auto-Fill →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">MyFutureJobs PERKESO</h3>
+          <p class="feature-description">Complete 5-step MyFutureJobs application process with interview tracking and candidate management.</p>
+          <a href="/chat.html" class="feature-link">Start Process →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">✉️</div>
+          <h3 class="feature-title">Email Templates</h3>
+          <p class="feature-description">Ready-to-use email and Slack templates for requesting documents, follow-ups, and agency communication.</p>
+          <a href="/chat.html" class="feature-link">View Templates →</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3 class="feature-title">Instant Help</h3>
+          <p class="feature-description">Keyword-based chatbot provides instant answers to common questions about the EP application process.</p>
+          <a href="/chat.html" class="feature-link">Ask a Question →</a>
+        </div>
+      </div>
+
+      <!-- Process Timeline -->
+      <div class="timeline-section">
+        <h2 class="section-title">EP Application Process Timeline</h2>
+        <div class="timeline">
+          <div class="timeline-phase active">
+            <div class="timeline-phase-number">Phase 1</div>
+            <div class="timeline-phase-title">Company Documents</div>
+            <div class="timeline-phase-duration">1-3 days</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 2</div>
+            <div class="timeline-phase-title">Candidate Documents</div>
+            <div class="timeline-phase-duration">1-2 weeks</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 3</div>
+            <div class="timeline-phase-title">MyFutureJobs</div>
+            <div class="timeline-phase-duration">2-3 weeks</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 4</div>
+            <div class="timeline-phase-title">JTKSM Application</div>
+            <div class="timeline-phase-duration">1 week</div>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 5</div>
+            <div class="timeline-phase-title">EP Application</div>
+            <div class="timeline-phase-duration">4-6 weeks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Add active state to nav links based on current page
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment
+.env
+**/.env
+
+# Logs and OS metadata
+*.log
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# Documentation & Large Files (excluding core markdown)
+*.zip
+*.pdf
+# *.docx  # If you want to keep docx templates, comment this out.
+# For now, let's ignore docx if they are sensitive.
+# The user might want to keep some templates.
+
+# Temp directories
+temp_docs/
+**/temp_docs/
+**/uploads/
+
+# Tool specific
+.aider*
+.planning/

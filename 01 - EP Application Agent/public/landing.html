@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pantas HR Team of Agents | AI-Powered HR Automation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #3b82f6;
+      --secondary: #06b6d4;
+      --accent: #f472b6;
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-light: #f8fafc;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-light: #f8fafc;
+      --success: #10b981;
+      --gradient-blue: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Hero Section with White Background */
+    .hero {
+      background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    /* Navigation */
+    .nav {
+      position: relative;
+      z-index: 10;
+      padding: 1.5rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-brand-text {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-brand-tagline {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-left: 0.5rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-logo-container {
+      background: white;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .nav-logo-text {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Hero Content */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 5%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .hero-text h1 span {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-text p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-accent);
+      color: white;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Hero Visual */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .agent-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .agent-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+      border: 1px solid rgba(37, 99, 235, 0.1);
+    }
+
+    .agent-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .agent-card.live {
+      border-color: var(--success);
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    }
+
+    .agent-card.planned {
+      opacity: 0.7;
+    }
+
+    .agent-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .agent-card.live .agent-icon {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .agent-card.planned .agent-icon {
+      background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    }
+
+    .agent-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .agent-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .agent-status.live {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .agent-status.planned {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-secondary);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Features Section */
+    .features {
+      background: var(--gradient-dark);
+      padding: 6rem 5%;
+      position: relative;
+    }
+
+    .features::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.3;
+    }
+
+    .features-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(37, 99, 235, 0.2);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-5px);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      background: var(--gradient-accent);
+    }
+
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-description {
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Stats Section */
+    .stats {
+      background: white;
+      padding: 4rem 5%;
+    }
+
+    .stats-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 800;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* CTA Section */
+    .cta {
+      background: var(--gradient-blue);
+      padding: 6rem 5%;
+      text-align: center;
+    }
+
+    .cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .cta-subtitle {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-white:hover {
+      background: var(--bg-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--bg-dark);
+      padding: 3rem 5%;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-text {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .hero-text h1 {
+        font-size: 2rem;
+      }
+
+      .agent-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-brand">
+        <span class="nav-brand-text">HR Team of Agents</span>
+        <span class="nav-brand-tagline">| AI-Powered HR Automation</span>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-logo-container">
+          <img src="/pantas-logo.png" alt="Pantas" class="nav-logo" onerror="this.style.display='none'">
+          <span class="nav-logo-text">Pantas</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Transform HR with <span>Intelligent Agents</span></h1>
+        <p>A unified platform of specialized AI agents for every HR function. From employment pass applications to employee onboarding, automate your workflows with precision and compliance.</p>
+        <div class="hero-buttons">
+          <a href="/platform" class="btn btn-primary">
+            <span>🚀</span>
+            Launch HR Platform
+          </a>
+          <a href="/chat.html" class="btn btn-secondary">
+            <span>🤖</span>
+            Try EP Agent
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="agent-cards">
+          <div class="agent-card live">
+            <div class="agent-icon">🛂</div>
+            <div class="agent-name">EP Application</div>
+            <span class="agent-status live">
+              <span class="status-dot"></span>
+              Live
+            </span>
+          </div>
+          <div class="agent-card planned">
+            <div class="agent-icon">📋</div>
+            <div class="agent-name">Onboarding</div>
+            <span class="agent-status planned">
+              <span class="status-dot"></span>
+              Planned
+            </span>
+          </div>
+          <div class="agent-card planned">
+            <div class="agent-icon">🏖️</div>
+            <div class="agent-name">Leave Management</div>
+            <span class="agent-status planned">
+              <span class="status-dot"></span>
+              Planned
+            </span>
+          </div>
+          <div class="agent-card planned">
+            <div class="agent-icon">🎯</div>
+            <div class="agent-name">Interview</div>
+            <span class="agent-status planned">
+              <span class="status-dot"></span>
+              Planned
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="features-container">
+      <div class="section-header">
+        <span class="section-label">✨ Features</span>
+        <h2 class="section-title">Why Choose AI Agents?</h2>
+        <p class="section-subtitle">Streamline your HR operations with intelligent automation that saves time and ensures compliance.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">5x Faster Processing</h3>
+          <p class="feature-description">Automate repetitive tasks and reduce manual processing time by up to 80%. Focus on strategic HR initiatives.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3 class="feature-title">100% Compliance</h3>
+          <p class="feature-description">Stay compliant with Malaysian immigration and labor regulations. Automatic updates for policy changes.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">Smart Analytics</h3>
+          <p class="feature-description">Real-time insights into application status, employee data, and HR metrics with interactive dashboards.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3 class="feature-title">Seamless Integration</h3>
+          <p class="feature-description">Connect with your existing HRMS, payroll systems, and communication tools like Slack and email.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📝</div>
+          <h3 class="feature-title">Auto-Fill Forms</h3>
+          <p class="feature-description">Upload CSV/Excel data and let AI automatically fill official government forms with perfect accuracy.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3 class="feature-title">24/7 Support</h3>
+          <p class="feature-description">Get instant answers to HR questions anytime. Keyword-based chatbot with contextual responses.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Compliance Rate</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">5x</div>
+        <div class="stat-label">Faster Processing</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">12</div>
+        <div class="stat-label">AI Agents Planned</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">24/7</div>
+        <div class="stat-label">Automated Support</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-container">
+      <h2 class="cta-title">Ready to Transform Your HR Operations?</h2>
+      <p class="cta-subtitle">Start automating your HR workflows today with our intelligent agent suite.</p>
+      <div class="cta-buttons">
+        <a href="/platform" class="btn btn-white">
+          <span>👥</span>
+          Access Employee Management
+        </a>
+        <a href="/chat.html" class="btn btn-outline">
+          <span>🤖</span>
+          Try EP Agent Demo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p class="footer-text">© 2026 Pantas Climate Solutions. All rights reserved. | HR Team of Agents v4.2.1</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EP Application | Pantas HR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --primary-light: #3b82f6;
+      --secondary: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      
+      --bg-main: #f8fafc;
+      --bg-sidebar: #1e293b;
+      --bg-sidebar-header: #ffffff;
+      --bg-card: #ffffff;
+      --bg-hover: #f1f5f9;
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --text-inverse: #f8fafc;
+      
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar - Same as Main Page */
+    .sidebar {
+      width: 300px;
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar-header {
+      background: var(--bg-sidebar-header);
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .sidebar-brand-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .sidebar-brand-text h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sidebar-brand-text p {
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem 1rem;
+    }
+
+    .nav-section { margin-bottom: 1.5rem; }
+
+    .nav-section-title {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 0 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .nav-item { margin-bottom: 0.25rem; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,0.08);
+      color: white;
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .nav-icon { font-size: 1.25rem; width: 24px; text-align: center; }
+
+    .nav-badge {
+      margin-left: auto;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      font-weight: 700;
+    }
+
+    .nav-badge.live {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .sidebar-user {
+      padding: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .user-details { flex: 1; }
+    .user-name { font-size: 0.875rem; font-weight: 600; color: white; }
+    .user-role { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 300px;
+      flex: 1;
+      min-height: 100vh;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-content { position: relative; z-index: 10; }
+
+    .hero-welcome {
+      color: rgba(255,255,255,0.9);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.8);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 3rem;
+      max-width: 1400px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab:hover { color: var(--primary); }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Sections */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* Process Flow Timeline */
+    .timeline {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-phase {
+      flex: 0 0 220px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+    }
+
+    .timeline-phase:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .timeline-phase-number {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-phase-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-phase-duration {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .timeline-phase-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .card-desc {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .card-action:hover { text-decoration: underline; }
+
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      background: var(--bg-hover);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.05);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.1);
+    }
+
+    .upload-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    .upload-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-desc {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Chat Box */
+    .chat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      height: 400px;
+      overflow-y: auto;
+      padding: 1.5rem;
+      background: var(--bg-hover);
+    }
+
+    .message {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .message.user { flex-direction: row-reverse; }
+
+    .message-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .message.bot .message-avatar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+
+    .message.user .message-avatar {
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      line-height: 1.6;
+    }
+
+    .message.bot .message-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .message.user .message-content {
+      background: var(--primary);
+      color: white;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      outline: none;
+    }
+
+    .chat-input:focus { border-color: var(--primary); }
+
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1.25rem;
+      transition: all 0.2s;
+    }
+
+    .send-btn:hover {
+      background: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
+    /* Quick Questions */
+    .quick-questions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .question-btn {
+      padding: 0.75rem 1rem;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .question-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover { background: var(--border); }
+  </style>
+</head>
+<body>
+  <!-- Sidebar - Same as Main Page -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand" style="flex-direction: column; gap: 0.5rem; padding: 0.75rem;">
+        <img src="/pantas-logo.png" alt="Pantas" class="sidebar-brand-logo" style="height: 48px; display: block; margin: 0 auto;" onerror="this.style.display='none'">
+        <p style="font-size: 0.625rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; margin: 0.5rem 0 0 0;">Employee Management System</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Main</div>
+        <div class="nav-item">
+          <a href="/" class="nav-link">
+            <span class="nav-icon">📊</span>
+            Dashboard
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/" onclick="showSection('employees'); return false;" class="nav-link">
+            <span class="nav-icon">👥</span>
+            Employees
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/" onclick="showSection('departments'); return false;" class="nav-link">
+            <span class="nav-icon">🏢</span>
+            Departments
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">AI Agents</div>
+        <div class="nav-item">
+          <button class="nav-link active">
+            <span class="nav-icon">🛂</span>
+            EP Application
+            <span class="nav-badge live">LIVE</span>
+          </button>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">📋</span>
+            Onboarding
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">🏖️</span>
+            Leave
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+            <span class="nav-icon">🎯</span>
+            Interview
+            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Company</div>
+        <div class="nav-item">
+          <a href="/" onclick="showSection('agents'); return false;" class="nav-link">
+            <span class="nav-icon">🤖</span>
+            All Agents
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="/" onclick="showSection('settings'); return false;" class="nav-link">
+            <span class="nav-icon">⚙️</span>
+            Settings
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-user" onclick="window.location.href='/?section=settings'">
+      <div class="user-avatar">👤</div>
+      <div class="user-details">
+        <div class="user-name" id="sidebarName">Test User</div>
+        <div class="user-role" id="sidebarRole">Sustainability Analyst</div>
+      </div>
+      <div class="user-actions">
+        <button class="icon-btn" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.25rem;" title="Edit Profile">⚙️</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-content">
+        <p class="hero-welcome">EP Application Agent</p>
+        <h1 class="hero-title">Employment Pass Automation</h1>
+        <p class="hero-subtitle">Complete guide for Employment Pass applications in Malaysia. Download documents, upload interview data, and get instant answers.</p>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('process')">📊 Process Flow</button>
+        <button class="tab" onclick="switchTab('documents')">📁 Documents</button>
+        <button class="tab" onclick="switchTab('upload')">📤 Upload & Auto-Fill</button>
+        <button class="tab" onclick="switchTab('help')">💬 Questions?</button>
+      </div>
+
+      <!-- Process Flow Section -->
+      <div class="section active" id="processSection">
+        <div class="timeline">
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 1</div>
+            <div class="timeline-phase-title">Company Documents</div>
+            <div class="timeline-phase-duration">⏱️ 1-3 days</div>
+            <p class="timeline-phase-desc">Download SSM, DBKL, and other company documents. Send to immigration agency.</p>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 2</div>
+            <div class="timeline-phase-title">Candidate Documents</div>
+            <div class="timeline-phase-duration">⏱️ 1-2 weeks</div>
+            <p class="timeline-phase-desc">Collect passport, CV, certificates, and photo from candidate. Verify requirements.</p>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 3</div>
+            <div class="timeline-phase-title">MyFutureJobs PERKESO</div>
+            <div class="timeline-phase-duration">⏱️ 2-3 weeks</div>
+            <p class="timeline-phase-desc">Post job, conduct interviews (14 days min), upload candidate data, generate form.</p>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 4</div>
+            <div class="timeline-phase-title">JTKSM Application</div>
+            <div class="timeline-phase-duration">⏱️ 1 week</div>
+            <p class="timeline-phase-desc">Fill MyFutureJobs Expat Form, get COO signature, submit to JTKSM.</p>
+          </div>
+          <div class="timeline-phase">
+            <div class="timeline-phase-number">Phase 5</div>
+            <div class="timeline-phase-title">EP Application ESD</div>
+            <div class="timeline-phase-duration">⏱️ 4-6 weeks</div>
+            <p class="timeline-phase-desc">Submit GP Checklist and all documents to ESD portal. Wait for approval.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents Section -->
+      <div class="section" id="documentsSection">
+        <div class="cards-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">📄</div>
+              <div class="card-title">SSM Documents</div>
+            </div>
+            <p class="card-desc">Latest company registration documents from SSM (March 2026). Valid for 6 months.</p>
+            <a href="/api/templates/SSM_Documents.zip" class="card-action">⬇️ Download SSM_Documents.zip</a>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">🏢</div>
+              <div class="card-title">DBKL License</div>
+            </div>
+            <p class="card-desc">Business license from DBKL (Dewan Bandaraya Kuala Lumpur).</p>
+            <a href="/api/templates/DBKL_License.pdf" class="card-action">⬇️ Download DBKL_License.pdf</a>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">✅</div>
+              <div class="card-title">JTKSM Approval</div>
+            </div>
+            <p class="card-desc">Previous JTKSM approval letter for reference.</p>
+            <a href="/api/templates/JTKSM_Approval.pdf" class="card-action">⬇️ Download JTKSM_Approval.pdf</a>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">📝</div>
+              <div class="card-title">MyFutureJobs Expat Form</div>
+            </div>
+            <p class="card-desc">Template for interview outcomes. Fill in after completing interviews.</p>
+            <a href="/api/templates/MyFutureJobs_Expat_Form_Template.docx" class="card-action">⬇️ Download Template.docx</a>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">✓</div>
+              <div class="card-title">GP Checklist</div>
+            </div>
+            <p class="card-desc">Checklist for EP submission. Fill before submitting to ESD.</p>
+            <a href="/api/templates/GP_Checklist_Template.docx" class="card-action">⬇️ Download Template.docx</a>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon">👁️</div>
+              <div class="card-title">Example (Reference)</div>
+            </div>
+            <p class="card-desc">Filled example of MyFutureJobs Expat Form for reference.</p>
+            <a href="/api/templates/MyFutureJobs_Expat_Form_Example.pdf" class="card-action">👁️ View Example.pdf</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="section" id="uploadSection">
+        <div class="card" style="margin-bottom: 2rem;">
+          <div class="card-header">
+            <div class="card-icon">📤</div>
+            <div class="card-title">Upload Interview Template</div>
+          </div>
+          <p class="card-desc">Download the template, fill in candidate data from your MyFutureJobs interviews, then upload for auto-fill.</p>
+          
+          <div style="display: flex; gap: 1rem; margin: 1.5rem 0;">
+            <a href="/api/myfuturejobs/template/csv" class="btn btn-primary">
+              ⬇️ Download CSV Template
+            </a>
+            <a href="/api/myfuturejobs/template/xlsx" class="btn btn-secondary">
+              ⬇️ Download Excel Template
+            </a>
+          </div>
+
+          <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📁</div>
+            <div class="upload-title">Drop your filled template here</div>
+            <div class="upload-desc">or click to browse (CSV or Excel)</div>
+            <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;" onchange="handleFileUpload(event)">
+          </div>
+
+          <div id="uploadResult" style="margin-top: 1.5rem; display: none;">
+            <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem;">✅ Processed Successfully</h3>
+            <div id="candidateTable"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help/Chat Section -->
+      <div class="section" id="helpSection">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">💬</div>
+            <div class="card-title">Have Questions?</div>
+          </div>
+          <p class="card-desc">Ask about the EP application process, document requirements, or any concerns.</p>
+
+          <div class="quick-questions">
+            <button class="question-btn" onclick="askQuestion('What documents do I need?')">📋 What documents do I need?</button>
+            <button class="question-btn" onclick="askQuestion('How long does the process take?')">⏱️ How long does it take?</button>
+            <button class="question-btn" onclick="askQuestion('How do I fill the MyFutureJobs form?')">📝 How to fill MyFutureJobs form?</button>
+            <button class="question-btn" onclick="askQuestion('What is the CTC stamp requirement?')">✅ CTC stamp requirement?</button>
+            <button class="question-btn" onclick="askQuestion('Passport validity requirements?')">🛂 Passport validity?</button>
+            <button class="question-btn" onclick="askQuestion('Photo background color?')">📷 Photo requirements?</button>
+            <button class="question-btn" onclick="askQuestion('How to contact COO?')">📧 Contact COO?</button>
+            <button class="question-btn" onclick="askQuestion('MyFutureJobs interview process?')">🎯 MyFutureJobs process?</button>
+          </div>
+
+          <div class="chat-box" style="margin-top: 1.5rem;">
+            <div class="chat-messages" id="chatMessages">
+              <div class="message bot">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                  Hi! I'm here to help with your EP application questions. Select a quick question above or type your own!
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-wrapper">
+              <input type="text" class="chat-input" id="chatInput" placeholder="Type your question..." onkeypress="handleKeyPress(event)">
+              <button class="send-btn" onclick="sendMessage()">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Tab switching
+    function switchTab(tab) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(tab + 'Section').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Navigate to main page section
+    function showSection(section) {
+      window.location.href = '/?section=' + section;
+    }
+
+    // File upload handling
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      document.getElementById('uploadResult').style.display = 'block';
+      document.getElementById('candidateTable').innerHTML = '<p>Processing...</p>';
+
+      setTimeout(() => {
+        document.getElementById('candidateTable').innerHTML = `
+          <div style="background: var(--bg-hover); padding: 1rem; border-radius: 8px;">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+              ✅ File processed: <strong>${file.name}</strong><br>
+              In production, this would parse the CSV/Excel and display candidate data here.
+            </p>
+          </div>
+        `;
+      }, 1000);
+    }
+
+    // Drag and drop
+    const uploadZone = document.getElementById('uploadZone');
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) handleFileUpload({ target: { files: [file] } });
+    });
+
+    // Chat functions
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') sendMessage();
+    }
+
+    function askQuestion(question) {
+      document.getElementById('chatInput').value = question;
+      sendMessage();
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const messagesContainer = document.getElementById('chatMessages');
+      const message = input.value.trim();
+      
+      if (!message) return;
+
+      const userHTML = `
+        <div class="message user">
+          <div class="message-avatar">👤</div>
+          <div class="message-content">${escapeHtml(message)}</div>
+        </div>
+      `;
+      messagesContainer.insertAdjacentHTML('beforeend', userHTML);
+      input.value = '';
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      })
+      .then(res => res.json())
+      .then(data => {
+        const botHTML = `
+          <div class="message bot">
+            <div class="message-avatar">🤖</div>
+            <div class="message-content">${formatResponse(data.reply)}</div>
+          </div>
+        `;
+        messagesContainer.insertAdjacentHTML('beforeend', botHTML);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      })
+      .catch(err => {
+        console.error(err);
+        messagesContainer.insertAdjacentHTML('beforeend', `
+          <div class="message bot">
+            <div class="message-avatar">⚠️</div>
+            <div class="message-content">Sorry, I encountered an error.</div>
+          </div>
+        `);
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatResponse(text) {
+      let formatted = escapeHtml(text);
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      formatted = formatted.replace(/\n/g, '<br>');
+      return formatted;
+    }
+
+    // Load profile from localStorage
+    function loadProfile() {
+      const saved = localStorage.getItem('userProfile');
+      if (saved) {
+        try {
+          const profile = JSON.parse(saved);
+          document.getElementById('sidebarName').textContent = profile.name || 'Test User';
+          document.getElementById('sidebarRole').textContent = profile.designation || 'Employee';
+        } catch (e) {}
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

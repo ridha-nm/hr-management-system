@@ -1,0 +1,688 @@
+/* HR Agent — Pantas Brand Identity */
+
+:root {
+  --blue:         #1668F5;
+  --blue-dark:    #0d4fd4;
+  --teal:         #00b5d8;
+  --grad:         linear-gradient(135deg, #1668F5 0%, #00b5d8 100%);
+  --grad-text:    linear-gradient(90deg, #1668F5 0%, #00b5d8 100%);
+
+  --bg:           #ffffff;
+  --bg-surface:   #f8faff;
+  --bg-card:      #ffffff;
+  --bg-hover:     #f0f5ff;
+
+  --border:       #e8edf5;
+  --border-mid:   #d0d9eb;
+  --border-str:   #b3c1db;
+
+  --text-1:       #0a0f1e;
+  --text-2:       #4a5568;
+  --text-3:       #8fa0b5;
+
+  --user-bg:      #f0f5ff;
+  --user-border:  #d0deff;
+
+  --r-sm:         8px;
+  --r-md:         12px;
+  --r-lg:         16px;
+  --r-pill:       100px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-surface);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  color: var(--text-1);
+  position: relative;
+}
+
+/* Pantas-style dot grid background */
+.dot-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, #c8d8f0 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 880px;
+  height: 88vh;
+  position: relative;
+  z-index: 1;
+}
+
+.chat-shell {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(22,104,245,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ─── Header ─────────────────────────── */
+
+.shell-header {
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--text-1);
+}
+
+.brand-sep {
+  color: var(--border-mid);
+  font-weight: 300;
+  font-size: 16px;
+  margin: 0 2px;
+}
+
+.brand-product {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text-2);
+  font-weight: 400;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid #d0f0d8;
+  border-radius: var(--r-pill);
+  background: #f0fdf4;
+  font-size: 11.5px;
+  color: #16a34a;
+  font-weight: 500;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: livepulse 2.5s ease-in-out infinite;
+}
+
+@keyframes livepulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.agent-select {
+  height: 34px;
+  padding: 0 30px 0 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--r-pill);
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='%234a5568'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.2s;
+}
+
+.agent-select:hover { border-color: var(--blue); }
+.agent-select option { background: #fff; }
+
+/* Pantas "Request a demo" button style */
+.demo-btn {
+  height: 34px;
+  padding: 0 16px;
+  background: var(--grad);
+  border: none;
+  border-radius: var(--r-pill);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.demo-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+.demo-btn:active { transform: scale(0.97); }
+
+/* ─── Chat window ─────────────────────── */
+
+.chat-window {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  scroll-behavior: smooth;
+  background: var(--bg-surface);
+}
+
+.chat-window::-webkit-scrollbar        { width: 3px; }
+.chat-window::-webkit-scrollbar-track  { background: transparent; }
+.chat-window::-webkit-scrollbar-thumb  { background: var(--border-mid); border-radius: 10px; }
+
+/* ─── Messages ────────────────────────── */
+
+.message {
+  display: flex;
+  gap: 11px;
+  animation: msgIn 0.22s ease;
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bot-avatar {
+  background: var(--grad);
+  color: #fff;
+}
+
+.user-avatar {
+  background: var(--bg-hover);
+  border: 1px solid var(--border-mid);
+  color: var(--blue);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bubble {
+  border-radius: var(--r-md);
+  padding: 14px 18px;
+  line-height: 1.65;
+  font-size: 13.5px;
+  max-width: 82%;
+}
+
+.bot-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px var(--r-md) var(--r-md) var(--r-md);
+  color: var(--text-1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.user-message { flex-direction: row-reverse; }
+
+.user-bubble {
+  background: var(--user-bg);
+  border: 1px solid var(--user-border);
+  border-radius: var(--r-md) 3px var(--r-md) var(--r-md);
+  color: var(--text-1);
+}
+
+/* ─── Welcome hero ────────────────────── */
+
+.welcome-hero { margin-bottom: 20px; }
+
+.new-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  background: #eff5ff;
+  border: 1px solid #c7d9fb;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  color: var(--blue);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Pantas-style massive bold heading */
+.welcome-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+  margin-bottom: 10px;
+}
+
+/* Blue-to-teal gradient text like "Intelligence" on pantas.com */
+.gradient-text {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-sub {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* ─── Feature cards ───────────────────── */
+
+.feature-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.feat-card {
+  padding: 12px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.feat-card:hover {
+  border-color: #c0d3fb;
+  box-shadow: 0 2px 8px rgba(22,104,245,0.07);
+}
+
+.feat-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: 0.05em;
+  margin-bottom: 5px;
+  opacity: 0.7;
+}
+
+.feat-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 4px;
+}
+
+.feat-desc {
+  font-size: 11.5px;
+  color: var(--text-2);
+  line-height: 1.45;
+}
+
+/* ─── Steps ───────────────────────────── */
+
+.steps-block {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: #f8faff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+
+.step-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.step-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--grad);
+  flex-shrink: 0;
+}
+
+.step-dot.last { background: var(--teal); }
+
+.step-line {
+  width: 1.5px;
+  flex: 1;
+  min-height: 18px;
+  background: linear-gradient(to bottom, #1668F5, #00b5d8);
+  opacity: 0.25;
+  margin: 3px 0;
+}
+
+.step-body {
+  padding-bottom: 16px;
+  flex: 1;
+}
+
+.step-row:last-child .step-body { padding-bottom: 0; }
+
+.step-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 2px;
+}
+
+.step-desc {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+/* ─── Welcome CTA buttons ─────────────── */
+
+.welcome-cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* Matches Pantas solid CTA exactly */
+.cta-primary {
+  height: 38px;
+  padding: 0 20px;
+  background: var(--grad);
+  border: none;
+  border-radius: var(--r-pill);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.cta-primary:hover  { opacity: 0.87; transform: translateY(-1px); }
+.cta-primary:active { transform: scale(0.97); }
+
+/* Matches Pantas outlined CTA exactly */
+.cta-outline {
+  height: 38px;
+  padding: 0 20px;
+  background: transparent;
+  border: 1.5px solid var(--border-str);
+  border-radius: var(--r-pill);
+  color: var(--text-1);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.cta-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ─── Bubble markdown ─────────────────── */
+
+.bubble h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-1);
+  margin: 10px 0 5px;
+}
+
+.bubble h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin: 8px 0 4px;
+}
+
+.bubble p   { margin: 5px 0; }
+
+.bubble ul,
+.bubble ol  { margin: 6px 0; padding-left: 17px; }
+
+.bubble li  { margin: 3px 0; color: var(--text-2); }
+
+.bubble strong { color: var(--text-1); font-weight: 600; }
+
+.bubble code {
+  font-size: 11.5px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  border-radius: 5px;
+  color: var(--blue);
+  font-family: 'DM Mono', 'Fira Mono', monospace;
+}
+
+.bubble a { color: var(--blue); }
+
+/* ─── Typing indicator ────────────────── */
+
+.typing-indicator .bubble { padding: 14px 20px; }
+
+.typing { display: flex; gap: 5px; align-items: center; }
+
+.typing span {
+  width: 5px;
+  height: 5px;
+  background: var(--border-str);
+  border-radius: 50%;
+  animation: dotbounce 1.3s infinite;
+}
+
+.typing span:nth-child(2) { animation-delay: 0.18s; }
+.typing span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes dotbounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
+  30%            { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ─── Input dock ──────────────────────── */
+
+.input-dock {
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.input-dock.dragover {
+  background: #f0f5ff;
+  border-top-color: #c0d3fb;
+}
+
+.file-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.file-chips:empty { margin-bottom: 0; }
+
+.file-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px 3px 8px;
+  background: #eff5ff;
+  border: 1px solid #c7d9fb;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  color: var(--blue);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  animation: msgIn 0.18s ease;
+}
+
+.chip-icon { width: 11px; height: 11px; opacity: 0.65; }
+
+.chip-name {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip-remove {
+  background: none;
+  border: none;
+  color: #93b4f0;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+
+.chip-remove:hover { color: var(--blue); }
+
+/* Chat form */
+
+.chat-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.attach-btn {
+  width: 38px;
+  height: 38px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.attach-btn:hover {
+  background: var(--bg-hover);
+  color: var(--blue);
+  border-color: #c0d3fb;
+}
+
+.attach-btn.has-files {
+  background: #eff5ff;
+  color: var(--blue);
+  border-color: #c7d9fb;
+}
+
+.msg-input {
+  flex: 1;
+  height: 38px;
+  padding: 0 15px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--r-pill);
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.msg-input::placeholder { color: var(--text-3); }
+
+.msg-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(22,104,245,0.08);
+}
+
+/* Matches Pantas CTA pill button exactly */
+.send-btn {
+  height: 38px;
+  padding: 0 18px;
+  background: var(--grad);
+  border: none;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  transition: opacity 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.send-btn:hover  { opacity: 0.87; transform: translateY(-1px); }
+.send-btn:active { transform: scale(0.97); }
+
+/* ─── Responsive ──────────────────────── */
+
+@media (max-width: 640px) {
+  .chat-shell    { border-radius: 16px; }
+  .feature-row   { grid-template-columns: 1fr; }
+  .bubble        { max-width: 92%; }
+  .brand-product,
+  .brand-sep     { display: none; }
+  .demo-btn      { display: none; }
+  .app-container { height: 93vh; }
+  .welcome-title { font-size: 22px; }
+  .send-btn span { display: none; }
+}

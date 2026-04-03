@@ -1,0 +1,10 @@
+[
+  {
+    "id": "USR001",
+    "email": "admin@pantas.com",
+    "password": "$2b$10$pmPIJO5TI15y7eJc.Pxeoua.bcXpvIamyrJweDOaAuaCOqGkh2kAC",
+    "role": "admin",
+    "employeeId": "EMP001",
+    "createdAt": "2026-03-27T07:27:13.631Z"
+  }
+]

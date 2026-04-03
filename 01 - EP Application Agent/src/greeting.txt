@@ -1,0 +1,41 @@
+👋 **Welcome! I'm your EP Application Assistant.**
+
+---
+
+## 🎯 **SELECT YOUR PHASE**
+
+Type the phase number to get started:
+
+| Phase | What You'll Get |
+|-------|-----------------|
+| **Type "Phase 1"** | Company documents + downloads |
+| **Type "Phase 2"** | Candidate documents checklist |
+| **Type "Phase 3"** | MyFutureJobs PERKESO guide |
+| **Type "Phase 4"** | JTKSM form download |
+| **Type "Phase 5"** | EP checklist download |
+
+---
+
+## 📥 **QUICK DOWNLOADS**
+
+**Company Documents (Ready to Send):**
+- [SSM_Documents.zip](/api/templates/SSM_Documents.zip)
+- [DBKL_License.pdf](/api/templates/DBKL_License.pdf)
+- [JTKSM_Approval.pdf](/api/templates/JTKSM_Approval.pdf)
+
+**Word Templates (Fill In):**
+- [GP_Checklist_Template.docx](/api/templates/GP_Checklist_Template.docx) - Start filling from Phase 1
+- [JTKSM_Template.docx](/api/templates/JTKSM_Template.docx) - Fill in Phase 4
+
+---
+
+## 💬 **OTHER COMMANDS**
+
+- **"email template"** → Email & Slack templates
+- **"checklist"** → Document requirements
+- **"download"** → All files
+- **"help"** → All commands
+
+---
+
+**🎯 Not sure where to start? Type "Phase 1"**

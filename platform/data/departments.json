@@ -1,0 +1,27 @@
+[
+  {
+    "id": "DEPT001",
+    "name": "Business Development",
+    "headcount": 8
+  },
+  {
+    "id": "DEPT002",
+    "name": "Product",
+    "headcount": 6
+  },
+  {
+    "id": "DEPT003",
+    "name": "CSM",
+    "headcount": 5
+  },
+  {
+    "id": "DEPT004",
+    "name": "Engineering",
+    "headcount": 10
+  },
+  {
+    "id": "DEPT005",
+    "name": "Data Science",
+    "headcount": 4
+  }
+]

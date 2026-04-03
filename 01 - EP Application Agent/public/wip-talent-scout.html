@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Scout Bot | Pantas HR Team of Agents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #06b6d4;
+      --accent: #f472b6;
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --gradient-1: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+    }
+
+    .bg-gradient::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-2%, 3%) rotate(-1deg); }
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .wip-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 5%;
+    }
+
+    .wip-content {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .wip-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .wip-icon {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+
+    h1 span {
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .wip-content p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .features-preview {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .features-preview h3 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    .feature-tag {
+      display: inline-block;
+      padding: 8px 14px;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin: 4px;
+      color: var(--text-primary);
+    }
+
+    .notify-form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    .notify-form input {
+      flex: 1;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    .notify-form button {
+      padding: 14px 28px;
+      background: var(--gradient-1);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .notify-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    footer {
+      padding: 2rem 5%;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+
+  <nav>
+    <div class="logo">🤖 Pantas HR Team</div>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/chat.html">EP Bot</a></li>
+    </ul>
+  </nav>
+
+  <div class="wip-container">
+    <div class="wip-content">
+      <div class="wip-badge">🚧 Work in Progress</div>
+      <div class="wip-icon">🎯</div>
+      <h1>Talent <span>Scout</span> Bot</h1>
+      <p>AI-powered recruitment automation. Resume parsing, interview scheduling, candidate evaluation, and offer management.</p>
+
+      <div class="features-preview">
+        <h3>Coming Soon:</h3>
+        <span class="feature-tag">📄 Resume Parsing</span>
+        <span class="feature-tag">🤖 AI Screening</span>
+        <span class="feature-tag">📅 Interview Scheduling</span>
+        <span class="feature-tag">📊 Candidate Scoring</span>
+        <span class="feature-tag">✉️ Offer Letters</span>
+        <span class="feature-tag">📈 Analytics</span>
+      </div>
+
+      <p style="font-size: 0.9rem; margin-bottom: 1rem;">Want to be notified when we launch?</p>
+      <form class="notify-form" onsubmit="event.preventDefault(); alert('Thank you! We will notify you when launched.');">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">Notify Me</button>
+      </form>
+
+      <a href="/" class="back-link">← Back to Home</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 Pantas HR Team of Agents. All rights reserved.</p>
+  </footer>
+</body>
+</html>
