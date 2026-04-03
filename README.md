@@ -166,9 +166,6 @@ A unified HR platform with specialized AI agents for each HR function, accessibl
 | Page | URL |
 |------|-----|
 | **Landing Page** | http://localhost:3000/ |
-| **EP Agent Chat** | http://localhost:3000/chat.html |
-| **WIP Pages** | http://localhost:3000/wip-hr-generalist.html |
-| | http://localhost:3000/wip-talent-scout.html |
 
 
 
