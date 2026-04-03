@@ -575,7 +575,6 @@ PORT=3000
 
 ### **Version 3.2.3** (March 27, 2026) - **Unified Port Setup**
 - ✅ **Single Server** - Both EP Agent and HR Platform run on port 3000
-- ✅ **HR Platform Integration** - Accessible at `/platform` sub-path
 - ✅ **Shared Database** - Employee/department data shared between apps
 - ✅ **Simplified Deployment** - Single `node server.js` starts both apps
 - ✅ **Updated Documentation** - STATE.md files reflect unified setup
@@ -795,7 +794,6 @@ const companyInfo = {
 |-------------|-----|--------|
 | **EP Agent Landing** | http://localhost:3000/ | ✅ Live |
 | **EP Agent Chat** | http://localhost:3000/chat.html | ✅ Live |
-| **HR Platform** | http://localhost:3000/platform | ✅ Live (Demo Mode) |
 | **WIP HR Generalist** | http://localhost:3000/wip-hr-generalist.html | ✅ Live |
 | **WIP Talent Scout** | http://localhost:3000/wip-talent-scout.html | ✅ Live |
 

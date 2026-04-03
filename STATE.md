@@ -142,7 +142,6 @@
 |----------|-----|------|--------|
 | **EP Agent Landing** | http://localhost:3000/ | ❌ Public | ✅ Active |
 | **EP Agent Chat** | http://localhost:3000/chat.html | ❌ Public | ✅ Active |
-| **HR Platform** | http://localhost:3000/platform | ❌ Demo Mode | ✅ Active |
 | **WIP HR Generalist** | http://localhost:3000/wip-hr-generalist.html | ❌ Public | ✅ Active |
 | **WIP Talent Scout** | http://localhost:3000/wip-talent-scout.html | ❌ Public | ✅ Active |
 
@@ -172,7 +171,6 @@
 │   ├── data/                        # Employee/department database
 │   └── public/
 │       └── index.html               # Employee Management System
-│   NOTE: Access at http://localhost:3000/platform
 │
 ├── 02 - Onboarding Agent/           📋 PLANNING
 │   └── Plan.md                      ✅ Created
@@ -330,7 +328,6 @@
 
 ### **Version 4.2.1** (March 27, 2026) - **Unified Port Setup**
 - ✅ Both EP Agent and HR Platform running on single port (3000)
-- ✅ HR Platform accessible at `/platform` sub-path
 - ✅ Shared database and API endpoints
 - ✅ Simplified deployment - single server instance
 
