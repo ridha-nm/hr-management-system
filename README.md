@@ -161,6 +161,36 @@ A unified HR platform with specialized AI agents for each HR function, accessibl
 
 ---
 
+## 🛠️ **Installation & Setup**
+
+### **Prerequisites**
+- [Node.js](https://nodejs.org/) (v16.x or higher)
+- VS Code or any preferred IDE
+
+### **Run Locally (VS Code / Terminal)**
+
+**Method 1: Using the Startup Script (Mac/Linux)**
+```bash
+# From the project root, simply execute the shell script:
+./start.sh "01 - EP Application Agent" 3000
+```
+
+**Method 2: Using NPM/Node directly**
+```bash
+# 1. Navigate to the main agent directory
+cd "01 - EP Application Agent"
+
+# 2. Install dependencies (only required the first time)
+npm install
+
+# 3. Start the server
+node server.js
+```
+
+The server will automatically bind to Port 3000. You can then access the platform in your browser.
+
+---
+
 ## 🌐 **Access**
 
 | Page | URL |
