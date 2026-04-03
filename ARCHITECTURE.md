@@ -1,4 +1,4 @@
-# Pantas HR Team of Agents - Technical Architecture
+# Pantas Agent Team - Technical Architecture
 
 **Version:** 1.0.0  
 **Date:** March 27, 2026  

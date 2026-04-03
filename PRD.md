@@ -1,4 +1,4 @@
-# Pantas HR Team of Agents - Product Requirements Document (PRD)
+# Pantas Agent Team - Product Requirements Document (PRD)
 
 **Version:** 1.0.0 (Production Release)  
 **Date:** March 27, 2026  
@@ -28,7 +28,7 @@ HR operations at Pantas Climate Solutions currently involve:
 
 ### **Solution**
 
-**Pantas HR Team of Agents** - An internal platform with:
+**Pantas Agent Team** - An internal platform with:
 1. **Centralized Employee Management System** - Single source of truth for employee data
 2. **Specialized AI Agents** - Each handling specific HR functions autonomously
 3. **Unified Interface** - Consistent experience across web and mobile
@@ -51,7 +51,7 @@ HR operations at Pantas Climate Solutions currently involve:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│              Pantas HR Team of Agents                   │
+│              Pantas Agent Team                   │
 ├─────────────────────────────────────────────────────────┤
 │  Presentation Layer                                     │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │

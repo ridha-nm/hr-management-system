@@ -1,4 +1,4 @@
-# Pantas HR Team of Agents - Development Roadmap
+# Pantas Agent Team - Development Roadmap
 
 **Version:** 1.0.0  
 **Date:** March 27, 2026  
@@ -8,7 +8,7 @@
 
 ## 📅 Overview
 
-This document outlines the complete development roadmap for the Pantas HR Team of Agents platform, from initial concept to full market launch.
+This document outlines the complete development roadmap for the Pantas Agent Team platform, from initial concept to full market launch.
 
 ---
 

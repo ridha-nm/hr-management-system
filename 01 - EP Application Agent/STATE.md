@@ -9,7 +9,7 @@
 
 ## 📋 **OVERVIEW**
 
-The EP Application Agent is now part of the **Pantas HR Team of Agents** - a suite of specialized AI agents for complete HR operations.
+The EP Application Agent is now part of the **Pantas Agent Team** - a suite of specialized AI agents for complete HR operations.
 
 ### **HR Team of Agents Suite:**
 
@@ -590,7 +590,7 @@ PORT=3000
 - ✅ **HR Generalist Bot Plan** - Created comprehensive Plan.md
 - ✅ **Talent Scout Bot Plan** - Created comprehensive Plan.md
 - ✅ **WIP Pages** - Work in Progress pages for upcoming bots
-- ✅ **Landing Page Rebrand** - Now shows "Pantas HR Team of Agents"
+- ✅ **Landing Page Rebrand** - Now shows "Pantas Agent Team"
 - ✅ **Folder Structure** - Created folders for all 3 bots
 
 ### **Version 3.1.2** (March 27, 2026) - **Progress Tracker on Landing Page**
