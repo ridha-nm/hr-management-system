@@ -1,4 +1,4 @@
-# EP Application Bot - Complete Package
+# EP Application Agent - Complete Package
 
 **Version:** 3.0.0
 **Status:** ✅ Production Ready

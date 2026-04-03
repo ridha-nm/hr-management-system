@@ -29,8 +29,8 @@ This document provides an index of all documentation created for the Pantas Agen
 ---
 
 ### **2. PRD.md** - Product Requirements Document
-**Purpose:** Complete product specification for CEO pitch  
-**Audience:** CEO, executives, investors  
+**Purpose:** Complete product specification
+**Audience:** Executives, investors  
 **Contents:**
 - Executive summary
 - Product vision and architecture
@@ -96,23 +96,6 @@ This document provides an index of all documentation created for the Pantas Agen
 
 ---
 
-### **6. CEO_PITCH.md** - CEO Pitch Deck
-**Purpose:** Presentation for CEO approval and funding  
-**Audience:** CEO, board, investors  
-**Contents:**
-- 18-slide pitch deck
-- Problem/solution framework
-- Live demo guide
-- Market opportunity (RM 700M TAM)
-- Competitive landscape
-- Financial projections (5 years)
-- Investment ask (RM 2.5M)
-- Next steps
-
-📄 **Location:** `/CEO_PITCH.md`  
-⏱️ **Read Time:** 15 minutes (presentation: 30 min)
-
----
 
 ## 📁 Agent-Specific Documentation
 
@@ -154,7 +137,6 @@ Each planned agent has a `Plan.md` file in its folder:
 ├── 📄 ROADMAP.md                   # Development roadmap
 ├── 📄 ARCHITECTURE.md              # Technical architecture
 ├── 📄 STATE.md                     # Platform state
-├── 📄 CEO_PITCH.md                 # CEO pitch deck
 ├── 📄 DOCUMENTATION_INDEX.md       # This file
 │
 ├── 📁 01 - EP Application Agent/
@@ -181,10 +163,9 @@ Each planned agent has a `Plan.md` file in its folder:
 
 ## 🎯 Document Usage Guide
 
-### **For CEO/Executives**
-1. Start with **CEO_PITCH.md** (presentation deck)
-2. Review **PRD.md** (product vision and business model)
-3. Check **STATE.md** (current progress)
+### **For Executives**
+1. Review **PRD.md** (product vision and business model)
+2. Check **STATE.md** (current progress)
 
 ### **For Product Managers**
 1. Read **PRD.md** (complete product spec)
@@ -199,7 +180,6 @@ Each planned agent has a `Plan.md` file in its folder:
 ### **For Designers**
 1. Review **ARCHITECTURE.md** (multi-platform patterns)
 2. Check **PRD.md** (user experience requirements)
-3. Reference **CEO_PITCH.md** (brand positioning)
 
 ---
 
@@ -212,8 +192,7 @@ Each planned agent has a `Plan.md` file in its folder:
 | ROADMAP.md | 450 | 3,500 | 15 min |
 | ARCHITECTURE.md | 800 | 6,000 | 25 min |
 | STATE.md | 500 | 4,000 | 10 min |
-| CEO_PITCH.md | 400 | 3,000 | 15 min |
-| **Total** | **3,150** | **24,000** | **95 min** |
+| **Total** | **2,750** | **21,000** | **80 min** |
 
 ---
 
@@ -226,7 +205,6 @@ Each planned agent has a `Plan.md` file in its folder:
 | ROADMAP.md | Bi-weekly | Product Manager |
 | ARCHITECTURE.md | As needed | Tech Lead |
 | STATE.md | Weekly | Development Team |
-| CEO_PITCH.md | As needed | Product Manager |
 
 ---
 

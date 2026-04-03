@@ -1,4 +1,4 @@
-# EP Application Bot - STATE.md
+# EP Application Agent - STATE.md
 
 **Version:** 1.0.0 (Production Release)
 **Last Updated:** March 27, 2026
@@ -9,13 +9,13 @@
 
 ## 📋 **OVERVIEW**
 
-The EP Application Bot is now part of the **Pantas HR Team of Agents** - a suite of specialized AI agents for complete HR operations.
+The EP Application Agent is now part of the **Pantas HR Team of Agents** - a suite of specialized AI agents for complete HR operations.
 
 ### **HR Team of Agents Suite:**
 
 | Bot | Status | Purpose |
 |-----|--------|---------|
-| **EP Application Bot** | ✅ Production Ready | Employment Pass automation for Malaysia |
+| **EP Application Agent** | ✅ Production Ready | Employment Pass automation for Malaysia |
 | **HR Generalist Bot** | 🚧 Planning Phase | Employee onboarding, policies, leave, performance |
 | **Talent Scout Bot** | 🚧 Planning Phase | Recruitment, screening, interview automation |
 
@@ -23,7 +23,7 @@ The EP Application Bot is now part of the **Pantas HR Team of Agents** - a suite
 
 ## 📋 **OVERVIEW**
 
-The EP Application Bot is a keyword-based chatbot that guides HR teams through the complete Employment Pass (EP) application process for Malaysia. All information is displayed directly in the chat interface with downloadable templates and company documents.
+The EP Application Agent is a keyword-based chatbot that guides HR teams through the complete Employment Pass (EP) application process for Malaysia. All information is displayed directly in the chat interface with downloadable templates and company documents.
 
 ### **Core Philosophy**
 1. **All Information in Chat** - Users don't need to read external MD files; everything is displayed in the chat
@@ -833,7 +833,7 @@ const companyInfo = {
 
 | Bot | Version | Status |
 |-----|---------|--------|
-| EP Application Bot | 3.2.3 | ✅ Live |
+| EP Application Agent | 3.2.3 | ✅ Live |
 | HR Platform | 4.2.1 | ✅ Demo Mode |
 | Onboarding Agent | 0.0.1 | 📋 Planning |
 | Leave Agent | 0.0.1 | 📋 Planning |

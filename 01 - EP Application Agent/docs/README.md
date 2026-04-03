@@ -6,7 +6,7 @@
 
 ## 📁 What's Here
 
-This folder contains technical documentation for the EP Application Bot.
+This folder contains technical documentation for the EP Application Agent.
 
 ### Source Code Documentation
 - Bot logic and keyword matching
