@@ -13,15 +13,35 @@ A unified HR platform with specialized AI agents for each HR function, accessibl
 
 ## 🖼️ **Platform Previews**
 
-![Platform Workspace](./assets/screenshot1.png)
-![Platform Workspace](./assets/screenshot2.png)
-![Platform Workspace](./assets/screenshot3.png)
-![Platform Workspace](./assets/screenshot4.png)
-![Platform Workspace](./assets/screenshot5.png)
-![Platform Workspace](./assets/screenshot6.png)
-![Platform Workspace](./assets/screenshot7.png)
-![Platform Workspace](./assets/screenshot8.png)
-![Platform Workspace](./assets/screenshot9.png)
+### **Main Overview**
+#### Central Dashboard
+![Dashboard Dashboard](./assets/screenshot1.png)
+
+#### Employee Directory
+![Employee Directory](./assets/screenshot2.png)
+
+#### Departments Overview
+![Departments Overview](./assets/screenshot3.png)
+
+### **EP Application Agent Workflows**
+#### Process Flow Walkthrough
+![EP Agent - Process Flow](./assets/screenshot4.png)
+
+#### Document Repository
+![EP Agent - Documents View](./assets/screenshot5.png)
+
+#### Template Upload & Auto-Fill
+![EP Agent - Upload Template](./assets/screenshot6.png)
+
+#### AI Chat Window
+![EP Agent - Chat Interface](./assets/screenshot7.png)
+
+### **System Architecture**
+#### All Agents 
+![All Agents Hub](./assets/screenshot8.png)
+
+#### Profile Settings
+![Profile Settings](./assets/screenshot9.png)
 
 ---
 
