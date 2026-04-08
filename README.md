@@ -11,6 +11,16 @@ A unified HR platform with specialized AI agents for each HR function, accessibl
 
 ---
 
+## 🖼️ **Platform Previews**
+
+![Platform Workspace](./assets/screenshot1.png)
+![Platform Workspace](./assets/screenshot2.png)
+![Platform Workspace](./assets/screenshot3.png)
+![Platform Workspace](./assets/screenshot4.png)
+![Platform Workspace](./assets/screenshot5.png)
+
+---
+
 ## 🤖 **Available Agents**
 
 ### **✅ Live Agents**
