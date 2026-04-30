@@ -1,0 +1,11 @@
+[
+  { "id": "BD001", "name": "Joshua Wong",                 "role": "BD Lead",       "email": "joshua@pantas.com",  "jiraAccountId": "" },
+  { "id": "BD002", "name": "Ashley Chai",                 "role": "BD Executive",  "email": "ashley@pantas.com",  "jiraAccountId": "" },
+  { "id": "BD003", "name": "Mohamed Kasib Farhan Cassim", "role": "BD Executive",  "email": "kasib@pantas.com",   "jiraAccountId": "" },
+  { "id": "BD004", "name": "Nadzim Zahari",               "role": "BD Executive",  "email": "nadzim@pantas.com",  "jiraAccountId": "" },
+  { "id": "BD005", "name": "Raj Jang Lama",               "role": "BD Analyst",    "email": "raj@pantas.com",     "jiraAccountId": "" },
+  { "id": "BD006", "name": "Xie Yi Chen",                 "role": "BD Analyst",    "email": "yichen@pantas.com",  "jiraAccountId": "" },
+  { "id": "BD007", "name": "Ridha Mohamed",               "role": "BD Analyst",    "email": "ridha@pantas.com",   "jiraAccountId": "" },
+  { "id": "BD008", "name": "Charanya Nair",               "role": "BD Analyst",    "email": "charanya@pantas.com","jiraAccountId": "" },
+  { "id": "BD009", "name": "Max Lee",                     "role": "BD Intern",     "email": "max@pantas.com",     "jiraAccountId": "" }
+]

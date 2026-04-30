@@ -1,0 +1,27 @@
+[
+  {
+    "id": "SD_20260430",
+    "date": "2026-04-30",
+    "status": "active",
+    "attendance": {
+      "BD001": {
+        "status": "pending"
+      },
+      "BD002": {
+        "status": "pending"
+      },
+      "BD003": {
+        "status": "pending"
+      },
+      "BD004": {
+        "status": "pending"
+      },
+      "BD005": {
+        "status": "pending"
+      }
+    },
+    "updates": {},
+    "summary": null,
+    "createdAt": "2026-04-30T11:20:34.690Z"
+  }
+]

@@ -21,8 +21,7 @@ const epBotPath = path.join(epBotFullPath, 'public');
 
 // Serve EP Agent files
 app.use('/ep', express.static(epBotPath));
-app.use('/chat.html', express.static(path.join(epBotFullPath, 'public', 'chat.html')));
-app.use('/api', express.static(path.join(epBotFullPath, 'public')));
+app.get('/chat.html', (req, res) => res.sendFile(path.join(epBotPath, 'chat.html')));
 
 // EP Agent API proxy (simple implementation)
 const epBotServer = require('express')();
@@ -121,6 +120,409 @@ epBotServer.get('/api/myfuturejobs/template/xlsx', (req, res) => {
 
 // Mount EP Bot API
 app.use('/ep-api', epBotServer);
+
+// Mirror EP API at /api/* so chat.html calls work without path changes
+const epTemplateFiles = {
+  'MyFutureJobs_Expat_Form_Template.docx': 'templates/LAPORAN PENGAMBILAN PEKERJA TEMPATAN (Filled in) (1).docx',
+  'GP_Checklist_Template.docx': 'templates/GP Checklist - EP (New) - MDEC.docx',
+  'SSM_Documents.zip': '03_Company_Documents/2026_SSM_Docs_as_of_Mar_10_2026 (1).zip',
+  'DBKL_License.pdf': '03_Company_Documents/DBKL_License.pdf',
+  'JTKSM_Approval.pdf': '03_Company_Documents/JTKSM Approval.pdf',
+  'SOCSO_Guide.pdf': '03_Company_Documents/SOCSO (Perkeso) approval. Steps (2025).pdf',
+  'MyFutureJobs_Expat_Form_Example.pdf': '03_Company_Documents/Sustainability Data Analyst_72b9e4e7c14542d09b03fd4fbc04147b (1) (1).pdf'
+};
+
+app.post('/api/chat', upload.single('file'), async (req, res) => {
+  try {
+    const { message } = req.body;
+    let reply = analyzeMessage(message || '');
+    if (req.file) {
+      const fileName = req.file.originalname;
+      let docType = 'Unknown';
+      if (fileName.toLowerCase().includes('passport')) docType = 'Passport';
+      else if (/cv|resume/i.test(fileName)) docType = 'CV';
+      else if (fileName.toLowerCase().includes('cert')) docType = 'Certificate';
+      else if (fileName.toLowerCase().includes('photo')) docType = 'Photo';
+      reply += `\n\n📎 **File Detected:** ${fileName}\n**Type:** ${docType}`;
+      fs.promises.unlink(req.file.path).catch(console.error);
+    }
+    res.json({ reply });
+  } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.get('/api/templates', (req, res) => {
+  res.json({ templates: Object.keys(epTemplateFiles).map(name => ({ name, url: `/api/templates/${encodeURIComponent(name)}` })) });
+});
+
+app.get('/api/templates/:filename', async (req, res) => {
+  const rel = epTemplateFiles[req.params.filename];
+  if (!rel) return res.status(404).json({ error: 'Not found' });
+  const filePath = path.join(epBotFullPath, rel);
+  try {
+    await fs.promises.access(filePath);
+    res.setHeader('Content-Disposition', `attachment; filename="${req.params.filename}"`);
+    res.send(await fs.promises.readFile(filePath));
+  } catch { res.status(404).json({ error: 'File not found on disk' }); }
+});
+
+app.get('/api/myfuturejobs/template/csv', (req, res) => {
+  const wb = XLSX.utils.book_new();
+  const headers = ['BIL','IC/Passport','Nama','Telefon','Emel','Jantina','Pendidikan','Keputusan','Ulasan'];
+  const ws = XLSX.utils.aoa_to_sheet([headers, ['1','900515-01-1234','Ahmad bin Abdullah','+60 12-345-6789','ahmad@email.com','Lelaki','Bachelor Computer Science - UM','Tidak Berjaya','Lacks SQL/Power BI experience']]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Interview Template');
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename="MyFutureJobs_Interview_Template.csv"');
+  res.send(XLSX.utils.sheet_to_csv(ws));
+});
+
+app.get('/api/myfuturejobs/template/xlsx', (req, res) => {
+  const wb = XLSX.utils.book_new();
+  const headers = ['BIL','IC/Passport','Nama','Telefon','Emel','Jantina','Pendidikan','Keputusan','Ulasan'];
+  const ws = XLSX.utils.aoa_to_sheet([headers, ['1','900515-01-1234','Ahmad bin Abdullah','+60 12-345-6789','ahmad@email.com','Lelaki','Bachelor Computer Science - UM','Tidak Berjaya','Lacks SQL/Power BI experience']]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Interview Template');
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename="MyFutureJobs_Interview_Template.xlsx"');
+  res.send(XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
+});
+
+// ── Onboarding Agent ──
+const onboardingAgentPath = path.join(__dirname, '..', '02 - Onboarding Agent');
+const onboardingPublicPath = path.join(onboardingAgentPath, 'public');
+const onboardingDataFile = path.join(onboardingAgentPath, 'data', 'onboardings.json');
+
+if (!fs.existsSync(path.join(onboardingAgentPath, 'data'))) {
+  fs.mkdirSync(path.join(onboardingAgentPath, 'data'), { recursive: true });
+}
+
+const { processMessage: obProcessMessage, calcProgress: obCalcProgress } = require(path.join(onboardingAgentPath, 'src', 'onboardingBot'));
+
+// ── Standup Agent ──
+const mammoth = require('mammoth');
+const standupManagerPath = path.join(__dirname, '..', '03 - Standup Agent', 'src', 'standupManager');
+const { createSession: sdCreateSession, markAttendance: sdMarkAttendance, submitUpdate: sdSubmitUpdate, closeSession: sdCloseSession, calcAnalytics: sdCalcAnalytics, getTodayKey: sdGetTodayKey, parseTranscript: sdParseTranscript, detectAccounts: sdDetectAccounts } = require(standupManagerPath);
+const { getTeamSprintData, resolveTeamAccountIds, isConfigured: jiraIsConfigured } = require(path.join(__dirname, '..', '03 - Standup Agent', 'src', 'jira'));
+const { generateCooSummary, extractGeminiHighlights } = require(path.join(__dirname, '..', '03 - Standup Agent', 'src', 'cooSummary'));
+
+const SD_DATA_DIR = path.join(__dirname, '..', '03 - Standup Agent', 'data');
+if (!fs.existsSync(SD_DATA_DIR)) fs.mkdirSync(SD_DATA_DIR, { recursive: true });
+
+function loadSDFile(file) {
+  const fp = path.join(SD_DATA_DIR, file);
+  if (!fs.existsSync(fp)) return [];
+  try { return JSON.parse(fs.readFileSync(fp, 'utf8')); } catch { return []; }
+}
+function saveSDFile(file, data) {
+  fs.writeFileSync(path.join(SD_DATA_DIR, file), JSON.stringify(data, null, 2));
+}
+
+function loadOnboardings() {
+  if (!fs.existsSync(onboardingDataFile)) return [];
+  try { return JSON.parse(fs.readFileSync(onboardingDataFile, 'utf8')); }
+  catch { return []; }
+}
+function saveOnboardings(data) { fs.writeFileSync(onboardingDataFile, JSON.stringify(data, null, 2)); }
+
+app.use('/onboarding', express.static(onboardingPublicPath));
+
+const obRouter = require('express').Router();
+
+obRouter.post('/chat', (req, res) => {
+  const { message, sessionId, activeOnboardingId } = req.body;
+  const onboardings = loadOnboardings();
+  const result = obProcessMessage(message, sessionId, onboardings, activeOnboardingId || null);
+  if (result.newOnboarding) { onboardings.push(result.newOnboarding); saveOnboardings(onboardings); }
+  res.json({ reply: result.reply, quickReplies: result.quickReplies || [], activeOnboarding: result.activeOnboarding || null, action: result.action || null });
+});
+
+obRouter.get('/onboardings', (req, res) => {
+  const list = loadOnboardings();
+  res.json(list.map(o => ({ ...o, progress: obCalcProgress(o) })));
+});
+obRouter.get('/onboardings/:id', (req, res) => {
+  const o = loadOnboardings().find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/setup/:item', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  if (req.params.item in o.setup) { o.setup[req.params.item] = !o.setup[req.params.item]; saveOnboardings(list); }
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/academy/:module', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  const { field } = req.body;
+  if (o.academy[req.params.module] && field in o.academy[req.params.module]) { o.academy[req.params.module][field] = !o.academy[req.params.module][field]; saveOnboardings(list); }
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/documents/:item', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  if (req.params.item in o.documents) { o.documents[req.params.item] = !o.documents[req.params.item]; saveOnboardings(list); }
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/day1', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  o.day1Completed = !o.day1Completed; saveOnboardings(list);
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+
+app.use('/onboarding-api', obRouter);
+
+// ── Standup Router ──
+const sdRouter = express.Router();
+
+sdRouter.get('/team', (req, res) => res.json(loadSDFile('team.json')));
+sdRouter.get('/accounts', (req, res) => res.json(loadSDFile('accounts.json')));
+
+sdRouter.post('/team', (req, res) => {
+  const { name, role } = req.body;
+  if (!name || !role) return res.status(400).json({ error: 'name and role required' });
+  const team = loadSDFile('team.json');
+  const id = 'BD' + String(team.length + 1).padStart(3, '0');
+  const member = { id, name, role };
+  team.push(member);
+  saveSDFile('team.json', team);
+  res.status(201).json(member);
+});
+
+sdRouter.delete('/team/:id', (req, res) => {
+  let team = loadSDFile('team.json');
+  const len = team.length;
+  team = team.filter(m => m.id !== req.params.id);
+  if (team.length === len) return res.status(404).json({ error: 'Not found' });
+  saveSDFile('team.json', team);
+  res.json({ ok: true });
+});
+
+sdRouter.get('/sessions', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  res.json(sessions.slice().sort((a, b) => b.date.localeCompare(a.date)));
+});
+
+sdRouter.get('/sessions/today', (req, res) => {
+  const today = sdGetTodayKey();
+  const sessions = loadSDFile('standups.json');
+  const session = sessions.find(s => s.date === today) || null;
+  res.json(session);
+});
+
+sdRouter.post('/sessions', (req, res) => {
+  const today = sdGetTodayKey();
+  const sessions = loadSDFile('standups.json');
+  if (sessions.find(s => s.date === today)) {
+    return res.status(409).json({ error: 'Session already exists for today' });
+  }
+  const team = loadSDFile('team.json');
+  const session = sdCreateSession(today, team);
+  sessions.push(session);
+  saveSDFile('standups.json', sessions);
+  res.status(201).json(session);
+});
+
+sdRouter.get('/sessions/:id', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const session = sessions.find(s => s.id === req.params.id);
+  if (!session) return res.status(404).json({ error: 'Not found' });
+  res.json(session);
+});
+
+sdRouter.patch('/sessions/:id/attendance', (req, res) => {
+  const { memberId, status } = req.body;
+  if (!memberId || !status) return res.status(400).json({ error: 'memberId and status required' });
+  const sessions = loadSDFile('standups.json');
+  const idx = sessions.findIndex(s => s.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  sdMarkAttendance(sessions[idx], memberId, status);
+  saveSDFile('standups.json', sessions);
+  res.json(sessions[idx]);
+});
+
+sdRouter.post('/sessions/:id/updates', (req, res) => {
+  const { memberId, yesterday, today, blockers, tickets, accounts } = req.body;
+  if (!memberId) return res.status(400).json({ error: 'memberId required' });
+  const sessions = loadSDFile('standups.json');
+  const idx = sessions.findIndex(s => s.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  sdSubmitUpdate(sessions[idx], memberId, { yesterday, today, blockers, tickets, accounts });
+  if (blockers && blockers.trim()) {
+    const blockerList = loadSDFile('blockers.json');
+    blockerList.push({
+      id: 'BLK_' + Date.now(),
+      text: blockers.trim(),
+      memberId,
+      sessionId: req.params.id,
+      tickets: tickets || [],
+      status: 'open',
+      createdAt: new Date().toISOString(),
+      date: new Date().toISOString().slice(0, 10)
+    });
+    saveSDFile('blockers.json', blockerList);
+  }
+  saveSDFile('standups.json', sessions);
+  res.json(sessions[idx]);
+});
+
+sdRouter.patch('/sessions/:id/close', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const idx = sessions.findIndex(s => s.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  const team = loadSDFile('team.json');
+  sdCloseSession(sessions[idx], team);
+  saveSDFile('standups.json', sessions);
+  res.json(sessions[idx]);
+});
+
+sdRouter.get('/blockers', (req, res) => res.json(loadSDFile('blockers.json')));
+
+sdRouter.post('/blockers', (req, res) => {
+  const { text, memberId, sessionId, tickets, date } = req.body;
+  if (!text || !memberId) return res.status(400).json({ error: 'text and memberId required' });
+  const blockers = loadSDFile('blockers.json');
+  const blocker = {
+    id: 'BLK_' + Date.now(),
+    text,
+    memberId,
+    sessionId: sessionId || null,
+    tickets: tickets || [],
+    status: 'open',
+    createdAt: new Date().toISOString(),
+    date: date || new Date().toISOString().slice(0, 10)
+  };
+  blockers.push(blocker);
+  saveSDFile('blockers.json', blockers);
+  res.status(201).json(blocker);
+});
+
+sdRouter.patch('/blockers/:id/resolve', (req, res) => {
+  const blockers = loadSDFile('blockers.json');
+  const idx = blockers.findIndex(b => b.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  blockers[idx].status = 'resolved';
+  blockers[idx].resolvedAt = new Date().toISOString();
+  saveSDFile('blockers.json', blockers);
+  res.json(blockers[idx]);
+});
+
+// Parse Gemini Notes summary or Meet transcript → per-member structured updates
+// Accepts: multipart .docx or .txt file upload, OR JSON body { text: "..." }
+const sdMemUpload = multer({ storage: multer.memoryStorage() });
+sdRouter.post('/parse-transcript', sdMemUpload.single('file'), async (req, res) => {
+  try {
+    const team = loadSDFile('team.json');
+    let text = '';
+    if (req.file) {
+      const mime = req.file.mimetype || '';
+      const name = (req.file.originalname || '').toLowerCase();
+      const isDocx = mime.includes('wordprocessingml') || mime.includes('openxmlformats') || name.endsWith('.docx');
+      if (isDocx) {
+        const result = await mammoth.extractRawText({ buffer: req.file.buffer });
+        text = result.value;
+      } else {
+        // Treat as plain text (.txt, .md, etc.)
+        text = req.file.buffer.toString('utf8');
+      }
+    } else if (req.body && req.body.text) {
+      text = req.body.text;
+    } else {
+      return res.status(400).json({ error: 'Provide text body or upload a .docx / .txt file' });
+    }
+    const accounts = loadSDFile('accounts.json');
+    const members = sdParseTranscript(text, team, accounts);
+    res.json({ members });
+  } catch (err) {
+    console.error('parse-transcript error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+sdRouter.get('/analytics', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const team = loadSDFile('team.json');
+  res.json(sdCalcAnalytics(sessions, team));
+});
+
+// ── Jira integration ──────────────────────────────────────────────────────────
+
+// GET /standup-api/jira/status — is Jira configured?
+sdRouter.get('/jira/status', (req, res) => {
+  res.json({ configured: jiraIsConfigured() });
+});
+
+// POST /standup-api/jira/resolve-team — look up Jira account IDs for team members by email
+sdRouter.post('/jira/resolve-team', async (req, res) => {
+  try {
+    const team = loadSDFile('team.json');
+    const results = await resolveTeamAccountIds(team);
+    // Persist resolved account IDs back to team.json
+    results.forEach(({ memberId, jiraAccountId }) => {
+      const member = team.find(m => m.id === memberId);
+      if (member) member.jiraAccountId = jiraAccountId;
+    });
+    saveSDFile('team.json', team);
+    res.json({ resolved: results.length, team });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /standup-api/jira/sprint — fetch current sprint issues for BD team
+sdRouter.get('/jira/sprint', async (req, res) => {
+  const team = loadSDFile('team.json');
+  const result = await getTeamSprintData(team);
+  if (!result.ok) return res.status(503).json({ error: result.error });
+  // Convert Map to plain object for JSON serialisation
+  const byMember = {};
+  result.byMember.forEach((issues, memberId) => { byMember[memberId] = issues; });
+  res.json({ total: result.total, byMember });
+});
+
+// POST /standup-api/jira/config — save Jira credentials
+sdRouter.post('/jira/config', (req, res) => {
+  const { domain, email, token, projectKey, boardId } = req.body;
+  const cfgPath = path.join(SD_DATA_DIR, 'config.json');
+  let cfg = {};
+  try { cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8')); } catch { /* new */ }
+  cfg.jira = { domain: domain || cfg.jira?.domain || '', email: email || cfg.jira?.email || '',
+    token: token || cfg.jira?.token || '', projectKey: projectKey || cfg.jira?.projectKey || 'BO',
+    boardId: boardId || cfg.jira?.boardId || 113 };
+  fs.writeFileSync(cfgPath, JSON.stringify(cfg, null, 2));
+  res.json({ ok: true });
+});
+
+// ── COO Summary ───────────────────────────────────────────────────────────────
+
+// POST /standup-api/sessions/:id/coo-summary
+// Body: { geminiText? }  — optional raw Gemini Notes text for highlights
+sdRouter.post('/sessions/:id/coo-summary', async (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const session  = sessions.find(s => s.id === req.params.id);
+  if (!session) return res.status(404).json({ error: 'Session not found' });
+
+  const team     = loadSDFile('team.json');
+  const accounts = loadSDFile('accounts.json');
+  const geminiText = req.body?.geminiText || null;
+
+  // Fetch Jira data (optional — gracefully skip if not configured)
+  let jiraByMember = null;
+  const jiraResult = await getTeamSprintData(team);
+  if (jiraResult.ok) jiraByMember = jiraResult.byMember;
+
+  // Parse Gemini notes if provided
+  let geminiParsed     = null;
+  let geminiHighlights = [];
+  if (geminiText) {
+    geminiParsed     = sdParseTranscript(geminiText, team, accounts);
+    geminiHighlights = extractGeminiHighlights(geminiText);
+  }
+
+  const summary = generateCooSummary({ session, team, jiraByMember, geminiParsed, geminiHighlights, accounts });
+  res.json({ summary, jiraConfigured: jiraIsConfigured() });
+});
+
+app.use('/standup-api', sdRouter);
 
 app.use(express.static('public'));
 app.use(session({
@@ -405,11 +807,11 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
 
 // ========== EMPLOYEE ROUTES ==========
 
-app.get('/api/employees', authMiddleware, (req, res) => {
+app.get('/api/employees', (req, res) => {
   res.json(db.employees);
 });
 
-app.get('/api/employees/:id', authMiddleware, (req, res) => {
+app.get('/api/employees/:id', (req, res) => {
   const employee = db.employees.find(e => e.id === req.params.id);
   if (!employee) {
     return res.status(404).json({ error: 'Employee not found' });
@@ -417,7 +819,7 @@ app.get('/api/employees/:id', authMiddleware, (req, res) => {
   res.json(employee);
 });
 
-app.get('/api/employees/stats/summary', authMiddleware, (req, res) => {
+app.get('/api/employees/stats/summary', (req, res) => {
   const stats = {
     total: db.employees.length,
     byDepartment: {},
@@ -436,23 +838,23 @@ app.get('/api/employees/stats/summary', authMiddleware, (req, res) => {
 
 // ========== DEPARTMENT ROUTES ==========
 
-app.get('/api/departments', authMiddleware, (req, res) => {
+app.get('/api/departments', (req, res) => {
   res.json(db.departments);
 });
 
 // ========== COMPANY ROUTES ==========
 
-app.get('/api/company', authMiddleware, (req, res) => {
+app.get('/api/company', (req, res) => {
   res.json(db.companies[0]);
 });
 
 // ========== TEAM ROUTES ==========
 
-app.get('/api/teams', authMiddleware, (req, res) => {
+app.get('/api/teams', (req, res) => {
   res.json(db.teams);
 });
 
-app.get('/api/teams/:id', authMiddleware, (req, res) => {
+app.get('/api/teams/:id', (req, res) => {
   const team = db.teams.find(t => t.id === req.params.id);
   if (!team) {
     return res.status(404).json({ error: 'Team not found' });
@@ -467,9 +869,8 @@ app.get('/api/teams/:id', authMiddleware, (req, res) => {
 
 // ========== DASHBOARD ROUTES ==========
 
-app.get('/api/dashboard/stats', authMiddleware, (req, res) => {
-  const user = db.users.find(u => u.id === req.session.userId);
-  const employee = db.employees.find(e => e.id === user.employeeId);
+app.get('/api/dashboard/stats', (req, res) => {
+  const employee = db.employees[0];
 
   const stats = {
     leave: {

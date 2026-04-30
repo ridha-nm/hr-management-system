@@ -421,6 +421,122 @@
     .section { display: none; }
     .section.active { display: block; }
 
+    /* ===== ONBOARDING SECTION ===== */
+    .ob-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .ob-empty { text-align: center; padding: 4rem 2rem; color: var(--text-muted); grid-column: 1 / -1; }
+    .ob-card { background: var(--bg-card); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+    .ob-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+    .ob-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+    .ob-avatar { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; font-weight: 700; flex-shrink: 0; }
+    .ob-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .ob-type-badge { padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
+    .ob-type-badge.intern { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .ob-type-badge.full-time { background: rgba(37,99,235,0.12); color: var(--primary); }
+    .ob-progress-bar { height: 6px; background: var(--border); border-radius: 9999px; overflow: hidden; margin: 1rem 0 0.4rem; }
+    .ob-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 9999px; transition: width 0.5s ease; }
+    .ob-progress-label { font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+    .ob-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem; }
+    .ob-stat-mini { text-align: center; padding: 0.5rem; background: var(--bg-hover); border-radius: 8px; }
+    .ob-stat-mini-num { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+    .ob-stat-mini-label { font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Employee onboarding view */
+    .ob-back-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; border: none; color: var(--text-secondary); font-size: 0.875rem; font-weight: 500; cursor: pointer; padding: 0.5rem 0; margin-bottom: 1.5rem; }
+    .ob-back-btn:hover { color: var(--primary); }
+    .ob-hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 16px; padding: 2rem; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+    .ob-hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/svg%3E"); }
+    .ob-hero-text { position: relative; }
+    .ob-hero-name { font-size: 1.75rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-hero-sub { color: rgba(255,255,255,0.8); font-size: 0.875rem; margin-top: 0.25rem; }
+    .ob-hero-dates { color: rgba(255,255,255,0.65); font-size: 0.75rem; margin-top: 0.5rem; }
+    .ob-ring-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+    .ob-ring-svg { transform: rotate(-90deg); }
+    .ob-ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+    .ob-ring-pct { font-size: 1.25rem; font-weight: 800; }
+    .ob-ring-text { font-size: 0.625rem; opacity: 0.75; }
+
+    .ob-tabs-bar { display: flex; gap: 0.375rem; margin-bottom: 1.5rem; background: var(--bg-card); padding: 0.375rem; border-radius: 12px; box-shadow: var(--shadow); width: fit-content; flex-wrap: wrap; }
+    .ob-tab-btn { padding: 0.625rem 1.125rem; border-radius: 8px; border: none; background: transparent; color: var(--text-secondary); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+    .ob-tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+    .ob-tab-badge { padding: 0.1rem 0.4rem; border-radius: 9999px; font-size: 0.625rem; background: rgba(255,255,255,0.25); }
+    .ob-tab-btn:not(.active) .ob-tab-badge { background: var(--border); color: var(--text-muted); }
+    .ob-tab-content { display: none; }
+    .ob-tab-content.active { display: block; }
+
+    .ob-item-row { background: var(--bg-card); border-radius: 12px; margin-bottom: 0.75rem; overflow: hidden; border: 1px solid var(--border); }
+    .ob-item-header { display: flex; align-items: center; gap: 0.875rem; padding: 1rem 1.25rem; cursor: pointer; user-select: none; }
+    .ob-item-header:hover { background: var(--bg-hover); }
+    .ob-item-check { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 0.7rem; font-weight: 700; }
+    .ob-item-check.done { background: var(--success); border-color: var(--success); color: white; }
+    .ob-item-label { flex: 1; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
+    .ob-item-label.done { text-decoration: line-through; color: var(--text-muted); }
+    .ob-item-contact { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+    .ob-item-expand-btn { padding: 0.25rem 0.625rem; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; flex-shrink: 0; }
+    .ob-item-expand-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .ob-item-details { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--border); background: #fafbfd; }
+    .ob-item-details.open { display: block; }
+    .ob-detail-what { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; margin: 1rem 0; }
+    .ob-detail-steps { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1rem; }
+    .ob-detail-steps li { font-size: 0.875rem; color: var(--text-primary); line-height: 1.5; }
+    .ob-detail-meta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .ob-detail-chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.625rem; background: var(--bg-hover); border-radius: 9999px; font-size: 0.75rem; color: var(--text-secondary); }
+
+    .ob-academy-card { background: var(--bg-card); border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--border); overflow: hidden; }
+    .ob-academy-header { padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+    .ob-academy-header:hover { background: var(--bg-hover); }
+    .ob-academy-title-wrap { display: flex; align-items: center; gap: 0.75rem; }
+    .ob-academy-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .ob-academy-name { font-size: 0.9375rem; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-academy-duration { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem; }
+    .ob-status-pill { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .ob-status-pill.not-started { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+    .ob-status-pill.in-progress { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .ob-status-pill.completed { background: rgba(16,185,129,0.15); color: var(--success); }
+    .ob-academy-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--border); background: #fafbfd; }
+    .ob-academy-body.open { display: block; }
+    .ob-academy-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; margin: 1rem 0; }
+    .ob-topics { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .ob-topic-tag { padding: 0.25rem 0.625rem; background: var(--bg-hover); border-radius: 6px; font-size: 0.75rem; color: var(--text-secondary); border: 1px solid var(--border); }
+    .ob-academy-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+    .ob-academy-check { display: flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; color: var(--text-secondary); cursor: pointer; }
+    .ob-quiz-btn { padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .ob-quiz-btn:hover { background: var(--primary-dark); }
+
+    .ob-day1-timeline { display: flex; flex-direction: column; }
+    .ob-day1-item { display: flex; gap: 1rem; }
+    .ob-day1-time-col { width: 76px; flex-shrink: 0; text-align: right; padding-top: 0.125rem; }
+    .ob-day1-time { font-size: 0.75rem; font-weight: 600; color: var(--primary); }
+    .ob-day1-line-col { display: flex; flex-direction: column; align-items: center; margin: 0 0.5rem; }
+    .ob-day1-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--primary); flex-shrink: 0; margin-top: 0.25rem; }
+    .ob-day1-connector { width: 2px; background: var(--border); flex: 1; min-height: 24px; margin: 4px 0; }
+    .ob-day1-item:last-child .ob-day1-connector { display: none; }
+    .ob-day1-content { padding-bottom: 1.25rem; flex: 1; }
+    .ob-day1-activity { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
+    .ob-day1-who { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* Chat drawer */
+    .ob-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; }
+    .ob-overlay.open { display: block; }
+    .ob-chat-drawer { position: fixed; right: -460px; top: 0; width: 440px; height: 100vh; background: white; z-index: 101; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); transition: right 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .ob-chat-drawer.open { right: 0; }
+    .ob-drawer-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-sidebar); }
+    .ob-drawer-title { font-weight: 700; font-size: 1rem; color: white; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-drawer-close { background: transparent; border: none; color: rgba(255,255,255,0.6); font-size: 1.25rem; cursor: pointer; line-height: 1; }
+    .ob-drawer-close:hover { color: white; }
+    .ob-chat-msgs { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .ob-msg { max-width: 85%; padding: 0.75rem 1rem; border-radius: 12px; font-size: 0.875rem; line-height: 1.5; }
+    .ob-msg.bot { background: var(--bg-hover); color: var(--text-primary); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .ob-msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .ob-quick-replies { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem 1.25rem 0; }
+    .ob-qr-btn { padding: 0.375rem 0.875rem; border: 1.5px solid var(--primary); border-radius: 9999px; background: transparent; color: var(--primary); font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .ob-qr-btn:hover { background: var(--primary); color: white; }
+    .ob-chat-input-row { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+    .ob-chat-input-row input { flex: 1; padding: 0.625rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Inter', sans-serif; outline: none; }
+    .ob-chat-input-row input:focus { border-color: var(--primary); }
+    .ob-send-btn { padding: 0.625rem 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.875rem; }
+    .ob-send-btn:hover { background: var(--primary-dark); }
+
     /* Top Bar */
     .top-bar {
       display: none;
@@ -558,6 +674,69 @@
     .btn-secondary:hover {
       background: var(--border);
     }
+
+    /* ===== STANDUP SECTION ===== */
+    .sd-tabs-bar { display:flex;gap:0.375rem;margin-bottom:1.5rem;background:var(--bg-card);padding:0.375rem;border-radius:12px;box-shadow:var(--shadow);width:fit-content; }
+    .sd-tab-btn { padding:0.625rem 1.25rem;border-radius:8px;border:none;background:transparent;color:var(--text-secondary);font-size:0.875rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem; }
+    .sd-tab-btn.active { background:var(--primary);color:white;box-shadow:0 2px 8px rgba(37,99,235,0.3); }
+    .sd-tab-content { display:none; }
+    .sd-tab-content.active { display:block; }
+
+    .sd-start-card { background:var(--bg-card);border-radius:16px;padding:4rem 2rem;text-align:center;border:2px dashed var(--border);max-width:480px;margin:0 auto; }
+
+    .sd-attendance-strip { display:flex;gap:0.75rem;flex-wrap:wrap; }
+    .sd-att-chip { display:flex;flex-direction:column;align-items:center;gap:0.2rem;padding:0.625rem 0.875rem;border-radius:12px;cursor:pointer;border:2px solid transparent;transition:all 0.15s;background:var(--bg-hover);min-width:72px; }
+    .sd-att-chip.present { background:rgba(16,185,129,0.12);border-color:var(--success); }
+    .sd-att-chip.absent { background:rgba(239,68,68,0.1);border-color:var(--danger); }
+    .sd-att-chip.late { background:rgba(245,158,11,0.12);border-color:var(--warning); }
+    .sd-att-name { font-size:0.875rem;font-weight:600; }
+    .sd-att-status { font-size:0.625rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted); }
+    .sd-att-chip.present .sd-att-status { color:var(--success); }
+    .sd-att-chip.absent .sd-att-status { color:var(--danger); }
+    .sd-att-chip.late .sd-att-status { color:var(--warning); }
+
+    .sd-member-card { background:var(--bg-card);border-radius:16px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1rem;box-shadow:var(--shadow); }
+    .sd-member-header { display:flex;justify-content:space-between;align-items:center; }
+    .sd-update-field { display:flex;flex-direction:column;gap:0.375rem; }
+    .sd-update-field label { font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted); }
+    .sd-update-field textarea { padding:0.625rem 0.875rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;font-family:'Inter',sans-serif;resize:vertical;outline:none;transition:border-color 0.15s; }
+    .sd-update-field textarea:focus { border-color:var(--primary); }
+    .sd-submit-btn { padding:0.625rem 1.5rem;background:var(--primary);color:white;border:none;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer; }
+    .sd-submit-btn:hover { background:var(--primary-dark); }
+
+    .sd-ticket-chip { display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.5rem;background:rgba(37,99,235,0.1);color:var(--primary);border-radius:6px;font-size:0.75rem;font-weight:600; }
+    .sd-summary-card { background:var(--bg-card);border-radius:16px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1.5rem; }
+
+    .sd-blocker-card { background:var(--bg-card);border-radius:12px;padding:1.25rem;border:1px solid var(--border); }
+    .sd-session-item { background:var(--bg-card);border-radius:12px;padding:1.25rem;border:1px solid var(--border);cursor:pointer;transition:all 0.2s; }
+    .sd-session-item:hover { border-color:var(--primary);box-shadow:var(--shadow); }
+
+    .sd-analytics-row { display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border); }
+    .sd-analytics-row:last-child { border-bottom:none; }
+
+    /* Transcript upload modal */
+    .sd-modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1.5rem; }
+    .sd-modal-overlay.open { display:flex; }
+    .sd-modal { background:white;border-radius:20px;width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);overflow:hidden; }
+    .sd-modal-header { padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg-sidebar); }
+    .sd-modal-title { font-weight:700;font-size:1rem;color:white;font-family:'Plus Jakarta Sans',sans-serif; }
+    .sd-modal-close { background:transparent;border:none;color:rgba(255,255,255,0.65);font-size:1.25rem;cursor:pointer;line-height:1; }
+    .sd-modal-close:hover { color:white; }
+    .sd-modal-body { padding:1.5rem;overflow-y:auto;flex:1; }
+    .sd-modal-footer { padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:0.75rem;background:var(--bg-hover); }
+    .sd-drop-zone { border:2px dashed var(--border);border-radius:12px;padding:1.5rem;text-align:center;color:var(--text-muted);cursor:pointer;transition:all 0.2s;margin-bottom:1rem;font-size:0.875rem; }
+    .sd-drop-zone:hover,.sd-drop-zone.drag-over { border-color:var(--primary);background:rgba(37,99,235,0.04);color:var(--primary); }
+    .sd-paste-area { width:100%;padding:0.875rem;border:1.5px solid var(--border);border-radius:10px;font-size:0.8125rem;font-family:'Inter',sans-serif;resize:vertical;outline:none;min-height:180px;line-height:1.6; }
+    .sd-paste-area:focus { border-color:var(--primary); }
+    .sd-parsed-card { background:var(--bg-hover);border-radius:12px;padding:1.25rem;margin-bottom:0.75rem;border:1px solid var(--border); }
+    .sd-parsed-name { font-weight:700;font-size:0.9375rem;margin-bottom:0.75rem;font-family:'Plus Jakarta Sans',sans-serif; }
+    .sd-parsed-field { margin-bottom:0.5rem; }
+    .sd-parsed-label { font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:0.2rem; }
+    .sd-parsed-input { width:100%;padding:0.5rem 0.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.8125rem;font-family:'Inter',sans-serif;outline:none;background:white; }
+    .sd-parsed-input:focus { border-color:var(--primary); }
+    .sd-import-btn { padding:0.625rem 1.5rem;background:var(--primary);color:white;border:none;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer; }
+    .sd-import-btn:hover { background:var(--primary-dark); }
+    .sd-import-btn:disabled { opacity:0.5;cursor:not-allowed; }
   </style>
 </head>
 <body>
@@ -603,18 +782,18 @@
           </a>
         </div>
         <div class="nav-item">
-          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
+          <button class="nav-link" onclick="showSection('onboarding')">
             <span class="nav-icon">📋</span>
             Onboarding
-            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
-          </span>
+            <span class="nav-badge live">LIVE</span>
+          </button>
         </div>
         <div class="nav-item">
-          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
-            <span class="nav-icon">🏖️</span>
-            Leave
-            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
-          </span>
+          <button class="nav-link" onclick="showSection('standup')">
+            <span class="nav-icon">📋</span>
+            BD Standup
+            <span class="nav-badge live">LIVE</span>
+          </button>
         </div>
         <div class="nav-item">
           <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
@@ -801,6 +980,51 @@
         </div>
       </section>
 
+      <!-- Onboarding Section -->
+      <section class="section" id="onboardingSection">
+        <!-- Admin View -->
+        <div id="ob-admin-view">
+          <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;padding:2rem 3rem 1.5rem;">
+            <div>
+              <h2 class="section-title">Onboarding</h2>
+              <p class="section-subtitle">Manage new hire onboarding journeys</p>
+            </div>
+            <button class="btn btn-primary" onclick="obOpenChat()">+ Add New Employee</button>
+          </div>
+          <div style="padding:0 3rem 3rem;">
+            <div id="ob-list" class="ob-grid"></div>
+          </div>
+        </div>
+        <!-- Employee View -->
+        <div id="ob-emp-view" style="display:none;padding:2rem 3rem 3rem;">
+          <button class="ob-back-btn" onclick="obShowAdmin()">← Back to All Onboardings</button>
+          <div id="ob-emp-content"></div>
+        </div>
+      </section>
+
+      <!-- Standup Section -->
+      <section class="section" id="standupSection">
+        <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;padding:2rem 3rem 1.5rem;">
+          <div>
+            <h2 class="section-title">BD Standup</h2>
+            <p class="section-subtitle">Mon · Tue · Thu · Fri at 9:45 AM</p>
+          </div>
+          <div id="sd-header-actions"></div>
+        </div>
+        <div style="padding:0 3rem 3rem;">
+          <div class="sd-tabs-bar">
+            <button class="sd-tab-btn active" onclick="sdSwitchTab('today')">Today</button>
+            <button class="sd-tab-btn" onclick="sdSwitchTab('blockers')">Blockers <span id="sd-blocker-count" class="ob-tab-badge">0</span></button>
+            <button class="sd-tab-btn" onclick="sdSwitchTab('history')">History</button>
+            <button class="sd-tab-btn" onclick="sdSwitchTab('analytics')">Analytics</button>
+          </div>
+          <div id="sd-tab-today" class="sd-tab-content active"></div>
+          <div id="sd-tab-blockers" class="sd-tab-content"></div>
+          <div id="sd-tab-history" class="sd-tab-content"></div>
+          <div id="sd-tab-analytics" class="sd-tab-content"></div>
+        </div>
+      </section>
+
       <!-- Settings Section -->
       <section class="section" id="settingsSection">
         <div class="section-header">
@@ -899,8 +1123,70 @@
     </div>
   </main>
 
+  <!-- Standup Transcript Upload Modal -->
+  <div id="sd-upload-modal" class="sd-modal-overlay" onclick="if(event.target===this)sdCloseUpload()">
+    <div class="sd-modal">
+      <div class="sd-modal-header">
+        <span class="sd-modal-title">📄 Import Meeting Summary</span>
+        <button class="sd-modal-close" onclick="sdCloseUpload()">✕</button>
+      </div>
+      <div class="sd-modal-body" id="sd-modal-body">
+        <!-- Step 1: paste/upload -->
+        <div id="sd-upload-step1">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.6">
+            Paste your <strong>Gemini meeting summary</strong> or <strong>Google Meet transcript</strong> below.
+            The agent will extract each person's Yesterday / Today / Blockers and Jira ticket refs automatically.
+          </p>
+          <div class="sd-drop-zone" id="sd-drop-zone" onclick="document.getElementById('sd-file-input').click()"
+               ondragover="event.preventDefault();this.classList.add('drag-over')"
+               ondragleave="this.classList.remove('drag-over')"
+               ondrop="sdHandleDrop(event)">
+            <div style="font-size:1.5rem;margin-bottom:0.5rem">📂</div>
+            <div style="font-weight:600;margin-bottom:0.25rem">Drop Gemini Notes file here</div>
+            <div style="font-size:0.8125rem">.docx or .txt · or click to browse</div>
+            <input type="file" id="sd-file-input" accept=".docx,.txt,.text,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="sdHandleFileInput(event)">
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+            <span style="font-size:0.75rem;color:var(--text-muted);font-weight:600">OR PASTE TEXT</span>
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+          </div>
+          <textarea id="sd-paste-input" class="sd-paste-area" placeholder="Paste Gemini summary or Meet transcript here...&#10;&#10;Works with:&#10;• Google Meet transcript (.txt export)&#10;• Gemini meeting summary (copy from email or Google Doc)&#10;• Any text with team member names + their updates"></textarea>
+        </div>
+        <!-- Step 2: preview & edit parsed results -->
+        <div id="sd-upload-step2" style="display:none">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+            <button onclick="sdBackToStep1()" style="background:transparent;border:none;color:var(--primary);cursor:pointer;font-size:0.875rem;font-weight:600">← Back</button>
+            <span style="color:var(--text-muted);font-size:0.875rem">Review and edit extracted updates before importing</span>
+          </div>
+          <div id="sd-parsed-results"></div>
+        </div>
+      </div>
+      <div class="sd-modal-footer">
+        <button class="btn btn-secondary" onclick="sdCloseUpload()">Cancel</button>
+        <button id="sd-parse-btn" class="sd-import-btn" onclick="sdParseText()">Parse →</button>
+        <button id="sd-apply-btn" class="sd-import-btn" style="display:none" onclick="sdApplyParsed()">Import to Standup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onboarding Chat Drawer -->
+  <div id="ob-overlay" class="ob-overlay" onclick="obCloseChat()"></div>
+  <div id="ob-chat-drawer" class="ob-chat-drawer">
+    <div class="ob-drawer-header">
+      <span class="ob-drawer-title">📋 Add New Employee</span>
+      <button class="ob-drawer-close" onclick="obCloseChat()">✕</button>
+    </div>
+    <div id="ob-chat-msgs" class="ob-chat-msgs"></div>
+    <div id="ob-quick-replies" class="ob-quick-replies"></div>
+    <div class="ob-chat-input-row">
+      <input id="ob-chat-input" type="text" placeholder="Type a message..." onkeydown="if(event.key==='Enter')obSend()">
+      <button class="ob-send-btn" onclick="obSend()">Send</button>
+    </div>
+  </div>
+
   <script>
-    const API_URL = '/platform/api';
+    const API_URL = '/api';
     let employees = [];
     let departments = [];
 
@@ -918,20 +1204,22 @@
       {
         id: 'onboarding',
         name: 'Onboarding Agent',
-        icon: '🎉',
-        desc: '16-step automated onboarding workflow. IT setup, meetings, buddy assignment, and documentation.',
-        status: 'planned',
-        statusText: 'Planned',
-        url: null
+        icon: '📋',
+        desc: 'HR-triggered onboarding. IT setup checklist, Pantas Academy tracking, Day 1 schedule, and step-by-step guides for new hires.',
+        status: 'live',
+        statusText: 'Live',
+        url: null,
+        action: "showSection('onboarding')"
       },
       {
-        id: 'leave',
-        name: 'Leave Agent',
-        icon: '🏖️',
-        desc: 'Automated leave application and approval workflow. Balance tracking and team calendar.',
-        status: 'planned',
-        statusText: 'Planned',
-        url: null
+        id: 'standup',
+        name: 'BD Standup Agent',
+        icon: '📋',
+        desc: 'Daily standup tracker for the BD team. Attendance, Yesterday/Today/Blockers updates, persistent blocker board, and session summaries.',
+        status: 'live',
+        statusText: 'Live',
+        url: null,
+        action: "showSection('standup')"
       },
       {
         id: 'interview',
@@ -1029,27 +1317,1057 @@
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-      
+
       const targetSection = document.getElementById(section + 'Section');
-      if (targetSection) {
-        targetSection.classList.add('active');
+      if (targetSection) targetSection.classList.add('active');
+
+      document.querySelectorAll(`.nav-link[onclick*="'${section}'"]`).forEach(n => n.classList.add('active'));
+
+      if (section === 'onboarding') {
+        document.getElementById('ob-admin-view').style.display = 'block';
+        document.getElementById('ob-emp-view').style.display = 'none';
+        obLoadList();
+      } else if (section === 'standup') {
+        sdInit();
       }
-      
-      event.target.closest('.nav-link')?.classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const section = params.get('section');
+      if (section) showSection(section);
+    });
+
+    // ===== ONBOARDING =====
+
+    const OB_API = '/onboarding-api';
+    let obSessionId = localStorage.getItem('ob_session') || (() => {
+      const id = 'sess_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('ob_session', id);
+      return id;
+    })();
+    let allOnboardings = [];
+    let currentObId = null;
+    let activeObTab = 'setup';
+
+    const SETUP_ITEMS_DEF = [
+      { key: 'pantas_email',       label: 'Pantas email setup',                   contact: 'Eong' },
+      { key: 'google_calendar',    label: 'Google Calendar invites',               contact: 'Eong / Manager' },
+      { key: 'slack',              label: 'Slack account + channels (2FA)',        contact: 'Eong' },
+      { key: 'jira',               label: 'JIRA access + BD Ops Board',            contact: 'Eong / BD Manager' },
+      { key: 'pantas_platform',    label: 'Pantas platform access',                contact: 'Eong / BD Manager' },
+      { key: 'facial_recognition', label: 'Facial recognition registration',       contact: 'Joshua' },
+      { key: 'laptop_check',       label: 'Laptop assigned & ready',               contact: 'Eong' },
+      { key: 'epf_submission',     label: 'EPF number collected',                  contact: 'Syaheedah' },
+      { key: 'lhdn_submission',    label: 'LHDN number collected',                 contact: 'Syaheedah' },
+      { key: 'bank_details',       label: 'Bank account details collected',        contact: 'Syaheedah' },
+      { key: 'employee_handbook',  label: 'Employee Handbook signed',              contact: 'Syaheedah' },
+      { key: 'financial_policy',   label: 'Financial Data Handling Policy signed', contact: 'Eong' },
+    ];
+
+    const DOC_ITEMS_DEF = [
+      { key: 'ic_passport',        label: 'IC / Passport copy' },
+      { key: 'emergency_contact',  label: 'Emergency contact info' },
+      { key: 'education_certs',    label: 'Education certificates' },
+    ];
+
+    const ACADEMY_MODULES_DEF = {
+      intern: [
+        { key: 'starter',      label: 'Starter Module',      duration: '5 days (Days 3–7)',   hasQuiz: true,  quizUrl: 'https://forms.gle/hj896cq3Nuny9HTb9', icon: '🌱' },
+        { key: 'intermediate', label: 'Intermediate Module', duration: '5 days (Days 11–15)', hasQuiz: true,  quizUrl: 'https://forms.gle/Yf1wJLhpR7eXsT377', icon: '📈' },
+      ],
+      'full-time': [
+        { key: 'starter',      label: 'Starter Module',       duration: '5 days (Days 3–7)',   hasQuiz: true,  quizUrl: 'https://forms.gle/hj896cq3Nuny9HTb9', icon: '🌱' },
+        { key: 'intermediate', label: 'Intermediate Module',  duration: '5 days (Days 11–15)', hasQuiz: true,  quizUrl: 'https://forms.gle/Yf1wJLhpR7eXsT377', icon: '📈' },
+        { key: 'advanced',     label: 'Advanced Module',      duration: '5 days (Days 16–20)', hasQuiz: true,  quizUrl: 'https://forms.gle/zr4DtYe5EgtHNzHg9', icon: '🚀' },
+        { key: 'software',     label: 'Software Module',      duration: '5 days (Days 21–25)', hasQuiz: false, icon: '💻' },
+        { key: 'utilities',    label: 'Utilities Module',     duration: '4 days (Days 26–29)', hasQuiz: false, icon: '⚙️' },
+      ],
+    };
+
+    const DAY1_SCHEDULE_DEF = [
+      { time: '9:00 AM',  activity: 'Welcome & company overview presentation', contact: 'Syaheedah' },
+      { time: '10:00 AM', activity: 'HR onboarding (paperwork, SOPs, culture deck)', contact: 'Syaheedah' },
+      { time: '11:00 AM', activity: 'Office tour', contact: 'Team' },
+      { time: '12:00 PM', activity: 'Welcome lunch', contact: 'Team' },
+      { time: '2:00 PM',  activity: 'Workstation & IT setup', contact: 'Eong' },
+      { time: '3:00 PM',  activity: 'Facial recognition registration', contact: 'Joshua' },
+      { time: '4:00 PM',  activity: 'Role, project & supervisor introduction', contact: 'Manager' },
+      { time: '5:00 PM',  activity: 'Wrap up + Day 2 overview', contact: 'Manager' },
+    ];
+
+    const SETUP_MATERIALS = {
+      pantas_email:       { what: 'Your official Pantas work email (firstname@pantas.com) — used for all communications, calendar invites, and app logins.', steps: ['Provide your full name, personal email, and phone number to Eong (IT)', 'IT will create your account within 24 hours of Day 1', 'Enable 2-Factor Authentication via Google Authenticator', 'Log in at mail.google.com with your new @pantas.com credentials'], contact: 'Eong (IT)', time: '~30 min on Day 1' },
+      google_calendar:    { what: 'Access to shared company calendars, team standups, and sprint meetings so you always know what\'s on.', steps: ['Your Google Calendar links to your @pantas.com email — activates once email is set up', 'Your manager or Eong will invite you to relevant recurring meetings', 'Key recurring: BD/Engineering Standup, Sprint Planning, Sprint Review', 'Accept invites — they appear in your Gmail inbox'], contact: 'Eong / Your Manager', time: '~15 min' },
+      slack:              { what: 'Pantas\'s main communication tool. All team channels, announcements, and day-to-day chat happen here.', steps: ['Download Slack from slack.com/downloads', 'Sign in with your @pantas.com email — auto-joins the Pantas workspace', 'Enable 2FA in Slack account settings', 'Join your department channel plus #general and #announcements', 'Introduce yourself in #general!'], contact: 'Eong (IT)', time: '~20 min' },
+      jira:               { what: 'Pantas\'s project and task management tool for tracking work, bugs, and sprints.', steps: ['Visit pantas.atlassian.net/jira', 'Request access from Eong or your BD Manager', 'Accept the email invitation to join', 'Your manager will add you to the relevant project board'], contact: 'Eong / BD Manager', time: '~30 min' },
+      pantas_platform:    { what: 'Access to the Pantas product platform — the core product you\'ll be working with.', steps: ['Production: beta.pantas.com', 'Admin panel: pantas.com/admin', 'Request credentials from Eong or your BD Manager', 'Your role determines your access level in the system'], contact: 'Eong / BD Manager', time: '~20 min' },
+      facial_recognition: { what: 'Registers your face for the office entry system — required to independently access the building.', steps: ['Find Joshua from the Security team (usually at reception)', 'He will guide you through the facial scan — under 5 minutes', 'Scheduled on Day 1 at 3:00 PM during your IT setup block', 'Before registration, reception can manually let you in'], contact: 'Joshua (Security)', time: '~5 min, Day 1 at 3 PM' },
+      laptop_check:       { what: 'Your work laptop, pre-configured with essential software by IT.', steps: ['Eong checks laptop availability before your start date', 'Day 1 at 2:00 PM — head to your workstation for IT setup', 'Required software will be installed: Slack, browser, dev tools as needed', 'If anything is missing, raise it with Eong immediately'], contact: 'Eong (IT)', time: 'Day 1, 2:00 PM' },
+      epf_submission:     { what: 'Your EPF (Employees Provident Fund) number for payroll setup — Malaysia\'s mandatory retirement savings scheme.', steps: ['Email syaheedah@pantas.com — Subject: "EPF Number - [Your Name]"', 'CC nadzim@pantas.com and arman@pantas.com', 'Attach a photo of your EPF card or statement showing your member number', 'No EPF number yet? Notify Syaheedah — she\'ll guide you through registration'], contact: 'Syaheedah (HR)', time: 'Within first week' },
+      lhdn_submission:    { what: 'Your LHDN (Inland Revenue Board) income tax number for tax deduction calculations.', steps: ['Include in the same email as your EPF submission', 'Tax number is on your MyTax portal or previous EA form', 'No number yet? Visit mytax.hasil.gov.my to register', 'First-time earner? Syaheedah can advise on the registration process'], contact: 'Syaheedah (HR)', time: 'Within first week' },
+      bank_details:       { what: 'Your bank account details for salary payment — paid on the 25th of each month.', steps: ['Email account name (must match IC exactly) and account number to Syaheedah', 'Supported: Maybank, CIMB, Public Bank, RHB, and all major Malaysian banks', 'Include a photo of your bank book or online banking screenshot for verification'], contact: 'Syaheedah (HR)', time: 'Within first week' },
+      employee_handbook:  { what: 'The Pantas Employee Handbook covers company policies, code of conduct, leave policies, and working guidelines.', steps: ['Syaheedah hands you the handbook on Day 1 during HR onboarding at 10:00 AM', 'Read carefully — covers leave entitlements, dress code, and performance expectations', 'Sign and return a copy to Syaheedah to acknowledge receipt', 'Always available on Notion under HR > Policies'], contact: 'Syaheedah (HR)', time: 'Day 1, 10:00 AM' },
+      financial_policy:   { what: 'Financial Data Handling Policy — ensures all team members handle sensitive financial data responsibly.', steps: ['Eong will provide this document during your IT setup session', 'Read all sections: data classification, sharing rules, and security requirements', 'Sign and return a copy to Eong to confirm you\'ve read and understood it', 'Mandatory for all team members, not just finance roles'], contact: 'Eong (IT)', time: 'Within first week' },
+    };
+
+    const DOC_MATERIALS = {
+      ic_passport:       { what: 'A copy of your IC (MyKad) or passport for employment records and regulatory compliance.', steps: ['Scan or photograph both sides of your IC clearly', 'Email to Syaheedah or submit physically on Day 1', 'Ensure all text and the photo are clearly visible'] },
+      emergency_contact: { what: 'Emergency contact details kept on file in case we need to reach someone on your behalf.', steps: ['Provide: full name, relationship, phone number, and email address', 'Submit via email to Syaheedah or on the Day 1 HR form'] },
+      education_certs:   { what: 'Copies of your highest qualification certificates for employment records.', steps: ['Provide certified or clear photocopies of your degree or diploma', 'Recent graduate with pending cert? Submit your transcript and an official letter from your university'] },
+    };
+
+    const ACADEMY_MATERIALS = {
+      starter:      { what: 'Foundation course covering Pantas products, our market, core processes, and company culture.', topics: ['What Pantas does and who we serve', 'Product overview and key features', 'Company culture and values', 'Communication & collaboration norms'] },
+      intermediate: { what: 'Deeper dive into departmental processes, workflows, and cross-team collaboration.', topics: ['Deep-dive into your department\'s role', 'Client interaction standards', 'Project management workflows in Jira', 'Using Notion effectively'] },
+      advanced:     { what: 'Advanced topics in strategy, data interpretation, and business operations.', topics: ['Business strategy and OKR framework', 'Data literacy fundamentals', 'Financial awareness for non-finance roles', 'Decision-making and escalation frameworks'] },
+      software:     { what: 'Hands-on training with the software stack used at Pantas.', topics: ['Core software walkthrough', 'Integration between tools', 'Automation basics', 'Tool-specific best practices'] },
+      utilities:    { what: 'Utilities, admin tools, and operational systems used day-to-day.', topics: ['HR systems navigation', 'Expense and leave tools', 'Calendar and scheduling best practices', 'Security and access management'] },
+    };
+
+    async function obLoadList() {
+      try {
+        const res = await fetch(OB_API + '/onboardings');
+        allOnboardings = await res.json();
+        obRenderList();
+      } catch (e) { console.error('obLoadList error:', e); }
+    }
+
+    function obRenderList() {
+      const list = document.getElementById('ob-list');
+      if (!list) return;
+      if (!allOnboardings.length) {
+        list.innerHTML = `<div class="ob-empty"><div style="font-size:3rem;margin-bottom:1rem">📋</div><p style="font-size:1.125rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem">No active onboardings</p><p>Click "+ Add New Employee" to start an onboarding journey.</p></div>`;
+        return;
+      }
+      list.innerHTML = allOnboardings.map(ob => {
+        const p = ob.progress;
+        const initials = ob.employee.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const typeClass = ob.employee.type === 'intern' ? 'intern' : 'full-time';
+        const typeLabel = ob.employee.type === 'intern' ? 'Intern' : 'Full-time';
+        const startStr = new Date(ob.employee.startDate).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+        return `<div class="ob-card" onclick="obShowEmployee('${ob.id}')">
+          <div class="ob-card-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div class="ob-avatar">${initials}</div>
+              <div>
+                <div class="ob-name">${ob.employee.name}</div>
+                <div class="ob-meta">${ob.employee.role}</div>
+                <div class="ob-meta">${ob.employee.department}</div>
+              </div>
+            </div>
+            <span class="ob-type-badge ${typeClass}">${typeLabel}</span>
+          </div>
+          <div class="ob-progress-bar"><div class="ob-progress-fill" style="width:${p.pct}%"></div></div>
+          <div class="ob-progress-label"><span>Overall progress</span><span>${p.pct}%</span></div>
+          <div class="ob-stats-row">
+            <div class="ob-stat-mini"><div class="ob-stat-mini-num">${p.setup.done}/${p.setup.total}</div><div class="ob-stat-mini-label">Setup</div></div>
+            <div class="ob-stat-mini"><div class="ob-stat-mini-num">${p.academy.done}/${p.academy.total}</div><div class="ob-stat-mini-label">Academy</div></div>
+            <div class="ob-stat-mini"><div class="ob-stat-mini-num">${p.docs.done}/${p.docs.total}</div><div class="ob-stat-mini-label">Docs</div></div>
+          </div>
+          <div class="ob-meta" style="margin-top:0.875rem">Started ${startStr}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function obShowEmployee(id) {
+      currentObId = id;
+      activeObTab = 'setup';
+      document.getElementById('ob-admin-view').style.display = 'none';
+      document.getElementById('ob-emp-view').style.display = 'block';
+      obRenderEmployee();
+    }
+
+    function obShowAdmin() {
+      currentObId = null;
+      document.getElementById('ob-admin-view').style.display = 'block';
+      document.getElementById('ob-emp-view').style.display = 'none';
+      obLoadList();
+    }
+
+    function obSwitchTab(tab) {
+      activeObTab = tab;
+      obRenderEmployee();
+    }
+
+    function obRenderEmployee() {
+      const ob = allOnboardings.find(o => o.id === currentObId);
+      if (!ob) return;
+      const p = ob.progress;
+      const typeModules = ACADEMY_MODULES_DEF[ob.employee.type] || ACADEMY_MODULES_DEF['full-time'];
+      const academyDone = typeModules.filter(m => ob.academy[m.key]?.completed).length;
+      const startStr = new Date(ob.employee.startDate).toLocaleDateString('en-MY', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const circumference = 2 * Math.PI * 40;
+
+      document.getElementById('ob-emp-content').innerHTML = `
+        <div class="ob-hero">
+          <div class="ob-hero-text">
+            <div style="font-size:0.8125rem;color:rgba(255,255,255,0.65);margin-bottom:0.25rem">Welcome to Pantas!</div>
+            <div class="ob-hero-name">${ob.employee.name}</div>
+            <div class="ob-hero-sub">${ob.employee.role} &middot; ${ob.employee.department} &middot; ${ob.employee.type === 'intern' ? 'Intern' : 'Full-time'}</div>
+            <div class="ob-hero-dates">Started: ${startStr}</div>
+          </div>
+          <div class="ob-ring-wrap">
+            <svg class="ob-ring-svg" width="100" height="100">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="8" stroke-linecap="round"
+                stroke-dasharray="${circumference}" stroke-dashoffset="${circumference * (1 - p.pct / 100)}"/>
+            </svg>
+            <div class="ob-ring-label"><div class="ob-ring-pct">${p.pct}%</div><div class="ob-ring-text">Complete</div></div>
+          </div>
+        </div>
+
+        <div class="ob-tabs-bar">
+          <button class="ob-tab-btn ${activeObTab === 'setup' ? 'active' : ''}" onclick="obSwitchTab('setup')">Setup <span class="ob-tab-badge">${p.setup.done}/${p.setup.total}</span></button>
+          <button class="ob-tab-btn ${activeObTab === 'academy' ? 'active' : ''}" onclick="obSwitchTab('academy')">Academy <span class="ob-tab-badge">${academyDone}/${typeModules.length}</span></button>
+          <button class="ob-tab-btn ${activeObTab === 'documents' ? 'active' : ''}" onclick="obSwitchTab('documents')">Documents <span class="ob-tab-badge">${p.docs.done}/${p.docs.total}</span></button>
+          <button class="ob-tab-btn ${activeObTab === 'day1' ? 'active' : ''}" onclick="obSwitchTab('day1')">Day 1 Schedule</button>
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'setup' ? 'active' : ''}">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Complete all setup tasks to get fully onboarded. Click any item to see step-by-step instructions.</p>
+          ${SETUP_ITEMS_DEF.map(item => obRenderSetupItem(item, ob.setup[item.key])).join('')}
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'academy' ? 'active' : ''}">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Complete Pantas Academy modules in order. Each module builds on the previous one. Expand any module to see topics and track progress.</p>
+          ${typeModules.map(mod => obRenderAcademyCard(mod, ob.academy[mod.key] || {})).join('')}
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'documents' ? 'active' : ''}">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Submit the following documents to HR to complete your employment records.</p>
+          ${DOC_ITEMS_DEF.map(item => obRenderDocItem(item, ob.documents[item.key])).join('')}
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'day1' ? 'active' : ''}">
+          <div class="card" style="margin-bottom:1.5rem">
+            <h3 class="card-title">Your Day 1 Schedule</h3>
+            <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.5rem">Here's what to expect on your first day. Arrive by 9:00 AM sharp!</p>
+            <div class="ob-day1-timeline">
+              ${DAY1_SCHEDULE_DEF.map(s => `
+                <div class="ob-day1-item">
+                  <div class="ob-day1-time-col"><div class="ob-day1-time">${s.time}</div></div>
+                  <div class="ob-day1-line-col"><div class="ob-day1-dot"></div><div class="ob-day1-connector"></div></div>
+                  <div class="ob-day1-content">
+                    <div class="ob-day1-activity">${s.activity}</div>
+                    <div class="ob-day1-who">with ${s.contact}</div>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="card-title" style="margin-bottom:1rem">What to bring on Day 1</h3>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem">
+              ${['Your IC or passport (original + copy)', 'Bank account details (name & number)', 'EPF & LHDN numbers if available', 'Education certificates', 'Emergency contact information', 'Any signed documents sent in advance'].map(i => `<li style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem"><span style="color:var(--success);font-weight:700">✓</span>${i}</li>`).join('')}
+            </ul>
+          </div>
+        </div>`;
+    }
+
+    function obRenderSetupItem(item, done) {
+      const mat = SETUP_MATERIALS[item.key] || {};
+      return `<div class="ob-item-row">
+        <div class="ob-item-header" onclick="obToggleDetails('ob-sdet-${item.key}')">
+          <div class="ob-item-check ${done ? 'done' : ''}" onclick="event.stopPropagation();obToggleSetup('${item.key}')">${done ? '✓' : ''}</div>
+          <span class="ob-item-label ${done ? 'done' : ''}">${item.label}</span>
+          <span class="ob-item-contact">${item.contact}</span>
+          <button class="ob-item-expand-btn">Details ↕</button>
+        </div>
+        <div id="ob-sdet-${item.key}" class="ob-item-details">
+          <p class="ob-detail-what">${mat.what || ''}</p>
+          <ol class="ob-detail-steps">${(mat.steps || []).map(s => `<li>${s}</li>`).join('')}</ol>
+          <div class="ob-detail-meta">
+            <span class="ob-detail-chip">👤 ${mat.contact || item.contact}</span>
+            ${mat.time ? `<span class="ob-detail-chip">⏱ ${mat.time}</span>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function obRenderDocItem(item, done) {
+      const mat = DOC_MATERIALS[item.key] || {};
+      return `<div class="ob-item-row">
+        <div class="ob-item-header" onclick="obToggleDetails('ob-ddet-${item.key}')">
+          <div class="ob-item-check ${done ? 'done' : ''}" onclick="event.stopPropagation();obToggleDoc('${item.key}')">${done ? '✓' : ''}</div>
+          <span class="ob-item-label ${done ? 'done' : ''}">${item.label}</span>
+          <span class="ob-item-contact">→ Syaheedah (HR)</span>
+          <button class="ob-item-expand-btn">Details ↕</button>
+        </div>
+        <div id="ob-ddet-${item.key}" class="ob-item-details">
+          <p class="ob-detail-what">${mat.what || ''}</p>
+          <ol class="ob-detail-steps">${(mat.steps || []).map(s => `<li>${s}</li>`).join('')}</ol>
+          <div class="ob-detail-meta"><span class="ob-detail-chip">👤 Syaheedah (HR)</span></div>
+        </div>
+      </div>`;
+    }
+
+    function obRenderAcademyCard(mod, record) {
+      const mat = ACADEMY_MATERIALS[mod.key] || {};
+      const status = record.completed ? 'completed' : record.started ? 'in-progress' : 'not-started';
+      const statusLabel = { 'not-started': 'Not Started', 'in-progress': 'In Progress', 'completed': 'Completed' }[status];
+      return `<div class="ob-academy-card">
+        <div class="ob-academy-header" onclick="obToggleDetails('ob-acad-${mod.key}')">
+          <div class="ob-academy-title-wrap">
+            <div class="ob-academy-icon">${mod.icon}</div>
+            <div>
+              <div class="ob-academy-name">${mod.label}</div>
+              <div class="ob-academy-duration">${mod.duration}</div>
+            </div>
+          </div>
+          <span class="ob-status-pill ${status}">${statusLabel}</span>
+        </div>
+        <div id="ob-acad-${mod.key}" class="ob-academy-body">
+          <p class="ob-academy-desc">${mat.what || ''}</p>
+          <div class="ob-topics">${(mat.topics || []).map(t => `<span class="ob-topic-tag">${t}</span>`).join('')}</div>
+          <div class="ob-academy-actions">
+            <label class="ob-academy-check"><input type="checkbox" ${record.started ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','started')"> Started</label>
+            <label class="ob-academy-check"><input type="checkbox" ${record.completed ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','completed')"> Completed</label>
+            ${mod.hasQuiz && mod.quizUrl ? `<label class="ob-academy-check"><input type="checkbox" ${record.quizPassed ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','quizPassed')"> Quiz Passed</label>
+            <a href="${mod.quizUrl}" target="_blank" class="ob-quiz-btn">Take Quiz →</a>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function obToggleDetails(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('open');
+    }
+
+    async function obToggleSetup(key) {
+      const res = await fetch(`${OB_API}/onboardings/${currentObId}/setup/${key}`, { method: 'PATCH' });
+      const updated = await res.json();
+      const idx = allOnboardings.findIndex(o => o.id === currentObId);
+      if (idx >= 0) allOnboardings[idx] = updated;
+      obRenderEmployee();
+    }
+
+    async function obToggleDoc(key) {
+      const res = await fetch(`${OB_API}/onboardings/${currentObId}/documents/${key}`, { method: 'PATCH' });
+      const updated = await res.json();
+      const idx = allOnboardings.findIndex(o => o.id === currentObId);
+      if (idx >= 0) allOnboardings[idx] = updated;
+      obRenderEmployee();
+    }
+
+    async function obToggleAcademy(module, field) {
+      const res = await fetch(`${OB_API}/onboardings/${currentObId}/academy/${module}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ field })
+      });
+      const updated = await res.json();
+      const idx = allOnboardings.findIndex(o => o.id === currentObId);
+      if (idx >= 0) allOnboardings[idx] = updated;
+      obRenderEmployee();
+    }
+
+    // Chat drawer
+    function obOpenChat() {
+      document.getElementById('ob-overlay').classList.add('open');
+      document.getElementById('ob-chat-drawer').classList.add('open');
+      if (!document.getElementById('ob-chat-msgs').children.length) obInitChat();
+    }
+
+    function obCloseChat() {
+      document.getElementById('ob-overlay').classList.remove('open');
+      document.getElementById('ob-chat-drawer').classList.remove('open');
+    }
+
+    async function obInitChat() {
+      const res = await fetch(`${OB_API}/chat`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'hi', sessionId: obSessionId })
+      });
+      const data = await res.json();
+      obAddMsg('bot', data.reply);
+      obSetQR(data.quickReplies || []);
+    }
+
+    async function obSend() {
+      const input = document.getElementById('ob-chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = '';
+      obAddMsg('user', msg);
+      obSetQR([]);
+      const res = await fetch(`${OB_API}/chat`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, sessionId: obSessionId })
+      });
+      const data = await res.json();
+      obAddMsg('bot', data.reply);
+      obSetQR(data.quickReplies || []);
+      if (data.newOnboarding) {
+        obLoadList();
+        setTimeout(() => {
+          document.getElementById('ob-chat-msgs').innerHTML = '';
+          obSetQR([]);
+          obSessionId = 'sess_' + Math.random().toString(36).slice(2);
+          localStorage.setItem('ob_session', obSessionId);
+        }, 4000);
+      }
+    }
+
+    function obAddMsg(role, text) {
+      const msgs = document.getElementById('ob-chat-msgs');
+      const div = document.createElement('div');
+      div.className = `ob-msg ${role}`;
+      div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function obSetQR(qrs) {
+      document.getElementById('ob-quick-replies').innerHTML = qrs.map(q => `<button class="ob-qr-btn" onclick="obQRClick('${q}')">${q}</button>`).join('');
+    }
+
+    function obQRClick(text) {
+      document.getElementById('ob-chat-input').value = text;
+      obSend();
+    }
+
+    // ===== BD STANDUP =====
+    const SD_API = '/standup-api';
+    let sdCurrentTab = 'today';
+    let sdSession = null;
+    let sdTeam = [];
+    let sdBlockers = [];
+
+    async function sdInit() {
+      [sdTeam, sdSession, sdBlockers] = await Promise.all([
+        fetch(SD_API + '/team').then(r => r.json()),
+        fetch(SD_API + '/sessions/today').then(r => r.json()),
+        fetch(SD_API + '/blockers').then(r => r.json()),
+      ]);
+      sdRenderAll();
+    }
+
+    function sdSwitchTab(tab) {
+      sdCurrentTab = tab;
+      document.querySelectorAll('.sd-tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', ['today','blockers','history','analytics'][i] === tab);
+      });
+      document.querySelectorAll('.sd-tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('sd-tab-' + tab).classList.add('active');
+      if (tab === 'history') sdLoadHistory();
+      if (tab === 'analytics') sdLoadAnalytics();
+    }
+
+    function sdRenderAll() {
+      sdRenderToday();
+      sdRenderBlockers();
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+    }
+
+    // ---- Today tab ----
+    function sdRenderToday() {
+      const el = document.getElementById('sd-tab-today');
+      const today = new Date();
+      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const standupDays = [1,2,4,5];
+      const isToday = standupDays.includes(today.getDay());
+      const dateStr = today.toLocaleDateString('en-MY', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+      if (!sdSession) {
+        if (!isToday) {
+          const next = sdGetNextStandupDate();
+          el.innerHTML = `<div class="sd-start-card">
+            <div style="font-size:3rem;margin-bottom:1rem">📅</div>
+            <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:0.5rem">No standup today</h3>
+            <p style="color:var(--text-secondary)">Today is ${dayNames[today.getDay()]}. Next standup: <strong>${next}</strong></p>
+          </div>`;
+        } else {
+          el.innerHTML = `<div class="sd-start-card">
+            <div style="font-size:3rem;margin-bottom:1rem">☀️</div>
+            <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:0.5rem">${dateStr}</h3>
+            <p style="color:var(--text-secondary);margin-bottom:1.5rem">Ready to start today's standup?</p>
+            <button class="btn btn-primary" style="font-size:1rem;padding:0.75rem 2rem;" onclick="sdStartSession()">Start Standup</button>
+          </div>`;
+        }
+        return;
+      }
+
+      const isComplete = sdSession.status === 'completed';
+      const present = Object.values(sdSession.attendance).filter(a => a.status === 'present' || a.status === 'late').length;
+
+      const attStrip = `<div class="card" style="margin-bottom:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <h3 class="card-title" style="margin:0">Attendance — ${dateStr}</h3>
+          <div style="display:flex;gap:0.5rem;align-items:center">
+            <span style="font-size:0.875rem;color:var(--text-muted)">${present}/${sdTeam.length} present</span>
+            ${!isComplete ? `<div style="display:flex;gap:0.5rem">
+        <button class="btn btn-secondary" style="font-size:0.8125rem;padding:0.375rem 0.75rem;" onclick="sdOpenUpload()">📄 Import Summary</button>
+        <button class="btn btn-secondary" style="font-size:0.8125rem;padding:0.375rem 0.75rem;" onclick="sdCloseSession()">End & Summarise</button>
+      </div>` : `<span style="padding:0.25rem 0.75rem;background:rgba(16,185,129,0.15);color:var(--success);border-radius:9999px;font-size:0.75rem;font-weight:600;">Completed</span>`}
+          </div>
+        </div>
+        <div class="sd-attendance-strip">
+          ${sdTeam.map(m => {
+            const att = sdSession.attendance[m.id] || { status: 'pending' };
+            return `<div class="sd-att-chip ${att.status}" onclick="${isComplete ? '' : `sdToggleAttendance('${m.id}')`}" style="${isComplete ? 'cursor:default' : ''}">
+              <span class="sd-att-name">${m.name.split(' ')[0]}</span>
+              <span class="sd-att-status">${att.status === 'pending' ? '–' : att.status}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+
+      if (isComplete && sdSession.summary) {
+        el.innerHTML = attStrip + `<div class="sd-summary-card">
+          <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+            <h3 class="card-title" style="margin:0">Standup Summary</h3>
+            <button class="btn btn-secondary" style="font-size:0.8125rem;" onclick="navigator.clipboard.writeText(document.getElementById('sd-summary-text').textContent).then(()=>showToast('✅ Copied!'))">Copy</button>
+          </div>
+          <pre id="sd-summary-text" style="white-space:pre-wrap;font-family:'Inter',sans-serif;font-size:0.875rem;line-height:1.7;color:var(--text-primary)">${sdSession.summary}</pre>
+        </div>`;
+        el.innerHTML += sdTeam.map(m => sdRenderMemberCard(m, true)).join('');
+        return;
+      }
+
+      el.innerHTML = attStrip + sdTeam.map(m => sdRenderMemberCard(m, isComplete)).join('');
+    }
+
+    function sdRenderMemberCard(member, readOnly) {
+      const att = sdSession.attendance[member.id] || { status: 'pending' };
+      const update = sdSession.updates[member.id];
+      const isPresent = att.status === 'present' || att.status === 'late';
+      const hasUpdate = !!update;
+
+      const attBadgeStyle = { present: 'background:rgba(16,185,129,0.15);color:var(--success)', absent: 'background:rgba(239,68,68,0.15);color:var(--danger)', late: 'background:rgba(245,158,11,0.15);color:var(--warning)', pending: 'background:var(--bg-hover);color:var(--text-muted)' }[att.status];
+      const initials = member.name.split(' ').map(w=>w[0]).join('').slice(0,2);
+
+      if (!isPresent && !hasUpdate) {
+        return `<div class="sd-member-card" style="opacity:0.5">
+          <div class="sd-member-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div class="ob-avatar" style="font-size:0.875rem">${initials}</div>
+              <div><div style="font-weight:600">${member.name}</div><div style="font-size:0.75rem;color:var(--text-muted)">${member.role}</div></div>
+            </div>
+            <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;${attBadgeStyle}">${att.status}</span>
+          </div>
+        </div>`;
+      }
+
+      if (readOnly && hasUpdate) {
+        return `<div class="sd-member-card">
+          <div class="sd-member-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div class="ob-avatar" style="font-size:0.875rem">${initials}</div>
+              <div><div style="font-weight:600">${member.name}</div><div style="font-size:0.75rem;color:var(--text-muted)">${member.role}</div></div>
+            </div>
+            <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;${attBadgeStyle}">${att.status}</span>
+          </div>
+          <div style="padding:1rem 0 0;display:flex;flex-direction:column;gap:0.875rem">
+            ${update.yesterday ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Yesterday</div><p style="font-size:0.875rem">${update.yesterday}</p></div>` : ''}
+            ${update.today ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Today</div><p style="font-size:0.875rem">${update.today}</p></div>` : ''}
+            ${update.blockers ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--danger);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">🚫 Blocker</div><p style="font-size:0.875rem">${update.blockers}</p></div>` : ''}
+            ${update.tickets?.length ? `<div style="display:flex;gap:0.375rem;flex-wrap:wrap;margin-top:0.25rem">${update.tickets.map(t=>`<span class="sd-ticket-chip">${t}</span>`).join('')}</div>` : ''}
+            ${update.accounts?.length ? `<div style="display:flex;gap:0.375rem;flex-wrap:wrap;margin-top:0.25rem">${update.accounts.map(a=>`<span style="font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:20px;background:rgba(37,99,235,0.1);color:var(--primary);font-weight:600">🏢 ${a}</span>`).join('')}</div>` : ''}
+          </div>
+        </div>`;
+      }
+
+      const alreadySubmitted = hasUpdate;
+      return `<div class="sd-member-card" id="sd-card-${member.id}">
+        <div class="sd-member-header">
+          <div style="display:flex;align-items:center;gap:0.75rem">
+            <div class="ob-avatar" style="font-size:0.875rem">${initials}</div>
+            <div><div style="font-weight:600">${member.name}</div><div style="font-size:0.75rem;color:var(--text-muted)">${member.role}</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            ${alreadySubmitted ? `<span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;background:rgba(16,185,129,0.15);color:var(--success);">✓ Submitted</span>` : ''}
+            <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;${attBadgeStyle}">${att.status}</span>
+          </div>
+        </div>
+        <div style="padding:1rem 0 0;display:flex;flex-direction:column;gap:1rem">
+          <div class="sd-update-field">
+            <label>✅ Yesterday</label>
+            <textarea id="sd-yest-${member.id}" placeholder="What did you complete since last standup?" rows="2">${update?.yesterday || ''}</textarea>
+          </div>
+          <div class="sd-update-field">
+            <label>🔄 Today</label>
+            <textarea id="sd-today-${member.id}" placeholder="What are you working on today?" rows="2">${update?.today || ''}</textarea>
+          </div>
+          <div class="sd-update-field">
+            <label>🚫 Blockers</label>
+            <textarea id="sd-block-${member.id}" placeholder="Any blockers? Leave empty if none." rows="2">${update?.blockers || ''}</textarea>
+          </div>
+          <div class="sd-update-field">
+            <label>🎫 Jira Tickets</label>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem" id="sd-tickets-${member.id}">
+              ${(update?.tickets || []).map(t => `<span class="sd-ticket-chip">${t} <span onclick="sdRemoveTicket('${member.id}','${t}')" style="cursor:pointer;opacity:0.7">×</span></span>`).join('')}
+            </div>
+            <div style="display:flex;gap:0.5rem">
+              <input id="sd-ticket-input-${member.id}" type="text" placeholder="e.g. BO-42" style="padding:0.375rem 0.625rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.8125rem;width:120px;outline:none;" onkeydown="if(event.key==='Enter')sdAddTicket('${member.id}')">
+              <button onclick="sdAddTicket('${member.id}')" style="padding:0.375rem 0.625rem;border:1.5px solid var(--border);border-radius:6px;background:transparent;font-size:0.8125rem;cursor:pointer;">+ Add</button>
+              <a href="https://pantas.atlassian.net/jira/software/c/projects/BO/boards/113" target="_blank" style="padding:0.375rem 0.625rem;font-size:0.8125rem;color:var(--primary);display:flex;align-items:center;gap:0.25rem;text-decoration:none;">Open Jira ↗</a>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end">
+            <button class="sd-submit-btn" onclick="sdSubmitUpdate('${member.id}')">Submit Update</button>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // Ticket management
+    const sdTicketStore = {};
+
+    function sdAddTicket(memberId) {
+      const input = document.getElementById(`sd-ticket-input-${memberId}`);
+      const val = input.value.trim().toUpperCase();
+      if (!val) return;
+      if (!sdTicketStore[memberId]) sdTicketStore[memberId] = new Set();
+      sdTicketStore[memberId].add(val);
+      input.value = '';
+      sdRefreshTicketChips(memberId);
+    }
+
+    function sdRemoveTicket(memberId, ticket) {
+      sdTicketStore[memberId]?.delete(ticket);
+      sdRefreshTicketChips(memberId);
+    }
+
+    function sdRefreshTicketChips(memberId) {
+      const container = document.getElementById(`sd-tickets-${memberId}`);
+      if (!container) return;
+      const tickets = [...(sdTicketStore[memberId] || [])];
+      container.innerHTML = tickets.map(t => `<span class="sd-ticket-chip">${t} <span onclick="sdRemoveTicket('${memberId}','${t}')" style="cursor:pointer;opacity:0.7">×</span></span>`).join('');
+    }
+
+    async function sdStartSession() {
+      const res = await fetch(SD_API + '/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      sdSession = await res.json();
+      sdRenderToday();
+    }
+
+    async function sdToggleAttendance(memberId) {
+      const current = sdSession.attendance[memberId]?.status || 'pending';
+      const next = { pending: 'present', present: 'absent', absent: 'late', late: 'pending' }[current];
+      const res = await fetch(`${SD_API}/sessions/${sdSession.id}/attendance`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId, status: next })
+      });
+      sdSession = await res.json();
+      sdRenderToday();
+    }
+
+    async function sdSubmitUpdate(memberId) {
+      const yesterday = document.getElementById(`sd-yest-${memberId}`)?.value || '';
+      const today = document.getElementById(`sd-today-${memberId}`)?.value || '';
+      const blockers = document.getElementById(`sd-block-${memberId}`)?.value || '';
+      const tickets = [...(sdTicketStore[memberId] || [])];
+
+      const res = await fetch(`${SD_API}/sessions/${sdSession.id}/updates`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memberId, yesterday, today, blockers, tickets })
+      });
+      sdSession = await res.json();
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+      sdRenderToday();
+    }
+
+    async function sdCloseSession() {
+      const res = await fetch(`${SD_API}/sessions/${sdSession.id}/close`, { method: 'PATCH' });
+      sdSession = await res.json();
+      sdRenderToday();
+    }
+
+    // ---- Blockers tab ----
+    function sdRenderBlockers() {
+      const el = document.getElementById('sd-tab-blockers');
+      const open = sdBlockers.filter(b => b.status === 'open');
+      const resolved = sdBlockers.filter(b => b.status === 'resolved');
+
+      el.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <div>
+            <h3 style="font-weight:700;font-size:1.125rem;font-family:'Plus Jakarta Sans',sans-serif">${open.length} Active Blocker${open.length !== 1 ? 's' : ''}</h3>
+          </div>
+          <button class="btn btn-primary" onclick="sdShowAddBlocker()">+ Add Blocker</button>
+        </div>
+        <div id="sd-add-blocker-form" style="display:none;background:var(--bg-card);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;border:1px solid var(--border)">
+          <h4 style="margin-bottom:1rem;font-weight:600">New Blocker</h4>
+          <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <input id="sd-new-blocker-text" type="text" placeholder="Describe the blocker..." style="padding:0.625rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;outline:none;">
+            <div style="display:flex;gap:0.75rem">
+              <select id="sd-new-blocker-member" style="padding:0.625rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;flex:1">
+                ${sdTeam.map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
+              </select>
+              <input id="sd-new-blocker-ticket" type="text" placeholder="Ticket (e.g. BO-42)" style="padding:0.625rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;width:160px;">
+            </div>
+            <div style="display:flex;gap:0.5rem;justify-content:flex-end">
+              <button class="btn btn-secondary" onclick="document.getElementById('sd-add-blocker-form').style.display='none'">Cancel</button>
+              <button class="btn btn-primary" onclick="sdAddBlocker()">Add Blocker</button>
+            </div>
+          </div>
+        </div>
+        ${open.length === 0 ? '<div class="ob-empty"><div style="font-size:2.5rem;margin-bottom:0.75rem">✅</div><p style="font-weight:600;color:var(--text-primary)">No active blockers</p><p>Team is unblocked!</p></div>' : ''}
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          ${open.map(b => sdRenderBlockerCard(b)).join('')}
+        </div>
+        ${resolved.length > 0 ? `
+          <h4 style="margin:2rem 0 1rem;font-weight:600;color:var(--text-muted);font-size:0.875rem;text-transform:uppercase;letter-spacing:0.05em">Resolved (${resolved.length})</h4>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;opacity:0.6">
+            ${resolved.slice(-5).reverse().map(b => sdRenderBlockerCard(b, true)).join('')}
+          </div>` : ''}
+      `;
+    }
+
+    function sdRenderBlockerCard(blocker, resolved = false) {
+      const member = sdTeam.find(m => m.id === blocker.memberId);
+      const daysOpen = Math.floor((Date.now() - new Date(blocker.date || blocker.createdAt).getTime()) / 86400000);
+      return `<div class="sd-blocker-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem">
+          <div style="flex:1">
+            <p style="font-size:0.9375rem;font-weight:500;margin-bottom:0.5rem">${blocker.text}</p>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center">
+              <span style="font-size:0.75rem;color:var(--text-muted)">👤 ${member?.name || blocker.memberId}</span>
+              ${blocker.tickets?.length ? blocker.tickets.map(t => `<span class="sd-ticket-chip">${t}</span>`).join('') : ''}
+              <span style="font-size:0.75rem;color:${resolved ? 'var(--success)' : daysOpen >= 3 ? 'var(--danger)' : 'var(--text-muted)'}">
+                ${resolved ? '✓ Resolved' : `${daysOpen === 0 ? 'Today' : daysOpen + ' day' + (daysOpen !== 1 ? 's' : '') + ' open'}`}
+              </span>
+            </div>
+          </div>
+          ${!resolved ? `<button onclick="sdResolveBlocker('${blocker.id}')" style="padding:0.375rem 0.875rem;border:1.5px solid var(--success);border-radius:8px;color:var(--success);background:transparent;font-size:0.8125rem;font-weight:600;cursor:pointer;white-space:nowrap;">Resolve</button>` : ''}
+        </div>
+      </div>`;
+    }
+
+    function sdShowAddBlocker() {
+      const form = document.getElementById('sd-add-blocker-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function sdAddBlocker() {
+      const text = document.getElementById('sd-new-blocker-text').value.trim();
+      if (!text) return;
+      const memberId = document.getElementById('sd-new-blocker-member').value;
+      const ticket = document.getElementById('sd-new-blocker-ticket').value.trim();
+      await fetch(SD_API + '/blockers', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, memberId, tickets: ticket ? [ticket.toUpperCase()] : [], date: new Date().toISOString().slice(0,10) })
+      });
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      document.getElementById('sd-add-blocker-form').style.display = 'none';
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+      sdRenderBlockers();
+    }
+
+    async function sdResolveBlocker(id) {
+      await fetch(`${SD_API}/blockers/${id}/resolve`, { method: 'PATCH' });
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+      sdRenderBlockers();
+    }
+
+    // ---- History tab ----
+    async function sdLoadHistory() {
+      const sessions = await fetch(SD_API + '/sessions').then(r => r.json());
+      const el = document.getElementById('sd-tab-history');
+      if (!sessions.length) {
+        el.innerHTML = '<div class="ob-empty"><p>No standup sessions yet.</p></div>';
+        return;
+      }
+      el.innerHTML = `<div style="display:flex;flex-direction:column;gap:0.75rem">
+        ${sessions.map(s => {
+          const present = Object.values(s.attendance).filter(a => a.status === 'present' || a.status === 'late').length;
+          const total = Object.keys(s.attendance).length;
+          const blockersInSession = Object.values(s.updates).filter(u => u.blockers).length;
+          const dateStr = new Date(s.date).toLocaleDateString('en-MY', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+          return `<div class="sd-session-item" onclick="sdShowSessionDetail('${s.id}')">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:600;font-size:0.9375rem">${dateStr}</div>
+                <div style="font-size:0.8125rem;color:var(--text-muted);margin-top:0.2rem">${present}/${total} present · ${blockersInSession} blocker${blockersInSession !== 1 ? 's' : ''}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.75rem">
+                <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;background:${s.status === 'completed' ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'};color:${s.status === 'completed' ? 'var(--success)' : 'var(--warning)'}">${s.status}</span>
+                <span style="color:var(--text-muted)">→</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }
+
+    function sdShowSessionDetail(sessionId) {
+      fetch(SD_API + '/sessions/' + sessionId).then(r => r.json()).then(session => {
+        if (!session.summary) return;
+        const existing = document.getElementById('sd-session-detail');
+        if (existing) existing.remove();
+        const div = document.createElement('div');
+        div.id = 'sd-session-detail';
+        div.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:2rem';
+        div.innerHTML = `<div style="background:white;border-radius:16px;padding:2rem;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:var(--shadow-lg)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+            <h3 style="font-weight:700;font-size:1.125rem;font-family:'Plus Jakarta Sans',sans-serif">Session Summary</h3>
+            <button onclick="document.getElementById('sd-session-detail').remove()" style="background:transparent;border:none;font-size:1.25rem;cursor:pointer;color:var(--text-muted)">✕</button>
+          </div>
+          <pre style="white-space:pre-wrap;font-family:'Inter',sans-serif;font-size:0.875rem;line-height:1.7">${session.summary}</pre>
+        </div>`;
+        document.body.appendChild(div);
+        div.onclick = e => { if (e.target === div) div.remove(); };
+      });
+    }
+
+    // ---- Analytics tab ----
+    async function sdLoadAnalytics() {
+      const analytics = await fetch(SD_API + '/analytics').then(r => r.json());
+      const el = document.getElementById('sd-tab-analytics');
+      el.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2rem">
+          <div class="card" style="text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:var(--primary)">${analytics.totalSessions}</div>
+            <div style="font-size:0.875rem;color:var(--text-muted)">Total Sessions</div>
+          </div>
+          <div class="card" style="text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:var(--success)">${analytics.avgAttendance}%</div>
+            <div style="font-size:0.875rem;color:var(--text-muted)">Avg Attendance</div>
+          </div>
+          <div class="card" style="text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:${analytics.totalBlockers > 0 ? 'var(--danger)' : 'var(--success)'}">${analytics.totalBlockers}</div>
+            <div style="font-size:0.875rem;color:var(--text-muted)">Total Blockers</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">4-Week Attendance Rate</h3>
+          ${analytics.attendance.length === 0 ? '<p style="color:var(--text-muted);font-size:0.875rem">No sessions yet.</p>' : analytics.attendance.map(m => `
+            <div class="sd-analytics-row">
+              <div style="width:160px;flex-shrink:0">
+                <div style="font-size:0.875rem;font-weight:500">${m.name.split(' ')[0]}</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">${m.role}</div>
+              </div>
+              <div style="flex:1;background:var(--border);border-radius:9999px;height:8px;overflow:hidden">
+                <div style="height:100%;width:${m.rate}%;background:${m.rate >= 80 ? 'var(--success)' : m.rate >= 50 ? 'var(--warning)' : 'var(--danger)'};border-radius:9999px;transition:width 0.5s"></div>
+              </div>
+              <div style="width:48px;text-align:right;font-size:0.875rem;font-weight:600;color:${m.rate >= 80 ? 'var(--success)' : m.rate >= 50 ? 'var(--warning)' : 'var(--danger)'}">${m.rate}%</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function sdGetNextStandupDate() {
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const standupDays = [1,2,4,5];
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      while (!standupDays.includes(d.getDay())) d.setDate(d.getDate() + 1);
+      return `${days[d.getDay()]}, ${d.toLocaleDateString('en-MY', { day:'numeric', month:'long' })}`;
+    }
+
+    // ---- Transcript upload / parse ----
+    let sdParsedData = []; // holds last parsed results
+
+    function sdOpenUpload() {
+      sdResetUploadModal();
+      document.getElementById('sd-upload-modal').classList.add('open');
+    }
+
+    function sdCloseUpload() {
+      document.getElementById('sd-upload-modal').classList.remove('open');
+    }
+
+    function sdResetUploadModal() {
+      document.getElementById('sd-upload-step1').style.display = 'block';
+      document.getElementById('sd-upload-step2').style.display = 'none';
+      document.getElementById('sd-parse-btn').style.display = '';
+      document.getElementById('sd-apply-btn').style.display = 'none';
+      document.getElementById('sd-paste-input').value = '';
+      document.getElementById('sd-paste-input').placeholder = 'Paste Gemini summary or Meet transcript here...';
+      document.getElementById('sd-file-input').value = '';
+      sdPendingFile = null;
+      sdParsedData = [];
+    }
+
+    function sdBackToStep1() {
+      document.getElementById('sd-upload-step1').style.display = 'block';
+      document.getElementById('sd-upload-step2').style.display = 'none';
+      document.getElementById('sd-parse-btn').style.display = '';
+      document.getElementById('sd-apply-btn').style.display = 'none';
+    }
+
+    // Stored file reference for .docx binary upload
+    let sdPendingFile = null;
+
+    function sdLoadFile(file) {
+      if (!file) return;
+      sdPendingFile = null;
+      const isDocx = file.name.toLowerCase().endsWith('.docx') ||
+        file.type.includes('wordprocessingml') || file.type.includes('openxmlformats');
+      if (isDocx) {
+        // Binary — can't show in textarea; store for upload
+        sdPendingFile = file;
+        document.getElementById('sd-paste-input').value = '';
+        document.getElementById('sd-paste-input').placeholder = `📄 ${file.name} ready to parse`;
+        showToast('✅ File ready — click Parse →');
+      } else {
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('sd-paste-input').value = e.target.result;
+          showToast('✅ File loaded — click Parse →');
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    function sdHandleFileInput(event) {
+      sdLoadFile(event.target.files[0]);
+    }
+
+    function sdHandleDrop(event) {
+      event.preventDefault();
+      document.getElementById('sd-drop-zone').classList.remove('drag-over');
+      sdLoadFile(event.dataTransfer.files[0]);
+    }
+
+    async function sdParseText() {
+      const text = document.getElementById('sd-paste-input').value.trim();
+      if (!text && !sdPendingFile) { showToast('⚠️ Upload a file or paste text first'); return; }
+
+      const btn = document.getElementById('sd-parse-btn');
+      btn.textContent = 'Parsing…';
+      btn.disabled = true;
+
+      try {
+        let res;
+        if (sdPendingFile) {
+          // Upload binary file (e.g. .docx) via FormData
+          const form = new FormData();
+          form.append('file', sdPendingFile);
+          res = await fetch(SD_API + '/parse-transcript', { method: 'POST', body: form });
+        } else {
+          res = await fetch(SD_API + '/parse-transcript', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text }),
+          });
+        }
+        const data = await res.json();
+        sdParsedData = data.members || [];
+
+        if (!sdParsedData.length) {
+          showToast('⚠️ No team members detected. Check names match team list.');
+          btn.textContent = 'Parse →';
+          btn.disabled = false;
+          return;
+        }
+
+        sdRenderParsedPreview();
+        document.getElementById('sd-upload-step1').style.display = 'none';
+        document.getElementById('sd-upload-step2').style.display = 'block';
+        btn.style.display = 'none';
+        document.getElementById('sd-apply-btn').style.display = '';
+      } catch (e) {
+        showToast('⚠️ Parse failed: ' + e.message);
+        btn.textContent = 'Parse →';
+        btn.disabled = false;
+      }
+    }
+
+    function sdRenderParsedPreview() {
+      const container = document.getElementById('sd-parsed-results');
+      if (!sdParsedData.length) {
+        container.innerHTML = '<p style="color:var(--text-muted)">No updates extracted.</p>';
+        return;
+      }
+      container.innerHTML = sdParsedData.map((m, i) => `
+        <div class="sd-parsed-card">
+          <div class="sd-parsed-name">${m.name}</div>
+          <div class="sd-parsed-field">
+            <div class="sd-parsed-label">✅ Yesterday</div>
+            <input class="sd-parsed-input" id="sdp-yest-${i}" value="${(m.yesterday||'').replace(/"/g,'&quot;')}" placeholder="What was completed">
+          </div>
+          <div class="sd-parsed-field">
+            <div class="sd-parsed-label">🔄 Today</div>
+            <input class="sd-parsed-input" id="sdp-today-${i}" value="${(m.today||'').replace(/"/g,'&quot;')}" placeholder="What are they working on">
+          </div>
+          <div class="sd-parsed-field">
+            <div class="sd-parsed-label">🚫 Blockers</div>
+            <input class="sd-parsed-input" id="sdp-block-${i}" value="${(m.blockers||'').replace(/"/g,'&quot;')}" placeholder="Any blockers">
+          </div>
+          ${m.tickets && m.tickets.length ? `<div class="sd-parsed-field">
+            <div class="sd-parsed-label">🎫 Tickets</div>
+            <div style="display:flex;gap:0.375rem;flex-wrap:wrap">${m.tickets.map(t=>`<span class="sd-ticket-chip">${t}</span>`).join('')}</div>
+          </div>` : ''}
+          ${m.accounts && m.accounts.length ? `<div class="sd-parsed-field">
+            <div class="sd-parsed-label">🏢 Accounts</div>
+            <div style="display:flex;gap:0.375rem;flex-wrap:wrap">${m.accounts.map(a=>`<span style="font-size:0.75rem;padding:0.2rem 0.6rem;border-radius:20px;background:rgba(37,99,235,0.1);color:var(--primary);font-weight:600">${a}</span>`).join('')}</div>
+          </div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    async function sdApplyParsed() {
+      if (!sdSession) { showToast('⚠️ Start a standup session first'); return; }
+
+      const btn = document.getElementById('sd-apply-btn');
+      btn.textContent = 'Importing…';
+      btn.disabled = true;
+
+      // Read back edited values from preview inputs
+      const updates = sdParsedData.map((m, i) => ({
+        memberId: m.memberId,
+        yesterday: document.getElementById(`sdp-yest-${i}`)?.value || m.yesterday,
+        today: document.getElementById(`sdp-today-${i}`)?.value || m.today,
+        blockers: document.getElementById(`sdp-block-${i}`)?.value || m.blockers,
+        tickets: m.tickets,
+        accounts: m.accounts || [],
+      }));
+
+      // Submit each member's update and mark present
+      for (const u of updates) {
+        // Mark present if still pending
+        const att = sdSession.attendance[u.memberId];
+        if (!att || att.status === 'pending') {
+          const attRes = await fetch(`${SD_API}/sessions/${sdSession.id}/attendance`, {
+            method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ memberId: u.memberId, status: 'present' }),
+          });
+          sdSession = await attRes.json();
+        }
+        // Submit update
+        const updRes = await fetch(`${SD_API}/sessions/${sdSession.id}/updates`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(u),
+        });
+        sdSession = await updRes.json();
+      }
+
+      // Reload blockers
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+
+      sdCloseUpload();
+      sdRenderToday();
+      showToast(`✅ Imported updates for ${updates.length} team member${updates.length !== 1 ? 's' : ''}`);
     }
 
     // Render agent card
     function renderAgentCard(agent) {
       const isLive = agent.status === 'live';
+      const clickHandler = isLive
+        ? (agent.action ? `onclick="${agent.action}"` : `onclick="window.location.href='${agent.url}'"`)
+        : '';
+      const launchEl = isLive
+        ? (agent.action
+            ? `<button onclick="${agent.action}" class="agent-link" style="background:none;border:none;padding:0;cursor:pointer;font-size:0.875rem;font-weight:600;color:var(--primary)">Open in Platform →</button>`
+            : `<a href="${agent.url}" class="agent-link">Launch Agent →</a>`)
+        : '';
       return `
-        <div class="agent-card ${agent.status}" ${isLive ? `onclick="window.location.href='${agent.url}'"` : ''}>
+        <div class="agent-card ${agent.status}" style="${isLive ? 'cursor:pointer' : ''}" ${clickHandler}>
           <div class="agent-header">
             <div class="agent-icon">${agent.icon}</div>
             <span class="agent-status ${agent.status}">${agent.statusText}</span>
           </div>
           <h3 class="agent-name">${agent.name}</h3>
           <p class="agent-desc">${agent.desc}</p>
-          ${isLive ? `<a href="${agent.url}" class="agent-link">Launch Agent →</a>` : ''}
+          ${launchEl}
         </div>
       `;
     }
