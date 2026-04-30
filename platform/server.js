@@ -122,6 +122,73 @@ epBotServer.get('/api/myfuturejobs/template/xlsx', (req, res) => {
 // Mount EP Bot API
 app.use('/ep-api', epBotServer);
 
+// ── Onboarding Agent ──
+const onboardingAgentPath = path.join(__dirname, '..', '02 - Onboarding Agent');
+const onboardingPublicPath = path.join(onboardingAgentPath, 'public');
+const onboardingDataFile = path.join(onboardingAgentPath, 'data', 'onboardings.json');
+
+if (!fs.existsSync(path.join(onboardingAgentPath, 'data'))) {
+  fs.mkdirSync(path.join(onboardingAgentPath, 'data'), { recursive: true });
+}
+
+const { processMessage: obProcessMessage, calcProgress: obCalcProgress } = require(path.join(onboardingAgentPath, 'src', 'onboardingBot'));
+
+function loadOnboardings() {
+  if (!fs.existsSync(onboardingDataFile)) return [];
+  try { return JSON.parse(fs.readFileSync(onboardingDataFile, 'utf8')); }
+  catch { return []; }
+}
+function saveOnboardings(data) { fs.writeFileSync(onboardingDataFile, JSON.stringify(data, null, 2)); }
+
+app.use('/onboarding', express.static(onboardingPublicPath));
+
+const obRouter = require('express').Router();
+
+obRouter.post('/chat', (req, res) => {
+  const { message, sessionId, activeOnboardingId } = req.body;
+  const onboardings = loadOnboardings();
+  const result = obProcessMessage(message, sessionId, onboardings, activeOnboardingId || null);
+  if (result.newOnboarding) { onboardings.push(result.newOnboarding); saveOnboardings(onboardings); }
+  res.json({ reply: result.reply, quickReplies: result.quickReplies || [], activeOnboarding: result.activeOnboarding || null, action: result.action || null });
+});
+
+obRouter.get('/onboardings', (req, res) => {
+  const list = loadOnboardings();
+  res.json(list.map(o => ({ ...o, progress: obCalcProgress(o) })));
+});
+obRouter.get('/onboardings/:id', (req, res) => {
+  const o = loadOnboardings().find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/setup/:item', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  if (req.params.item in o.setup) { o.setup[req.params.item] = !o.setup[req.params.item]; saveOnboardings(list); }
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/academy/:module', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  const { field } = req.body;
+  if (o.academy[req.params.module] && field in o.academy[req.params.module]) { o.academy[req.params.module][field] = !o.academy[req.params.module][field]; saveOnboardings(list); }
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/documents/:item', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  if (req.params.item in o.documents) { o.documents[req.params.item] = !o.documents[req.params.item]; saveOnboardings(list); }
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+obRouter.patch('/onboardings/:id/day1', (req, res) => {
+  const list = loadOnboardings(); const o = list.find(o => o.id === req.params.id);
+  if (!o) return res.status(404).json({ error: 'Not found' });
+  o.day1Completed = !o.day1Completed; saveOnboardings(list);
+  res.json({ ...o, progress: obCalcProgress(o) });
+});
+
+app.use('/onboarding-api', obRouter);
+
 app.use(express.static('public'));
 app.use(session({
   secret: JWT_SECRET,
