@@ -232,8 +232,7 @@ function parseTranscript(text, team, accounts) {
         memberId: member.id,
         name: member.name,
         todayItems: [],
-        yesterdayChunks: [],  // from Details section (clean summaries)
-        txYesterdayChunks: [], // from Transcript (speaker utterances)
+        yesterdayChunks: [],
         blockerChunks: [],
         tickets: new Set(),
         accountsSet: new Set(),
@@ -265,17 +264,8 @@ function parseTranscript(text, team, accounts) {
     return accountMatchers.filter(a => a.re.test(str)).map(a => a.name);
   }
 
-  const YESTERDAY_KW = ['yesterday', 'completed', 'finished', 'done', 'wrapped up', 'sent over', 'sent out', 'reviewed', 'finalized', 'from yesterday'];
-  const BLOCKER_KW   = ['blocked', 'waiting for', 'waiting on', 'stuck', 'issue with', 'problem with', 'delay', "can't", 'not done', 'need approval'];
-  // First-person signals required for transcript-sourced blockers/yesterday
-  const FIRST_PERSON = ['i ', "i'm", "i've", "i'll", "i need", 'i am', "i can't", "i cannot", 'my ', 'for me'];
-
-  function hasFirstPerson(str) {
-    const sl = ' ' + str.toLowerCase();
-    return FIRST_PERSON.some(fp => sl.includes(' ' + fp) || sl.includes('\n' + fp));
-  }
-
   // ── 1. Next steps section ─────────────────────────────────────────────────
+  // MOST RELIABLE: Gemini explicitly attributes tasks to named people.
   // Format: [Full Name] Short Title: Full description sentence.
   const nextStepsSection = norm.match(/Next steps\s*\n([\s\S]*?)(?=\n📖|\nDetails\b|\nRate this|$)/i);
   if (nextStepsSection) {
@@ -292,91 +282,19 @@ function parseTranscript(text, team, accounts) {
     });
   }
 
-  // ── 2. Transcript section ─────────────────────────────────────────────────
-  // Real Gemini Notes format:
-  //   Timestamps appear on their OWN line: "00:01:02"
-  //   Then speaker lines below: "Speaker Name: spoken text"
-  //   Continuation lines follow with no speaker prefix
-  const transcriptSection = norm.match(/📖 Transcript[\s\S]*?(?:Transcript\s*\n)([\s\S]*?)(?=\nThis editable transcript|$)/i)
-    || norm.match(/📖 Transcript\s*\n([\s\S]*?)$/i);
-
-  if (transcriptSection) {
-    const lines = transcriptSection[1].split('\n');
-    let currentMember = null;
-    let buffer = [];
-
-    function cleanTranscript(str) {
-      // Remove filler words and clean up transcript speech artifacts
-      return str
-        .replace(/\b(um|uh|yeah|yep|okay|ok|so|right|like)\b[,.]?\s*/gi, ' ')
-        .replace(/\s{2,}/g, ' ').trim();
-    }
-
-    function flushBuffer() {
-      if (!currentMember || !buffer.length) return;
-      const chunk = cleanTranscript(buffer.join(' ').trim());
-      buffer = [];
-      if (chunk.length < 5) return;
-      const r = getOrCreate(currentMember);
-      const cl = chunk.toLowerCase();
-      // Blocker: require first-person signal + blocker keyword + reasonable length
-      if (chunk.length < 400 && hasFirstPerson(chunk) && BLOCKER_KW.some(kw => cl.includes(kw))) {
-        r.blockerChunks.push(chunk);
-      }
-      // Yesterday: require first-person + yesterday keyword
-      if (chunk.length < 400 && hasFirstPerson(chunk) && YESTERDAY_KW.some(kw => cl.includes(kw))) {
-        r.txYesterdayChunks.push(chunk);
-      }
-      extractTickets(chunk).forEach(t => r.tickets.add(t));
-      extractAccounts(chunk).forEach(a => r.accountsSet.add(a));
-    }
-
-    lines.forEach(rawLine => {
-      const line = rawLine.trim();
-      if (!line) return;
-
-      // Skip standalone timestamp lines (e.g. "00:01:02")
-      if (/^\d{1,2}:\d{2}:\d{2}$/.test(line)) { flushBuffer(); return; }
-
-      // Format A: "00:01:02 Speaker Name: text" (inline timestamp — some Gemini variants)
-      const withTs = line.match(/^\d{1,2}:\d{2}:\d{2}\s+(.+?):\s*(.*)$/);
-      if (withTs) {
-        flushBuffer();
-        currentMember = matchMember(withTs[1]);
-        if (withTs[2].trim()) buffer.push(withTs[2].trim());
-        return;
-      }
-
-      // Format B: "Speaker Name: text"  — name must match a team member
-      const speakerLine = line.match(/^([A-Z][^:]{2,50}):\s+(.+)$/);
-      if (speakerLine) {
-        const candidate = matchMember(speakerLine[1]);
-        if (candidate) {
-          flushBuffer();
-          currentMember = candidate;
-          if (speakerLine[2].trim()) buffer.push(speakerLine[2].trim());
-          return;
-        }
-      }
-
-      // Continuation line — skip embedded timestamp artifacts like "00:04:35."
-      if (currentMember && line.length > 3 && !/^\d{1,2}:\d{2}:\d{2}/.test(line)) {
-        buffer.push(line);
-      }
-    });
-    flushBuffer();
-  }
-
-  // ── 3. Details section ────────────────────────────────────────────────────
-  // Clean narrative summaries per topic. Most reliable source for yesterday info.
-  // These are past-tense narrative sentences written by Gemini about what happened.
+  // ── 2. Details section ────────────────────────────────────────────────────
+  // RELIABLE: Gemini's AI summary — attributes content to named people from
+  // full meeting context, NOT from unreliable room speaker diarization.
+  // The raw Transcript section is deliberately skipped: standup is done in a
+  // shared room so speaker labels in the transcript are inaccurate.
   const DETAILS_YESTERDAY_KW = ['yesterday', 'from yesterday', 'previous day', 'last week',
     'completed', 'finished', 'reviewed', 'sent out', 'sent over', 'wrapped up', 'submitted',
     'discussed yesterday'];
-  // Skip sentences that are clearly about future/current tasks (not past work)
+  // Exclude future-tense sentences — they describe today's tasks, not past work
   const FUTURE_SIGNALS = ['will be', 'needs to', 'is tasked', 'is going to', 'is asked to',
     'is scheduled', 'to finalize', 'to send out', 'to troubleshoot', 'to review', 'to work on',
     'to prioritize', 'to address', 'to arrange', 'to set up', 'to focus on'];
+  const DETAILS_BLOCKER_KW = ['blocked', 'waiting for', 'unable to', 'cannot proceed', 'delay'];
 
   const detailsSection = norm.match(/\bDetails\b\s*\n([\s\S]*?)(?=\n📖|$)/i);
   if (detailsSection) {
@@ -385,14 +303,12 @@ function parseTranscript(text, team, accounts) {
       .map(s => s
         .replace(/\(\d{2}:\d{2}:\d{2}\)/g, '')
         .replace(/\d{2}:\d{2}:\d{2}/g, '')
-        // Strip "Section Header: " prefix (no comma in header, ends with colon+space)
-        .replace(/^[^,:]{5,60}:\s+(?=[A-Z])/, '')
+        .replace(/^[^,:]{5,60}:\s+(?=[A-Z])/, '') // strip "Section Header: " prefix
         .trim())
       .filter(s => s.length > 10);
 
     sentences.forEach(sentence => {
       const sl = sentence.toLowerCase();
-      // Skip future-tense sentences — not about what was done yesterday
       if (FUTURE_SIGNALS.some(sig => sl.includes(sig))) return;
       const member = team.find(m => {
         const first = m.name.split(' ')[0].toLowerCase();
@@ -401,9 +317,7 @@ function parseTranscript(text, team, accounts) {
       if (!member) return;
       const r = getOrCreate(member);
       if (DETAILS_YESTERDAY_KW.some(kw => sl.includes(kw))) r.yesterdayChunks.push(sentence);
-      // Blockers from Details only if clearly blocking in nature
-      const detailsBlockerKW = ['blocked', 'waiting for', 'unable to', 'cannot proceed', 'delay'];
-      if (detailsBlockerKW.some(kw => sl.includes(kw))) r.blockerChunks.push(sentence);
+      if (DETAILS_BLOCKER_KW.some(kw => sl.includes(kw))) r.blockerChunks.push(sentence);
       extractTickets(sentence).forEach(t => r.tickets.add(t));
       extractAccounts(sentence).forEach(a => r.accountsSet.add(a));
     });
@@ -411,10 +325,8 @@ function parseTranscript(text, team, accounts) {
 
   // ── Assemble results ───────────────────────────────────────────────────────
   return Object.values(results).map(r => {
-    const today = r.todayItems.join('. ') || '';
-    // Prefer Details-sourced yesterday (clean prose) over raw transcript chunks
-    const allYesterday = [...new Set([...r.yesterdayChunks, ...r.txYesterdayChunks])];
-    const yesterday = allYesterday.slice(0, 2).join('. ');
+    const today     = r.todayItems.join('. ') || '';
+    const yesterday = [...new Set(r.yesterdayChunks)].slice(0, 2).join('. ');
     const blockers  = [...new Set(r.blockerChunks)].slice(0, 2).join('. ');
     const tickets   = [...r.tickets];
     const accounts  = [...r.accountsSet];
