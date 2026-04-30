@@ -196,6 +196,22 @@ if (!fs.existsSync(path.join(onboardingAgentPath, 'data'))) {
 
 const { processMessage: obProcessMessage, calcProgress: obCalcProgress } = require(path.join(onboardingAgentPath, 'src', 'onboardingBot'));
 
+// ── Standup Agent ──
+const standupManagerPath = path.join(__dirname, '..', '03 - Standup Agent', 'src', 'standupManager');
+const { createSession: sdCreateSession, markAttendance: sdMarkAttendance, submitUpdate: sdSubmitUpdate, closeSession: sdCloseSession, calcAnalytics: sdCalcAnalytics, getTodayKey: sdGetTodayKey } = require(standupManagerPath);
+
+const SD_DATA_DIR = path.join(__dirname, '..', '03 - Standup Agent', 'data');
+if (!fs.existsSync(SD_DATA_DIR)) fs.mkdirSync(SD_DATA_DIR, { recursive: true });
+
+function loadSDFile(file) {
+  const fp = path.join(SD_DATA_DIR, file);
+  if (!fs.existsSync(fp)) return [];
+  try { return JSON.parse(fs.readFileSync(fp, 'utf8')); } catch { return []; }
+}
+function saveSDFile(file, data) {
+  fs.writeFileSync(path.join(SD_DATA_DIR, file), JSON.stringify(data, null, 2));
+}
+
 function loadOnboardings() {
   if (!fs.existsSync(onboardingDataFile)) return [];
   try { return JSON.parse(fs.readFileSync(onboardingDataFile, 'utf8')); }
@@ -251,6 +267,148 @@ obRouter.patch('/onboardings/:id/day1', (req, res) => {
 });
 
 app.use('/onboarding-api', obRouter);
+
+// ── Standup Router ──
+const sdRouter = express.Router();
+
+sdRouter.get('/team', (req, res) => res.json(loadSDFile('team.json')));
+
+sdRouter.post('/team', (req, res) => {
+  const { name, role } = req.body;
+  if (!name || !role) return res.status(400).json({ error: 'name and role required' });
+  const team = loadSDFile('team.json');
+  const id = 'BD' + String(team.length + 1).padStart(3, '0');
+  const member = { id, name, role };
+  team.push(member);
+  saveSDFile('team.json', team);
+  res.status(201).json(member);
+});
+
+sdRouter.delete('/team/:id', (req, res) => {
+  let team = loadSDFile('team.json');
+  const len = team.length;
+  team = team.filter(m => m.id !== req.params.id);
+  if (team.length === len) return res.status(404).json({ error: 'Not found' });
+  saveSDFile('team.json', team);
+  res.json({ ok: true });
+});
+
+sdRouter.get('/sessions', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  res.json(sessions.slice().sort((a, b) => b.date.localeCompare(a.date)));
+});
+
+sdRouter.get('/sessions/today', (req, res) => {
+  const today = sdGetTodayKey();
+  const sessions = loadSDFile('standups.json');
+  const session = sessions.find(s => s.date === today) || null;
+  res.json(session);
+});
+
+sdRouter.post('/sessions', (req, res) => {
+  const today = sdGetTodayKey();
+  const sessions = loadSDFile('standups.json');
+  if (sessions.find(s => s.date === today)) {
+    return res.status(409).json({ error: 'Session already exists for today' });
+  }
+  const team = loadSDFile('team.json');
+  const session = sdCreateSession(today, team);
+  sessions.push(session);
+  saveSDFile('standups.json', sessions);
+  res.status(201).json(session);
+});
+
+sdRouter.get('/sessions/:id', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const session = sessions.find(s => s.id === req.params.id);
+  if (!session) return res.status(404).json({ error: 'Not found' });
+  res.json(session);
+});
+
+sdRouter.patch('/sessions/:id/attendance', (req, res) => {
+  const { memberId, status } = req.body;
+  if (!memberId || !status) return res.status(400).json({ error: 'memberId and status required' });
+  const sessions = loadSDFile('standups.json');
+  const idx = sessions.findIndex(s => s.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  sdMarkAttendance(sessions[idx], memberId, status);
+  saveSDFile('standups.json', sessions);
+  res.json(sessions[idx]);
+});
+
+sdRouter.post('/sessions/:id/updates', (req, res) => {
+  const { memberId, yesterday, today, blockers, tickets } = req.body;
+  if (!memberId) return res.status(400).json({ error: 'memberId required' });
+  const sessions = loadSDFile('standups.json');
+  const idx = sessions.findIndex(s => s.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  sdSubmitUpdate(sessions[idx], memberId, { yesterday, today, blockers, tickets });
+  if (blockers && blockers.trim()) {
+    const blockerList = loadSDFile('blockers.json');
+    blockerList.push({
+      id: 'BLK_' + Date.now(),
+      text: blockers.trim(),
+      memberId,
+      sessionId: req.params.id,
+      tickets: tickets || [],
+      status: 'open',
+      createdAt: new Date().toISOString(),
+      date: new Date().toISOString().slice(0, 10)
+    });
+    saveSDFile('blockers.json', blockerList);
+  }
+  saveSDFile('standups.json', sessions);
+  res.json(sessions[idx]);
+});
+
+sdRouter.patch('/sessions/:id/close', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const idx = sessions.findIndex(s => s.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  const team = loadSDFile('team.json');
+  sdCloseSession(sessions[idx], team);
+  saveSDFile('standups.json', sessions);
+  res.json(sessions[idx]);
+});
+
+sdRouter.get('/blockers', (req, res) => res.json(loadSDFile('blockers.json')));
+
+sdRouter.post('/blockers', (req, res) => {
+  const { text, memberId, sessionId, tickets, date } = req.body;
+  if (!text || !memberId) return res.status(400).json({ error: 'text and memberId required' });
+  const blockers = loadSDFile('blockers.json');
+  const blocker = {
+    id: 'BLK_' + Date.now(),
+    text,
+    memberId,
+    sessionId: sessionId || null,
+    tickets: tickets || [],
+    status: 'open',
+    createdAt: new Date().toISOString(),
+    date: date || new Date().toISOString().slice(0, 10)
+  };
+  blockers.push(blocker);
+  saveSDFile('blockers.json', blockers);
+  res.status(201).json(blocker);
+});
+
+sdRouter.patch('/blockers/:id/resolve', (req, res) => {
+  const blockers = loadSDFile('blockers.json');
+  const idx = blockers.findIndex(b => b.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ error: 'Not found' });
+  blockers[idx].status = 'resolved';
+  blockers[idx].resolvedAt = new Date().toISOString();
+  saveSDFile('blockers.json', blockers);
+  res.json(blockers[idx]);
+});
+
+sdRouter.get('/analytics', (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const team = loadSDFile('team.json');
+  res.json(sdCalcAnalytics(sessions, team));
+});
+
+app.use('/standup-api', sdRouter);
 
 app.use(express.static('public'));
 app.use(session({

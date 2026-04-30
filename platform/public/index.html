@@ -674,6 +674,45 @@
     .btn-secondary:hover {
       background: var(--border);
     }
+
+    /* ===== STANDUP SECTION ===== */
+    .sd-tabs-bar { display:flex;gap:0.375rem;margin-bottom:1.5rem;background:var(--bg-card);padding:0.375rem;border-radius:12px;box-shadow:var(--shadow);width:fit-content; }
+    .sd-tab-btn { padding:0.625rem 1.25rem;border-radius:8px;border:none;background:transparent;color:var(--text-secondary);font-size:0.875rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:0.5rem; }
+    .sd-tab-btn.active { background:var(--primary);color:white;box-shadow:0 2px 8px rgba(37,99,235,0.3); }
+    .sd-tab-content { display:none; }
+    .sd-tab-content.active { display:block; }
+
+    .sd-start-card { background:var(--bg-card);border-radius:16px;padding:4rem 2rem;text-align:center;border:2px dashed var(--border);max-width:480px;margin:0 auto; }
+
+    .sd-attendance-strip { display:flex;gap:0.75rem;flex-wrap:wrap; }
+    .sd-att-chip { display:flex;flex-direction:column;align-items:center;gap:0.2rem;padding:0.625rem 0.875rem;border-radius:12px;cursor:pointer;border:2px solid transparent;transition:all 0.15s;background:var(--bg-hover);min-width:72px; }
+    .sd-att-chip.present { background:rgba(16,185,129,0.12);border-color:var(--success); }
+    .sd-att-chip.absent { background:rgba(239,68,68,0.1);border-color:var(--danger); }
+    .sd-att-chip.late { background:rgba(245,158,11,0.12);border-color:var(--warning); }
+    .sd-att-name { font-size:0.875rem;font-weight:600; }
+    .sd-att-status { font-size:0.625rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted); }
+    .sd-att-chip.present .sd-att-status { color:var(--success); }
+    .sd-att-chip.absent .sd-att-status { color:var(--danger); }
+    .sd-att-chip.late .sd-att-status { color:var(--warning); }
+
+    .sd-member-card { background:var(--bg-card);border-radius:16px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1rem;box-shadow:var(--shadow); }
+    .sd-member-header { display:flex;justify-content:space-between;align-items:center; }
+    .sd-update-field { display:flex;flex-direction:column;gap:0.375rem; }
+    .sd-update-field label { font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted); }
+    .sd-update-field textarea { padding:0.625rem 0.875rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;font-family:'Inter',sans-serif;resize:vertical;outline:none;transition:border-color 0.15s; }
+    .sd-update-field textarea:focus { border-color:var(--primary); }
+    .sd-submit-btn { padding:0.625rem 1.5rem;background:var(--primary);color:white;border:none;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer; }
+    .sd-submit-btn:hover { background:var(--primary-dark); }
+
+    .sd-ticket-chip { display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.5rem;background:rgba(37,99,235,0.1);color:var(--primary);border-radius:6px;font-size:0.75rem;font-weight:600; }
+    .sd-summary-card { background:var(--bg-card);border-radius:16px;padding:1.5rem;border:1px solid var(--border);margin-bottom:1.5rem; }
+
+    .sd-blocker-card { background:var(--bg-card);border-radius:12px;padding:1.25rem;border:1px solid var(--border); }
+    .sd-session-item { background:var(--bg-card);border-radius:12px;padding:1.25rem;border:1px solid var(--border);cursor:pointer;transition:all 0.2s; }
+    .sd-session-item:hover { border-color:var(--primary);box-shadow:var(--shadow); }
+
+    .sd-analytics-row { display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border); }
+    .sd-analytics-row:last-child { border-bottom:none; }
   </style>
 </head>
 <body>
@@ -726,11 +765,11 @@
           </button>
         </div>
         <div class="nav-item">
-          <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
-            <span class="nav-icon">🏖️</span>
-            Leave
-            <span class="nav-badge" style="background: rgba(148, 163, 184, 0.2); color: var(--text-muted);">PLANNED</span>
-          </span>
+          <button class="nav-link" onclick="showSection('standup')">
+            <span class="nav-icon">📋</span>
+            BD Standup
+            <span class="nav-badge live">LIVE</span>
+          </button>
         </div>
         <div class="nav-item">
           <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
@@ -939,6 +978,29 @@
         </div>
       </section>
 
+      <!-- Standup Section -->
+      <section class="section" id="standupSection">
+        <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;padding:2rem 3rem 1.5rem;">
+          <div>
+            <h2 class="section-title">BD Standup</h2>
+            <p class="section-subtitle">Mon · Tue · Thu · Fri at 9:45 AM</p>
+          </div>
+          <div id="sd-header-actions"></div>
+        </div>
+        <div style="padding:0 3rem 3rem;">
+          <div class="sd-tabs-bar">
+            <button class="sd-tab-btn active" onclick="sdSwitchTab('today')">Today</button>
+            <button class="sd-tab-btn" onclick="sdSwitchTab('blockers')">Blockers <span id="sd-blocker-count" class="ob-tab-badge">0</span></button>
+            <button class="sd-tab-btn" onclick="sdSwitchTab('history')">History</button>
+            <button class="sd-tab-btn" onclick="sdSwitchTab('analytics')">Analytics</button>
+          </div>
+          <div id="sd-tab-today" class="sd-tab-content active"></div>
+          <div id="sd-tab-blockers" class="sd-tab-content"></div>
+          <div id="sd-tab-history" class="sd-tab-content"></div>
+          <div id="sd-tab-analytics" class="sd-tab-content"></div>
+        </div>
+      </section>
+
       <!-- Settings Section -->
       <section class="section" id="settingsSection">
         <div class="section-header">
@@ -1079,13 +1141,14 @@
         action: "showSection('onboarding')"
       },
       {
-        id: 'leave',
-        name: 'Leave Agent',
-        icon: '🏖️',
-        desc: 'Automated leave application and approval workflow. Balance tracking and team calendar.',
-        status: 'planned',
-        statusText: 'Planned',
-        url: null
+        id: 'standup',
+        name: 'BD Standup Agent',
+        icon: '📋',
+        desc: 'Daily standup tracker for the BD team. Attendance, Yesterday/Today/Blockers updates, persistent blocker board, and session summaries.',
+        status: 'live',
+        statusText: 'Live',
+        url: null,
+        action: "showSection('standup')"
       },
       {
         id: 'interview',
@@ -1193,6 +1256,8 @@
         document.getElementById('ob-admin-view').style.display = 'block';
         document.getElementById('ob-emp-view').style.display = 'none';
         obLoadList();
+      } else if (section === 'standup') {
+        sdInit();
       }
     }
 
@@ -1587,6 +1652,437 @@
     function obQRClick(text) {
       document.getElementById('ob-chat-input').value = text;
       obSend();
+    }
+
+    // ===== BD STANDUP =====
+    const SD_API = '/standup-api';
+    let sdCurrentTab = 'today';
+    let sdSession = null;
+    let sdTeam = [];
+    let sdBlockers = [];
+
+    async function sdInit() {
+      [sdTeam, sdSession, sdBlockers] = await Promise.all([
+        fetch(SD_API + '/team').then(r => r.json()),
+        fetch(SD_API + '/sessions/today').then(r => r.json()),
+        fetch(SD_API + '/blockers').then(r => r.json()),
+      ]);
+      sdRenderAll();
+    }
+
+    function sdSwitchTab(tab) {
+      sdCurrentTab = tab;
+      document.querySelectorAll('.sd-tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', ['today','blockers','history','analytics'][i] === tab);
+      });
+      document.querySelectorAll('.sd-tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('sd-tab-' + tab).classList.add('active');
+      if (tab === 'history') sdLoadHistory();
+      if (tab === 'analytics') sdLoadAnalytics();
+    }
+
+    function sdRenderAll() {
+      sdRenderToday();
+      sdRenderBlockers();
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+    }
+
+    // ---- Today tab ----
+    function sdRenderToday() {
+      const el = document.getElementById('sd-tab-today');
+      const today = new Date();
+      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const standupDays = [1,2,4,5];
+      const isToday = standupDays.includes(today.getDay());
+      const dateStr = today.toLocaleDateString('en-MY', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+      if (!sdSession) {
+        if (!isToday) {
+          const next = sdGetNextStandupDate();
+          el.innerHTML = `<div class="sd-start-card">
+            <div style="font-size:3rem;margin-bottom:1rem">📅</div>
+            <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:0.5rem">No standup today</h3>
+            <p style="color:var(--text-secondary)">Today is ${dayNames[today.getDay()]}. Next standup: <strong>${next}</strong></p>
+          </div>`;
+        } else {
+          el.innerHTML = `<div class="sd-start-card">
+            <div style="font-size:3rem;margin-bottom:1rem">☀️</div>
+            <h3 style="font-size:1.25rem;font-weight:700;margin-bottom:0.5rem">${dateStr}</h3>
+            <p style="color:var(--text-secondary);margin-bottom:1.5rem">Ready to start today's standup?</p>
+            <button class="btn btn-primary" style="font-size:1rem;padding:0.75rem 2rem;" onclick="sdStartSession()">Start Standup</button>
+          </div>`;
+        }
+        return;
+      }
+
+      const isComplete = sdSession.status === 'completed';
+      const present = Object.values(sdSession.attendance).filter(a => a.status === 'present' || a.status === 'late').length;
+
+      const attStrip = `<div class="card" style="margin-bottom:1.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <h3 class="card-title" style="margin:0">Attendance — ${dateStr}</h3>
+          <div style="display:flex;gap:0.5rem;align-items:center">
+            <span style="font-size:0.875rem;color:var(--text-muted)">${present}/${sdTeam.length} present</span>
+            ${!isComplete ? `<button class="btn btn-secondary" style="font-size:0.8125rem;padding:0.375rem 0.75rem;" onclick="sdCloseSession()">End & Summarise</button>` : `<span style="padding:0.25rem 0.75rem;background:rgba(16,185,129,0.15);color:var(--success);border-radius:9999px;font-size:0.75rem;font-weight:600;">Completed</span>`}
+          </div>
+        </div>
+        <div class="sd-attendance-strip">
+          ${sdTeam.map(m => {
+            const att = sdSession.attendance[m.id] || { status: 'pending' };
+            return `<div class="sd-att-chip ${att.status}" onclick="${isComplete ? '' : `sdToggleAttendance('${m.id}')`}" style="${isComplete ? 'cursor:default' : ''}">
+              <span class="sd-att-name">${m.name.split(' ')[0]}</span>
+              <span class="sd-att-status">${att.status === 'pending' ? '–' : att.status}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+
+      if (isComplete && sdSession.summary) {
+        el.innerHTML = attStrip + `<div class="sd-summary-card">
+          <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+            <h3 class="card-title" style="margin:0">Standup Summary</h3>
+            <button class="btn btn-secondary" style="font-size:0.8125rem;" onclick="navigator.clipboard.writeText(document.getElementById('sd-summary-text').textContent).then(()=>showToast('✅ Copied!'))">Copy</button>
+          </div>
+          <pre id="sd-summary-text" style="white-space:pre-wrap;font-family:'Inter',sans-serif;font-size:0.875rem;line-height:1.7;color:var(--text-primary)">${sdSession.summary}</pre>
+        </div>`;
+        el.innerHTML += sdTeam.map(m => sdRenderMemberCard(m, true)).join('');
+        return;
+      }
+
+      el.innerHTML = attStrip + sdTeam.map(m => sdRenderMemberCard(m, isComplete)).join('');
+    }
+
+    function sdRenderMemberCard(member, readOnly) {
+      const att = sdSession.attendance[member.id] || { status: 'pending' };
+      const update = sdSession.updates[member.id];
+      const isPresent = att.status === 'present' || att.status === 'late';
+      const hasUpdate = !!update;
+
+      const attBadgeStyle = { present: 'background:rgba(16,185,129,0.15);color:var(--success)', absent: 'background:rgba(239,68,68,0.15);color:var(--danger)', late: 'background:rgba(245,158,11,0.15);color:var(--warning)', pending: 'background:var(--bg-hover);color:var(--text-muted)' }[att.status];
+      const initials = member.name.split(' ').map(w=>w[0]).join('').slice(0,2);
+
+      if (!isPresent && !hasUpdate) {
+        return `<div class="sd-member-card" style="opacity:0.5">
+          <div class="sd-member-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div class="ob-avatar" style="font-size:0.875rem">${initials}</div>
+              <div><div style="font-weight:600">${member.name}</div><div style="font-size:0.75rem;color:var(--text-muted)">${member.role}</div></div>
+            </div>
+            <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;${attBadgeStyle}">${att.status}</span>
+          </div>
+        </div>`;
+      }
+
+      if (readOnly && hasUpdate) {
+        return `<div class="sd-member-card">
+          <div class="sd-member-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div class="ob-avatar" style="font-size:0.875rem">${initials}</div>
+              <div><div style="font-weight:600">${member.name}</div><div style="font-size:0.75rem;color:var(--text-muted)">${member.role}</div></div>
+            </div>
+            <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;${attBadgeStyle}">${att.status}</span>
+          </div>
+          <div style="padding:1rem 0 0;display:flex;flex-direction:column;gap:0.875rem">
+            ${update.yesterday ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Yesterday</div><p style="font-size:0.875rem">${update.yesterday}</p></div>` : ''}
+            ${update.today ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Today</div><p style="font-size:0.875rem">${update.today}</p></div>` : ''}
+            ${update.blockers ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--danger);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">🚫 Blocker</div><p style="font-size:0.875rem">${update.blockers}</p></div>` : ''}
+            ${update.tickets?.length ? `<div style="display:flex;gap:0.375rem;flex-wrap:wrap">${update.tickets.map(t=>`<span class="sd-ticket-chip">${t}</span>`).join('')}</div>` : ''}
+          </div>
+        </div>`;
+      }
+
+      const alreadySubmitted = hasUpdate;
+      return `<div class="sd-member-card" id="sd-card-${member.id}">
+        <div class="sd-member-header">
+          <div style="display:flex;align-items:center;gap:0.75rem">
+            <div class="ob-avatar" style="font-size:0.875rem">${initials}</div>
+            <div><div style="font-weight:600">${member.name}</div><div style="font-size:0.75rem;color:var(--text-muted)">${member.role}</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            ${alreadySubmitted ? `<span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;background:rgba(16,185,129,0.15);color:var(--success);">✓ Submitted</span>` : ''}
+            <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;${attBadgeStyle}">${att.status}</span>
+          </div>
+        </div>
+        <div style="padding:1rem 0 0;display:flex;flex-direction:column;gap:1rem">
+          <div class="sd-update-field">
+            <label>✅ Yesterday</label>
+            <textarea id="sd-yest-${member.id}" placeholder="What did you complete since last standup?" rows="2">${update?.yesterday || ''}</textarea>
+          </div>
+          <div class="sd-update-field">
+            <label>🔄 Today</label>
+            <textarea id="sd-today-${member.id}" placeholder="What are you working on today?" rows="2">${update?.today || ''}</textarea>
+          </div>
+          <div class="sd-update-field">
+            <label>🚫 Blockers</label>
+            <textarea id="sd-block-${member.id}" placeholder="Any blockers? Leave empty if none." rows="2">${update?.blockers || ''}</textarea>
+          </div>
+          <div class="sd-update-field">
+            <label>🎫 Jira Tickets</label>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem" id="sd-tickets-${member.id}">
+              ${(update?.tickets || []).map(t => `<span class="sd-ticket-chip">${t} <span onclick="sdRemoveTicket('${member.id}','${t}')" style="cursor:pointer;opacity:0.7">×</span></span>`).join('')}
+            </div>
+            <div style="display:flex;gap:0.5rem">
+              <input id="sd-ticket-input-${member.id}" type="text" placeholder="e.g. BO-42" style="padding:0.375rem 0.625rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.8125rem;width:120px;outline:none;" onkeydown="if(event.key==='Enter')sdAddTicket('${member.id}')">
+              <button onclick="sdAddTicket('${member.id}')" style="padding:0.375rem 0.625rem;border:1.5px solid var(--border);border-radius:6px;background:transparent;font-size:0.8125rem;cursor:pointer;">+ Add</button>
+              <a href="https://pantas.atlassian.net/jira/software/c/projects/BO/boards/113" target="_blank" style="padding:0.375rem 0.625rem;font-size:0.8125rem;color:var(--primary);display:flex;align-items:center;gap:0.25rem;text-decoration:none;">Open Jira ↗</a>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end">
+            <button class="sd-submit-btn" onclick="sdSubmitUpdate('${member.id}')">Submit Update</button>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // Ticket management
+    const sdTicketStore = {};
+
+    function sdAddTicket(memberId) {
+      const input = document.getElementById(`sd-ticket-input-${memberId}`);
+      const val = input.value.trim().toUpperCase();
+      if (!val) return;
+      if (!sdTicketStore[memberId]) sdTicketStore[memberId] = new Set();
+      sdTicketStore[memberId].add(val);
+      input.value = '';
+      sdRefreshTicketChips(memberId);
+    }
+
+    function sdRemoveTicket(memberId, ticket) {
+      sdTicketStore[memberId]?.delete(ticket);
+      sdRefreshTicketChips(memberId);
+    }
+
+    function sdRefreshTicketChips(memberId) {
+      const container = document.getElementById(`sd-tickets-${memberId}`);
+      if (!container) return;
+      const tickets = [...(sdTicketStore[memberId] || [])];
+      container.innerHTML = tickets.map(t => `<span class="sd-ticket-chip">${t} <span onclick="sdRemoveTicket('${memberId}','${t}')" style="cursor:pointer;opacity:0.7">×</span></span>`).join('');
+    }
+
+    async function sdStartSession() {
+      const res = await fetch(SD_API + '/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      sdSession = await res.json();
+      sdRenderToday();
+    }
+
+    async function sdToggleAttendance(memberId) {
+      const current = sdSession.attendance[memberId]?.status || 'pending';
+      const next = { pending: 'present', present: 'absent', absent: 'late', late: 'pending' }[current];
+      const res = await fetch(`${SD_API}/sessions/${sdSession.id}/attendance`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId, status: next })
+      });
+      sdSession = await res.json();
+      sdRenderToday();
+    }
+
+    async function sdSubmitUpdate(memberId) {
+      const yesterday = document.getElementById(`sd-yest-${memberId}`)?.value || '';
+      const today = document.getElementById(`sd-today-${memberId}`)?.value || '';
+      const blockers = document.getElementById(`sd-block-${memberId}`)?.value || '';
+      const tickets = [...(sdTicketStore[memberId] || [])];
+
+      const res = await fetch(`${SD_API}/sessions/${sdSession.id}/updates`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memberId, yesterday, today, blockers, tickets })
+      });
+      sdSession = await res.json();
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+      sdRenderToday();
+    }
+
+    async function sdCloseSession() {
+      const res = await fetch(`${SD_API}/sessions/${sdSession.id}/close`, { method: 'PATCH' });
+      sdSession = await res.json();
+      sdRenderToday();
+    }
+
+    // ---- Blockers tab ----
+    function sdRenderBlockers() {
+      const el = document.getElementById('sd-tab-blockers');
+      const open = sdBlockers.filter(b => b.status === 'open');
+      const resolved = sdBlockers.filter(b => b.status === 'resolved');
+
+      el.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+          <div>
+            <h3 style="font-weight:700;font-size:1.125rem;font-family:'Plus Jakarta Sans',sans-serif">${open.length} Active Blocker${open.length !== 1 ? 's' : ''}</h3>
+          </div>
+          <button class="btn btn-primary" onclick="sdShowAddBlocker()">+ Add Blocker</button>
+        </div>
+        <div id="sd-add-blocker-form" style="display:none;background:var(--bg-card);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;border:1px solid var(--border)">
+          <h4 style="margin-bottom:1rem;font-weight:600">New Blocker</h4>
+          <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <input id="sd-new-blocker-text" type="text" placeholder="Describe the blocker..." style="padding:0.625rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;outline:none;">
+            <div style="display:flex;gap:0.75rem">
+              <select id="sd-new-blocker-member" style="padding:0.625rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;flex:1">
+                ${sdTeam.map(m => `<option value="${m.id}">${m.name}</option>`).join('')}
+              </select>
+              <input id="sd-new-blocker-ticket" type="text" placeholder="Ticket (e.g. BO-42)" style="padding:0.625rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.875rem;width:160px;">
+            </div>
+            <div style="display:flex;gap:0.5rem;justify-content:flex-end">
+              <button class="btn btn-secondary" onclick="document.getElementById('sd-add-blocker-form').style.display='none'">Cancel</button>
+              <button class="btn btn-primary" onclick="sdAddBlocker()">Add Blocker</button>
+            </div>
+          </div>
+        </div>
+        ${open.length === 0 ? '<div class="ob-empty"><div style="font-size:2.5rem;margin-bottom:0.75rem">✅</div><p style="font-weight:600;color:var(--text-primary)">No active blockers</p><p>Team is unblocked!</p></div>' : ''}
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          ${open.map(b => sdRenderBlockerCard(b)).join('')}
+        </div>
+        ${resolved.length > 0 ? `
+          <h4 style="margin:2rem 0 1rem;font-weight:600;color:var(--text-muted);font-size:0.875rem;text-transform:uppercase;letter-spacing:0.05em">Resolved (${resolved.length})</h4>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;opacity:0.6">
+            ${resolved.slice(-5).reverse().map(b => sdRenderBlockerCard(b, true)).join('')}
+          </div>` : ''}
+      `;
+    }
+
+    function sdRenderBlockerCard(blocker, resolved = false) {
+      const member = sdTeam.find(m => m.id === blocker.memberId);
+      const daysOpen = Math.floor((Date.now() - new Date(blocker.date || blocker.createdAt).getTime()) / 86400000);
+      return `<div class="sd-blocker-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem">
+          <div style="flex:1">
+            <p style="font-size:0.9375rem;font-weight:500;margin-bottom:0.5rem">${blocker.text}</p>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center">
+              <span style="font-size:0.75rem;color:var(--text-muted)">👤 ${member?.name || blocker.memberId}</span>
+              ${blocker.tickets?.length ? blocker.tickets.map(t => `<span class="sd-ticket-chip">${t}</span>`).join('') : ''}
+              <span style="font-size:0.75rem;color:${resolved ? 'var(--success)' : daysOpen >= 3 ? 'var(--danger)' : 'var(--text-muted)'}">
+                ${resolved ? '✓ Resolved' : `${daysOpen === 0 ? 'Today' : daysOpen + ' day' + (daysOpen !== 1 ? 's' : '') + ' open'}`}
+              </span>
+            </div>
+          </div>
+          ${!resolved ? `<button onclick="sdResolveBlocker('${blocker.id}')" style="padding:0.375rem 0.875rem;border:1.5px solid var(--success);border-radius:8px;color:var(--success);background:transparent;font-size:0.8125rem;font-weight:600;cursor:pointer;white-space:nowrap;">Resolve</button>` : ''}
+        </div>
+      </div>`;
+    }
+
+    function sdShowAddBlocker() {
+      const form = document.getElementById('sd-add-blocker-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function sdAddBlocker() {
+      const text = document.getElementById('sd-new-blocker-text').value.trim();
+      if (!text) return;
+      const memberId = document.getElementById('sd-new-blocker-member').value;
+      const ticket = document.getElementById('sd-new-blocker-ticket').value.trim();
+      await fetch(SD_API + '/blockers', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, memberId, tickets: ticket ? [ticket.toUpperCase()] : [], date: new Date().toISOString().slice(0,10) })
+      });
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      document.getElementById('sd-add-blocker-form').style.display = 'none';
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+      sdRenderBlockers();
+    }
+
+    async function sdResolveBlocker(id) {
+      await fetch(`${SD_API}/blockers/${id}/resolve`, { method: 'PATCH' });
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+      sdRenderBlockers();
+    }
+
+    // ---- History tab ----
+    async function sdLoadHistory() {
+      const sessions = await fetch(SD_API + '/sessions').then(r => r.json());
+      const el = document.getElementById('sd-tab-history');
+      if (!sessions.length) {
+        el.innerHTML = '<div class="ob-empty"><p>No standup sessions yet.</p></div>';
+        return;
+      }
+      el.innerHTML = `<div style="display:flex;flex-direction:column;gap:0.75rem">
+        ${sessions.map(s => {
+          const present = Object.values(s.attendance).filter(a => a.status === 'present' || a.status === 'late').length;
+          const total = Object.keys(s.attendance).length;
+          const blockersInSession = Object.values(s.updates).filter(u => u.blockers).length;
+          const dateStr = new Date(s.date).toLocaleDateString('en-MY', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+          return `<div class="sd-session-item" onclick="sdShowSessionDetail('${s.id}')">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-weight:600;font-size:0.9375rem">${dateStr}</div>
+                <div style="font-size:0.8125rem;color:var(--text-muted);margin-top:0.2rem">${present}/${total} present · ${blockersInSession} blocker${blockersInSession !== 1 ? 's' : ''}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.75rem">
+                <span style="padding:0.2rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;background:${s.status === 'completed' ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'};color:${s.status === 'completed' ? 'var(--success)' : 'var(--warning)'}">${s.status}</span>
+                <span style="color:var(--text-muted)">→</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }
+
+    function sdShowSessionDetail(sessionId) {
+      fetch(SD_API + '/sessions/' + sessionId).then(r => r.json()).then(session => {
+        if (!session.summary) return;
+        const existing = document.getElementById('sd-session-detail');
+        if (existing) existing.remove();
+        const div = document.createElement('div');
+        div.id = 'sd-session-detail';
+        div.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:2rem';
+        div.innerHTML = `<div style="background:white;border-radius:16px;padding:2rem;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:var(--shadow-lg)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+            <h3 style="font-weight:700;font-size:1.125rem;font-family:'Plus Jakarta Sans',sans-serif">Session Summary</h3>
+            <button onclick="document.getElementById('sd-session-detail').remove()" style="background:transparent;border:none;font-size:1.25rem;cursor:pointer;color:var(--text-muted)">✕</button>
+          </div>
+          <pre style="white-space:pre-wrap;font-family:'Inter',sans-serif;font-size:0.875rem;line-height:1.7">${session.summary}</pre>
+        </div>`;
+        document.body.appendChild(div);
+        div.onclick = e => { if (e.target === div) div.remove(); };
+      });
+    }
+
+    // ---- Analytics tab ----
+    async function sdLoadAnalytics() {
+      const analytics = await fetch(SD_API + '/analytics').then(r => r.json());
+      const el = document.getElementById('sd-tab-analytics');
+      el.innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2rem">
+          <div class="card" style="text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:var(--primary)">${analytics.totalSessions}</div>
+            <div style="font-size:0.875rem;color:var(--text-muted)">Total Sessions</div>
+          </div>
+          <div class="card" style="text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:var(--success)">${analytics.avgAttendance}%</div>
+            <div style="font-size:0.875rem;color:var(--text-muted)">Avg Attendance</div>
+          </div>
+          <div class="card" style="text-align:center">
+            <div style="font-size:2rem;font-weight:800;color:${analytics.totalBlockers > 0 ? 'var(--danger)' : 'var(--success)'}">${analytics.totalBlockers}</div>
+            <div style="font-size:0.875rem;color:var(--text-muted)">Total Blockers</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">4-Week Attendance Rate</h3>
+          ${analytics.attendance.length === 0 ? '<p style="color:var(--text-muted);font-size:0.875rem">No sessions yet.</p>' : analytics.attendance.map(m => `
+            <div class="sd-analytics-row">
+              <div style="width:160px;flex-shrink:0">
+                <div style="font-size:0.875rem;font-weight:500">${m.name.split(' ')[0]}</div>
+                <div style="font-size:0.75rem;color:var(--text-muted)">${m.role}</div>
+              </div>
+              <div style="flex:1;background:var(--border);border-radius:9999px;height:8px;overflow:hidden">
+                <div style="height:100%;width:${m.rate}%;background:${m.rate >= 80 ? 'var(--success)' : m.rate >= 50 ? 'var(--warning)' : 'var(--danger)'};border-radius:9999px;transition:width 0.5s"></div>
+              </div>
+              <div style="width:48px;text-align:right;font-size:0.875rem;font-weight:600;color:${m.rate >= 80 ? 'var(--success)' : m.rate >= 50 ? 'var(--warning)' : 'var(--danger)'}">${m.rate}%</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function sdGetNextStandupDate() {
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const standupDays = [1,2,4,5];
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      while (!standupDays.includes(d.getDay())) d.setDate(d.getDate() + 1);
+      return `${days[d.getDay()]}, ${d.toLocaleDateString('en-MY', { day:'numeric', month:'long' })}`;
     }
 
     // Render agent card

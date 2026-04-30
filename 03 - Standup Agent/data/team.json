@@ -1,0 +1,7 @@
+[
+  { "id": "BD001", "name": "Ahmad Abdullah",  "role": "BD Manager" },
+  { "id": "BD002", "name": "Siti Rahayu",     "role": "BD Executive" },
+  { "id": "BD003", "name": "Fariz Hakim",     "role": "BD Executive" },
+  { "id": "BD004", "name": "Nadia Yusof",     "role": "BD Analyst" },
+  { "id": "BD005", "name": "Izzatul Iman",    "role": "BD Intern" }
+]
