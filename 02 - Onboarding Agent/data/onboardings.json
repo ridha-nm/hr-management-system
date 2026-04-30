@@ -1,0 +1,59 @@
+[
+  {
+    "id": "ONB001",
+    "employee": {
+      "name": "Ridha",
+      "role": "Sustainability Data Analyst",
+      "department": "Business Development",
+      "type": "full-time",
+      "startDate": "15 December 2025"
+    },
+    "setup": {
+      "pantas_email": false,
+      "google_calendar": false,
+      "slack": false,
+      "jira": false,
+      "pantas_platform": false,
+      "facial_recognition": false,
+      "laptop_check": false,
+      "epf_submission": false,
+      "lhdn_submission": false,
+      "bank_details": false,
+      "employee_handbook": false,
+      "financial_policy": false
+    },
+    "academy": {
+      "starter": {
+        "started": true,
+        "completed": true,
+        "quizPassed": false
+      },
+      "intermediate": {
+        "started": false,
+        "completed": false,
+        "quizPassed": false
+      },
+      "advanced": {
+        "started": false,
+        "completed": false,
+        "quizPassed": false
+      },
+      "software": {
+        "started": false,
+        "completed": false
+      },
+      "utilities": {
+        "started": true,
+        "completed": false
+      }
+    },
+    "documents": {
+      "ic_passport": false,
+      "emergency_contact": false,
+      "education_certs": false
+    },
+    "day1Completed": true,
+    "createdAt": "2026-04-30T03:50:10.842Z",
+    "status": "active"
+  }
+]
