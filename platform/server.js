@@ -197,8 +197,9 @@ if (!fs.existsSync(path.join(onboardingAgentPath, 'data'))) {
 const { processMessage: obProcessMessage, calcProgress: obCalcProgress } = require(path.join(onboardingAgentPath, 'src', 'onboardingBot'));
 
 // ── Standup Agent ──
+const mammoth = require('mammoth');
 const standupManagerPath = path.join(__dirname, '..', '03 - Standup Agent', 'src', 'standupManager');
-const { createSession: sdCreateSession, markAttendance: sdMarkAttendance, submitUpdate: sdSubmitUpdate, closeSession: sdCloseSession, calcAnalytics: sdCalcAnalytics, getTodayKey: sdGetTodayKey } = require(standupManagerPath);
+const { createSession: sdCreateSession, markAttendance: sdMarkAttendance, submitUpdate: sdSubmitUpdate, closeSession: sdCloseSession, calcAnalytics: sdCalcAnalytics, getTodayKey: sdGetTodayKey, parseTranscript: sdParseTranscript } = require(standupManagerPath);
 
 const SD_DATA_DIR = path.join(__dirname, '..', '03 - Standup Agent', 'data');
 if (!fs.existsSync(SD_DATA_DIR)) fs.mkdirSync(SD_DATA_DIR, { recursive: true });
@@ -400,6 +401,37 @@ sdRouter.patch('/blockers/:id/resolve', (req, res) => {
   blockers[idx].resolvedAt = new Date().toISOString();
   saveSDFile('blockers.json', blockers);
   res.json(blockers[idx]);
+});
+
+// Parse Gemini Notes summary or Meet transcript → per-member structured updates
+// Accepts: multipart .docx or .txt file upload, OR JSON body { text: "..." }
+const sdMemUpload = multer({ storage: multer.memoryStorage() });
+sdRouter.post('/parse-transcript', sdMemUpload.single('file'), async (req, res) => {
+  try {
+    const team = loadSDFile('team.json');
+    let text = '';
+    if (req.file) {
+      const mime = req.file.mimetype || '';
+      const name = (req.file.originalname || '').toLowerCase();
+      const isDocx = mime.includes('wordprocessingml') || mime.includes('openxmlformats') || name.endsWith('.docx');
+      if (isDocx) {
+        const result = await mammoth.extractRawText({ buffer: req.file.buffer });
+        text = result.value;
+      } else {
+        // Treat as plain text (.txt, .md, etc.)
+        text = req.file.buffer.toString('utf8');
+      }
+    } else if (req.body && req.body.text) {
+      text = req.body.text;
+    } else {
+      return res.status(400).json({ error: 'Provide text body or upload a .docx / .txt file' });
+    }
+    const members = sdParseTranscript(text, team);
+    res.json({ members });
+  } catch (err) {
+    console.error('parse-transcript error:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 sdRouter.get('/analytics', (req, res) => {

@@ -713,6 +713,30 @@
 
     .sd-analytics-row { display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border); }
     .sd-analytics-row:last-child { border-bottom:none; }
+
+    /* Transcript upload modal */
+    .sd-modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1.5rem; }
+    .sd-modal-overlay.open { display:flex; }
+    .sd-modal { background:white;border-radius:20px;width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);overflow:hidden; }
+    .sd-modal-header { padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg-sidebar); }
+    .sd-modal-title { font-weight:700;font-size:1rem;color:white;font-family:'Plus Jakarta Sans',sans-serif; }
+    .sd-modal-close { background:transparent;border:none;color:rgba(255,255,255,0.65);font-size:1.25rem;cursor:pointer;line-height:1; }
+    .sd-modal-close:hover { color:white; }
+    .sd-modal-body { padding:1.5rem;overflow-y:auto;flex:1; }
+    .sd-modal-footer { padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:0.75rem;background:var(--bg-hover); }
+    .sd-drop-zone { border:2px dashed var(--border);border-radius:12px;padding:1.5rem;text-align:center;color:var(--text-muted);cursor:pointer;transition:all 0.2s;margin-bottom:1rem;font-size:0.875rem; }
+    .sd-drop-zone:hover,.sd-drop-zone.drag-over { border-color:var(--primary);background:rgba(37,99,235,0.04);color:var(--primary); }
+    .sd-paste-area { width:100%;padding:0.875rem;border:1.5px solid var(--border);border-radius:10px;font-size:0.8125rem;font-family:'Inter',sans-serif;resize:vertical;outline:none;min-height:180px;line-height:1.6; }
+    .sd-paste-area:focus { border-color:var(--primary); }
+    .sd-parsed-card { background:var(--bg-hover);border-radius:12px;padding:1.25rem;margin-bottom:0.75rem;border:1px solid var(--border); }
+    .sd-parsed-name { font-weight:700;font-size:0.9375rem;margin-bottom:0.75rem;font-family:'Plus Jakarta Sans',sans-serif; }
+    .sd-parsed-field { margin-bottom:0.5rem; }
+    .sd-parsed-label { font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:0.2rem; }
+    .sd-parsed-input { width:100%;padding:0.5rem 0.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.8125rem;font-family:'Inter',sans-serif;outline:none;background:white; }
+    .sd-parsed-input:focus { border-color:var(--primary); }
+    .sd-import-btn { padding:0.625rem 1.5rem;background:var(--primary);color:white;border:none;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer; }
+    .sd-import-btn:hover { background:var(--primary-dark); }
+    .sd-import-btn:disabled { opacity:0.5;cursor:not-allowed; }
   </style>
 </head>
 <body>
@@ -1098,6 +1122,53 @@
       </section>
     </div>
   </main>
+
+  <!-- Standup Transcript Upload Modal -->
+  <div id="sd-upload-modal" class="sd-modal-overlay" onclick="if(event.target===this)sdCloseUpload()">
+    <div class="sd-modal">
+      <div class="sd-modal-header">
+        <span class="sd-modal-title">📄 Import Meeting Summary</span>
+        <button class="sd-modal-close" onclick="sdCloseUpload()">✕</button>
+      </div>
+      <div class="sd-modal-body" id="sd-modal-body">
+        <!-- Step 1: paste/upload -->
+        <div id="sd-upload-step1">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem;line-height:1.6">
+            Paste your <strong>Gemini meeting summary</strong> or <strong>Google Meet transcript</strong> below.
+            The agent will extract each person's Yesterday / Today / Blockers and Jira ticket refs automatically.
+          </p>
+          <div class="sd-drop-zone" id="sd-drop-zone" onclick="document.getElementById('sd-file-input').click()"
+               ondragover="event.preventDefault();this.classList.add('drag-over')"
+               ondragleave="this.classList.remove('drag-over')"
+               ondrop="sdHandleDrop(event)">
+            <div style="font-size:1.5rem;margin-bottom:0.5rem">📂</div>
+            <div style="font-weight:600;margin-bottom:0.25rem">Drop Gemini Notes file here</div>
+            <div style="font-size:0.8125rem">.docx or .txt · or click to browse</div>
+            <input type="file" id="sd-file-input" accept=".docx,.txt,.text,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="sdHandleFileInput(event)">
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+            <span style="font-size:0.75rem;color:var(--text-muted);font-weight:600">OR PASTE TEXT</span>
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+          </div>
+          <textarea id="sd-paste-input" class="sd-paste-area" placeholder="Paste Gemini summary or Meet transcript here...&#10;&#10;Works with:&#10;• Google Meet transcript (.txt export)&#10;• Gemini meeting summary (copy from email or Google Doc)&#10;• Any text with team member names + their updates"></textarea>
+        </div>
+        <!-- Step 2: preview & edit parsed results -->
+        <div id="sd-upload-step2" style="display:none">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.25rem">
+            <button onclick="sdBackToStep1()" style="background:transparent;border:none;color:var(--primary);cursor:pointer;font-size:0.875rem;font-weight:600">← Back</button>
+            <span style="color:var(--text-muted);font-size:0.875rem">Review and edit extracted updates before importing</span>
+          </div>
+          <div id="sd-parsed-results"></div>
+        </div>
+      </div>
+      <div class="sd-modal-footer">
+        <button class="btn btn-secondary" onclick="sdCloseUpload()">Cancel</button>
+        <button id="sd-parse-btn" class="sd-import-btn" onclick="sdParseText()">Parse →</button>
+        <button id="sd-apply-btn" class="sd-import-btn" style="display:none" onclick="sdApplyParsed()">Import to Standup</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Onboarding Chat Drawer -->
   <div id="ob-overlay" class="ob-overlay" onclick="obCloseChat()"></div>
@@ -1724,7 +1795,10 @@
           <h3 class="card-title" style="margin:0">Attendance — ${dateStr}</h3>
           <div style="display:flex;gap:0.5rem;align-items:center">
             <span style="font-size:0.875rem;color:var(--text-muted)">${present}/${sdTeam.length} present</span>
-            ${!isComplete ? `<button class="btn btn-secondary" style="font-size:0.8125rem;padding:0.375rem 0.75rem;" onclick="sdCloseSession()">End & Summarise</button>` : `<span style="padding:0.25rem 0.75rem;background:rgba(16,185,129,0.15);color:var(--success);border-radius:9999px;font-size:0.75rem;font-weight:600;">Completed</span>`}
+            ${!isComplete ? `<div style="display:flex;gap:0.5rem">
+        <button class="btn btn-secondary" style="font-size:0.8125rem;padding:0.375rem 0.75rem;" onclick="sdOpenUpload()">📄 Import Summary</button>
+        <button class="btn btn-secondary" style="font-size:0.8125rem;padding:0.375rem 0.75rem;" onclick="sdCloseSession()">End & Summarise</button>
+      </div>` : `<span style="padding:0.25rem 0.75rem;background:rgba(16,185,129,0.15);color:var(--success);border-radius:9999px;font-size:0.75rem;font-weight:600;">Completed</span>`}
           </div>
         </div>
         <div class="sd-attendance-strip">
@@ -2083,6 +2157,189 @@
       d.setDate(d.getDate() + 1);
       while (!standupDays.includes(d.getDay())) d.setDate(d.getDate() + 1);
       return `${days[d.getDay()]}, ${d.toLocaleDateString('en-MY', { day:'numeric', month:'long' })}`;
+    }
+
+    // ---- Transcript upload / parse ----
+    let sdParsedData = []; // holds last parsed results
+
+    function sdOpenUpload() {
+      sdResetUploadModal();
+      document.getElementById('sd-upload-modal').classList.add('open');
+    }
+
+    function sdCloseUpload() {
+      document.getElementById('sd-upload-modal').classList.remove('open');
+    }
+
+    function sdResetUploadModal() {
+      document.getElementById('sd-upload-step1').style.display = 'block';
+      document.getElementById('sd-upload-step2').style.display = 'none';
+      document.getElementById('sd-parse-btn').style.display = '';
+      document.getElementById('sd-apply-btn').style.display = 'none';
+      document.getElementById('sd-paste-input').value = '';
+      document.getElementById('sd-paste-input').placeholder = 'Paste Gemini summary or Meet transcript here...';
+      document.getElementById('sd-file-input').value = '';
+      sdPendingFile = null;
+      sdParsedData = [];
+    }
+
+    function sdBackToStep1() {
+      document.getElementById('sd-upload-step1').style.display = 'block';
+      document.getElementById('sd-upload-step2').style.display = 'none';
+      document.getElementById('sd-parse-btn').style.display = '';
+      document.getElementById('sd-apply-btn').style.display = 'none';
+    }
+
+    // Stored file reference for .docx binary upload
+    let sdPendingFile = null;
+
+    function sdLoadFile(file) {
+      if (!file) return;
+      sdPendingFile = null;
+      const isDocx = file.name.toLowerCase().endsWith('.docx') ||
+        file.type.includes('wordprocessingml') || file.type.includes('openxmlformats');
+      if (isDocx) {
+        // Binary — can't show in textarea; store for upload
+        sdPendingFile = file;
+        document.getElementById('sd-paste-input').value = '';
+        document.getElementById('sd-paste-input').placeholder = `📄 ${file.name} ready to parse`;
+        showToast('✅ File ready — click Parse →');
+      } else {
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('sd-paste-input').value = e.target.result;
+          showToast('✅ File loaded — click Parse →');
+        };
+        reader.readAsText(file);
+      }
+    }
+
+    function sdHandleFileInput(event) {
+      sdLoadFile(event.target.files[0]);
+    }
+
+    function sdHandleDrop(event) {
+      event.preventDefault();
+      document.getElementById('sd-drop-zone').classList.remove('drag-over');
+      sdLoadFile(event.dataTransfer.files[0]);
+    }
+
+    async function sdParseText() {
+      const text = document.getElementById('sd-paste-input').value.trim();
+      if (!text && !sdPendingFile) { showToast('⚠️ Upload a file or paste text first'); return; }
+
+      const btn = document.getElementById('sd-parse-btn');
+      btn.textContent = 'Parsing…';
+      btn.disabled = true;
+
+      try {
+        let res;
+        if (sdPendingFile) {
+          // Upload binary file (e.g. .docx) via FormData
+          const form = new FormData();
+          form.append('file', sdPendingFile);
+          res = await fetch(SD_API + '/parse-transcript', { method: 'POST', body: form });
+        } else {
+          res = await fetch(SD_API + '/parse-transcript', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text }),
+          });
+        }
+        const data = await res.json();
+        sdParsedData = data.members || [];
+
+        if (!sdParsedData.length) {
+          showToast('⚠️ No team members detected. Check names match team list.');
+          btn.textContent = 'Parse →';
+          btn.disabled = false;
+          return;
+        }
+
+        sdRenderParsedPreview();
+        document.getElementById('sd-upload-step1').style.display = 'none';
+        document.getElementById('sd-upload-step2').style.display = 'block';
+        btn.style.display = 'none';
+        document.getElementById('sd-apply-btn').style.display = '';
+      } catch (e) {
+        showToast('⚠️ Parse failed: ' + e.message);
+        btn.textContent = 'Parse →';
+        btn.disabled = false;
+      }
+    }
+
+    function sdRenderParsedPreview() {
+      const container = document.getElementById('sd-parsed-results');
+      if (!sdParsedData.length) {
+        container.innerHTML = '<p style="color:var(--text-muted)">No updates extracted.</p>';
+        return;
+      }
+      container.innerHTML = sdParsedData.map((m, i) => `
+        <div class="sd-parsed-card">
+          <div class="sd-parsed-name">${m.name}</div>
+          <div class="sd-parsed-field">
+            <div class="sd-parsed-label">✅ Yesterday</div>
+            <input class="sd-parsed-input" id="sdp-yest-${i}" value="${(m.yesterday||'').replace(/"/g,'&quot;')}" placeholder="What was completed">
+          </div>
+          <div class="sd-parsed-field">
+            <div class="sd-parsed-label">🔄 Today</div>
+            <input class="sd-parsed-input" id="sdp-today-${i}" value="${(m.today||'').replace(/"/g,'&quot;')}" placeholder="What are they working on">
+          </div>
+          <div class="sd-parsed-field">
+            <div class="sd-parsed-label">🚫 Blockers</div>
+            <input class="sd-parsed-input" id="sdp-block-${i}" value="${(m.blockers||'').replace(/"/g,'&quot;')}" placeholder="Any blockers">
+          </div>
+          ${m.tickets.length ? `<div class="sd-parsed-field">
+            <div class="sd-parsed-label">🎫 Tickets</div>
+            <div style="display:flex;gap:0.375rem;flex-wrap:wrap">${m.tickets.map(t=>`<span class="sd-ticket-chip">${t}</span>`).join('')}</div>
+          </div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    async function sdApplyParsed() {
+      if (!sdSession) { showToast('⚠️ Start a standup session first'); return; }
+
+      const btn = document.getElementById('sd-apply-btn');
+      btn.textContent = 'Importing…';
+      btn.disabled = true;
+
+      // Read back edited values from preview inputs
+      const updates = sdParsedData.map((m, i) => ({
+        memberId: m.memberId,
+        yesterday: document.getElementById(`sdp-yest-${i}`)?.value || m.yesterday,
+        today: document.getElementById(`sdp-today-${i}`)?.value || m.today,
+        blockers: document.getElementById(`sdp-block-${i}`)?.value || m.blockers,
+        tickets: m.tickets,
+      }));
+
+      // Submit each member's update and mark present
+      for (const u of updates) {
+        // Mark present if still pending
+        const att = sdSession.attendance[u.memberId];
+        if (!att || att.status === 'pending') {
+          const attRes = await fetch(`${SD_API}/sessions/${sdSession.id}/attendance`, {
+            method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ memberId: u.memberId, status: 'present' }),
+          });
+          sdSession = await attRes.json();
+        }
+        // Submit update
+        const updRes = await fetch(`${SD_API}/sessions/${sdSession.id}/updates`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(u),
+        });
+        sdSession = await updRes.json();
+      }
+
+      // Reload blockers
+      sdBlockers = await fetch(SD_API + '/blockers').then(r => r.json());
+      const open = sdBlockers.filter(b => b.status === 'open').length;
+      document.getElementById('sd-blocker-count').textContent = open;
+
+      sdCloseUpload();
+      sdRenderToday();
+      showToast(`✅ Imported updates for ${updates.length} team member${updates.length !== 1 ? 's' : ''}`);
     }
 
     // Render agent card

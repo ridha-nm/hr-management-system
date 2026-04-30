@@ -169,6 +169,219 @@ function calcAnalytics(sessions, team) {
   return { attendance, totalSessions, totalBlockers, avgAttendance };
 }
 
+/**
+ * Parse a Gemini Notes document (Notes by Gemini for Google Meet).
+ *
+ * Document structure (always present in this order):
+ *   📝 Notes header
+ *   Summary  — topic paragraphs (not per-person)
+ *   Next steps — [Full Name] Short Title: Description.
+ *   Details   — narrative paragraphs per topic with (HH:MM:SS) refs
+ *   📖 Transcript — HH:MM:SS Speaker: text  or  Speaker: text (continuation)
+ *
+ * Strategy:
+ *   - Next steps  → "Today / tasks" per person  (most reliable signal)
+ *   - Transcript  → speaker utterances → detect yesterday (past) / blockers (stuck)
+ *   - Details     → supplemental context for yesterday / blockers
+ *
+ * Returns array of { memberId, name, yesterday, today, blockers, tickets }
+ */
+function parseTranscript(text, team) {
+  if (!text || !team.length) return [];
+
+  const norm = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const results = {}; // memberId → { memberId, name, todayItems[], yesterdayChunks[], blockerChunks[], tickets Set }
+
+  // ── helpers ────────────────────────────────────────────────────────────────
+
+  function matchMember(nameStr) {
+    const n = nameStr.toLowerCase().trim();
+    return team.find(m => {
+      const ml = m.name.toLowerCase();
+      const parts = ml.split(' ');
+      // exact match
+      if (n === ml) return true;
+      // document name is a substring of member name or vice versa
+      if (ml.includes(n) || n.includes(ml)) return true;
+      // any word with 3+ chars matches (handles "Kasib" matching "Mohamed Kasib Farhan Cassim")
+      return parts.some(p => p.length >= 3 && n.includes(p));
+    });
+  }
+
+  function getOrCreate(member) {
+    if (!results[member.id]) {
+      results[member.id] = {
+        memberId: member.id,
+        name: member.name,
+        todayItems: [],
+        yesterdayChunks: [],  // from Details section (clean summaries)
+        txYesterdayChunks: [], // from Transcript (speaker utterances)
+        blockerChunks: [],
+        tickets: new Set(),
+      };
+    }
+    return results[member.id];
+  }
+
+  function extractTickets(str) {
+    return (str.match(/\bBO-\d+\b/gi) || []).map(t => t.toUpperCase());
+  }
+
+  const YESTERDAY_KW = ['yesterday', 'completed', 'finished', 'done', 'wrapped up', 'sent over', 'sent out', 'reviewed', 'finalized', 'from yesterday'];
+  const BLOCKER_KW   = ['blocked', 'waiting for', 'waiting on', 'stuck', 'issue with', 'problem with', 'delay', "can't", 'not done', 'need approval'];
+  // First-person signals required for transcript-sourced blockers/yesterday
+  const FIRST_PERSON = ['i ', "i'm", "i've", "i'll", "i need", 'i am', "i can't", "i cannot", 'my ', 'for me'];
+
+  function hasFirstPerson(str) {
+    const sl = ' ' + str.toLowerCase();
+    return FIRST_PERSON.some(fp => sl.includes(' ' + fp) || sl.includes('\n' + fp));
+  }
+
+  // ── 1. Next steps section ─────────────────────────────────────────────────
+  // Format: [Full Name] Short Title: Full description sentence.
+  const nextStepsSection = norm.match(/Next steps\s*\n([\s\S]*?)(?=\n📖|\nDetails\b|\nRate this|$)/i);
+  if (nextStepsSection) {
+    const lines = nextStepsSection[1].split('\n');
+    lines.forEach(line => {
+      const m = line.match(/^\[([^\]]+)\]\s*[^:]*:\s*(.+)/);
+      if (!m) return;
+      const member = matchMember(m[1]);
+      if (!member) return;
+      const r = getOrCreate(member);
+      r.todayItems.push(m[2].trim());
+      extractTickets(m[2]).forEach(t => r.tickets.add(t));
+    });
+  }
+
+  // ── 2. Transcript section ─────────────────────────────────────────────────
+  // Real Gemini Notes format:
+  //   Timestamps appear on their OWN line: "00:01:02"
+  //   Then speaker lines below: "Speaker Name: spoken text"
+  //   Continuation lines follow with no speaker prefix
+  const transcriptSection = norm.match(/📖 Transcript[\s\S]*?(?:Transcript\s*\n)([\s\S]*?)(?=\nThis editable transcript|$)/i)
+    || norm.match(/📖 Transcript\s*\n([\s\S]*?)$/i);
+
+  if (transcriptSection) {
+    const lines = transcriptSection[1].split('\n');
+    let currentMember = null;
+    let buffer = [];
+
+    function cleanTranscript(str) {
+      // Remove filler words and clean up transcript speech artifacts
+      return str
+        .replace(/\b(um|uh|yeah|yep|okay|ok|so|right|like)\b[,.]?\s*/gi, ' ')
+        .replace(/\s{2,}/g, ' ').trim();
+    }
+
+    function flushBuffer() {
+      if (!currentMember || !buffer.length) return;
+      const chunk = cleanTranscript(buffer.join(' ').trim());
+      buffer = [];
+      if (chunk.length < 5) return;
+      const r = getOrCreate(currentMember);
+      const cl = chunk.toLowerCase();
+      // Blocker: require first-person signal + blocker keyword + reasonable length
+      if (chunk.length < 400 && hasFirstPerson(chunk) && BLOCKER_KW.some(kw => cl.includes(kw))) {
+        r.blockerChunks.push(chunk);
+      }
+      // Yesterday: require first-person + yesterday keyword
+      if (chunk.length < 400 && hasFirstPerson(chunk) && YESTERDAY_KW.some(kw => cl.includes(kw))) {
+        r.txYesterdayChunks.push(chunk);
+      }
+      extractTickets(chunk).forEach(t => r.tickets.add(t));
+    }
+
+    lines.forEach(rawLine => {
+      const line = rawLine.trim();
+      if (!line) return;
+
+      // Skip standalone timestamp lines (e.g. "00:01:02")
+      if (/^\d{1,2}:\d{2}:\d{2}$/.test(line)) { flushBuffer(); return; }
+
+      // Format A: "00:01:02 Speaker Name: text" (inline timestamp — some Gemini variants)
+      const withTs = line.match(/^\d{1,2}:\d{2}:\d{2}\s+(.+?):\s*(.*)$/);
+      if (withTs) {
+        flushBuffer();
+        currentMember = matchMember(withTs[1]);
+        if (withTs[2].trim()) buffer.push(withTs[2].trim());
+        return;
+      }
+
+      // Format B: "Speaker Name: text"  — name must match a team member
+      const speakerLine = line.match(/^([A-Z][^:]{2,50}):\s+(.+)$/);
+      if (speakerLine) {
+        const candidate = matchMember(speakerLine[1]);
+        if (candidate) {
+          flushBuffer();
+          currentMember = candidate;
+          if (speakerLine[2].trim()) buffer.push(speakerLine[2].trim());
+          return;
+        }
+      }
+
+      // Continuation line — skip embedded timestamp artifacts like "00:04:35."
+      if (currentMember && line.length > 3 && !/^\d{1,2}:\d{2}:\d{2}/.test(line)) {
+        buffer.push(line);
+      }
+    });
+    flushBuffer();
+  }
+
+  // ── 3. Details section ────────────────────────────────────────────────────
+  // Clean narrative summaries per topic. Most reliable source for yesterday info.
+  // These are past-tense narrative sentences written by Gemini about what happened.
+  const DETAILS_YESTERDAY_KW = ['yesterday', 'from yesterday', 'previous day', 'last week',
+    'completed', 'finished', 'reviewed', 'sent out', 'sent over', 'wrapped up', 'submitted',
+    'discussed yesterday'];
+  // Skip sentences that are clearly about future/current tasks (not past work)
+  const FUTURE_SIGNALS = ['will be', 'needs to', 'is tasked', 'is going to', 'is asked to',
+    'is scheduled', 'to finalize', 'to send out', 'to troubleshoot', 'to review', 'to work on',
+    'to prioritize', 'to address', 'to arrange', 'to set up', 'to focus on'];
+
+  const detailsSection = norm.match(/\bDetails\b\s*\n([\s\S]*?)(?=\n📖|$)/i);
+  if (detailsSection) {
+    const sentences = detailsSection[1]
+      .split(/(?<=[.!?])\s+|\n/)
+      .map(s => s
+        .replace(/\(\d{2}:\d{2}:\d{2}\)/g, '')
+        .replace(/\d{2}:\d{2}:\d{2}/g, '')
+        // Strip "Section Header: " prefix (no comma in header, ends with colon+space)
+        .replace(/^[^,:]{5,60}:\s+(?=[A-Z])/, '')
+        .trim())
+      .filter(s => s.length > 10);
+
+    sentences.forEach(sentence => {
+      const sl = sentence.toLowerCase();
+      // Skip future-tense sentences — not about what was done yesterday
+      if (FUTURE_SIGNALS.some(sig => sl.includes(sig))) return;
+      const member = team.find(m => {
+        const first = m.name.split(' ')[0].toLowerCase();
+        return sl.includes(first) || sl.includes(m.name.toLowerCase());
+      });
+      if (!member) return;
+      const r = getOrCreate(member);
+      if (DETAILS_YESTERDAY_KW.some(kw => sl.includes(kw))) r.yesterdayChunks.push(sentence);
+      // Blockers from Details only if clearly blocking in nature
+      const detailsBlockerKW = ['blocked', 'waiting for', 'unable to', 'cannot proceed', 'delay'];
+      if (detailsBlockerKW.some(kw => sl.includes(kw))) r.blockerChunks.push(sentence);
+      extractTickets(sentence).forEach(t => r.tickets.add(t));
+    });
+  }
+
+  // ── Assemble results ───────────────────────────────────────────────────────
+  return Object.values(results).map(r => {
+    const today = r.todayItems.join('. ') || '';
+    // Prefer Details-sourced yesterday (clean prose) over raw transcript chunks
+    const allYesterday = [...new Set([...r.yesterdayChunks, ...r.txYesterdayChunks])];
+    const yesterday = allYesterday.slice(0, 2).join('. ');
+    const blockers  = [...new Set(r.blockerChunks)].slice(0, 2).join('. ');
+    const tickets   = [...r.tickets];
+
+    if (!today && !yesterday && !blockers && !tickets.length) return null;
+    return { memberId: r.memberId, name: r.name, yesterday, today, blockers, tickets };
+  }).filter(Boolean);
+}
+
 module.exports = {
   STANDUP_DAYS,
   STANDUP_TIME,
@@ -179,5 +392,6 @@ module.exports = {
   markAttendance,
   submitUpdate,
   closeSession,
-  calcAnalytics
+  calcAnalytics,
+  parseTranscript,
 };
