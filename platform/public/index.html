@@ -421,6 +421,122 @@
     .section { display: none; }
     .section.active { display: block; }
 
+    /* ===== ONBOARDING SECTION ===== */
+    .ob-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .ob-empty { text-align: center; padding: 4rem 2rem; color: var(--text-muted); grid-column: 1 / -1; }
+    .ob-card { background: var(--bg-card); border-radius: 16px; padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+    .ob-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+    .ob-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+    .ob-avatar { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; font-weight: 700; flex-shrink: 0; }
+    .ob-name { font-size: 1rem; font-weight: 700; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+    .ob-type-badge { padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
+    .ob-type-badge.intern { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .ob-type-badge.full-time { background: rgba(37,99,235,0.12); color: var(--primary); }
+    .ob-progress-bar { height: 6px; background: var(--border); border-radius: 9999px; overflow: hidden; margin: 1rem 0 0.4rem; }
+    .ob-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 9999px; transition: width 0.5s ease; }
+    .ob-progress-label { font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+    .ob-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem; }
+    .ob-stat-mini { text-align: center; padding: 0.5rem; background: var(--bg-hover); border-radius: 8px; }
+    .ob-stat-mini-num { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+    .ob-stat-mini-label { font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Employee onboarding view */
+    .ob-back-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; border: none; color: var(--text-secondary); font-size: 0.875rem; font-weight: 500; cursor: pointer; padding: 0.5rem 0; margin-bottom: 1.5rem; }
+    .ob-back-btn:hover { color: var(--primary); }
+    .ob-hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius: 16px; padding: 2rem; color: white; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+    .ob-hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/svg%3E"); }
+    .ob-hero-text { position: relative; }
+    .ob-hero-name { font-size: 1.75rem; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-hero-sub { color: rgba(255,255,255,0.8); font-size: 0.875rem; margin-top: 0.25rem; }
+    .ob-hero-dates { color: rgba(255,255,255,0.65); font-size: 0.75rem; margin-top: 0.5rem; }
+    .ob-ring-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+    .ob-ring-svg { transform: rotate(-90deg); }
+    .ob-ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+    .ob-ring-pct { font-size: 1.25rem; font-weight: 800; }
+    .ob-ring-text { font-size: 0.625rem; opacity: 0.75; }
+
+    .ob-tabs-bar { display: flex; gap: 0.375rem; margin-bottom: 1.5rem; background: var(--bg-card); padding: 0.375rem; border-radius: 12px; box-shadow: var(--shadow); width: fit-content; flex-wrap: wrap; }
+    .ob-tab-btn { padding: 0.625rem 1.125rem; border-radius: 8px; border: none; background: transparent; color: var(--text-secondary); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+    .ob-tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(37,99,235,0.3); }
+    .ob-tab-badge { padding: 0.1rem 0.4rem; border-radius: 9999px; font-size: 0.625rem; background: rgba(255,255,255,0.25); }
+    .ob-tab-btn:not(.active) .ob-tab-badge { background: var(--border); color: var(--text-muted); }
+    .ob-tab-content { display: none; }
+    .ob-tab-content.active { display: block; }
+
+    .ob-item-row { background: var(--bg-card); border-radius: 12px; margin-bottom: 0.75rem; overflow: hidden; border: 1px solid var(--border); }
+    .ob-item-header { display: flex; align-items: center; gap: 0.875rem; padding: 1rem 1.25rem; cursor: pointer; user-select: none; }
+    .ob-item-header:hover { background: var(--bg-hover); }
+    .ob-item-check { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 0.7rem; font-weight: 700; }
+    .ob-item-check.done { background: var(--success); border-color: var(--success); color: white; }
+    .ob-item-label { flex: 1; font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
+    .ob-item-label.done { text-decoration: line-through; color: var(--text-muted); }
+    .ob-item-contact { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+    .ob-item-expand-btn { padding: 0.25rem 0.625rem; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; flex-shrink: 0; }
+    .ob-item-expand-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .ob-item-details { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--border); background: #fafbfd; }
+    .ob-item-details.open { display: block; }
+    .ob-detail-what { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; margin: 1rem 0; }
+    .ob-detail-steps { padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 1rem; }
+    .ob-detail-steps li { font-size: 0.875rem; color: var(--text-primary); line-height: 1.5; }
+    .ob-detail-meta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .ob-detail-chip { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.625rem; background: var(--bg-hover); border-radius: 9999px; font-size: 0.75rem; color: var(--text-secondary); }
+
+    .ob-academy-card { background: var(--bg-card); border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--border); overflow: hidden; }
+    .ob-academy-header { padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+    .ob-academy-header:hover { background: var(--bg-hover); }
+    .ob-academy-title-wrap { display: flex; align-items: center; gap: 0.75rem; }
+    .ob-academy-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .ob-academy-name { font-size: 0.9375rem; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-academy-duration { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.1rem; }
+    .ob-status-pill { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .ob-status-pill.not-started { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+    .ob-status-pill.in-progress { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .ob-status-pill.completed { background: rgba(16,185,129,0.15); color: var(--success); }
+    .ob-academy-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--border); background: #fafbfd; }
+    .ob-academy-body.open { display: block; }
+    .ob-academy-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; margin: 1rem 0; }
+    .ob-topics { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .ob-topic-tag { padding: 0.25rem 0.625rem; background: var(--bg-hover); border-radius: 6px; font-size: 0.75rem; color: var(--text-secondary); border: 1px solid var(--border); }
+    .ob-academy-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+    .ob-academy-check { display: flex; align-items: center; gap: 0.375rem; font-size: 0.875rem; color: var(--text-secondary); cursor: pointer; }
+    .ob-quiz-btn { padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .ob-quiz-btn:hover { background: var(--primary-dark); }
+
+    .ob-day1-timeline { display: flex; flex-direction: column; }
+    .ob-day1-item { display: flex; gap: 1rem; }
+    .ob-day1-time-col { width: 76px; flex-shrink: 0; text-align: right; padding-top: 0.125rem; }
+    .ob-day1-time { font-size: 0.75rem; font-weight: 600; color: var(--primary); }
+    .ob-day1-line-col { display: flex; flex-direction: column; align-items: center; margin: 0 0.5rem; }
+    .ob-day1-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--primary); flex-shrink: 0; margin-top: 0.25rem; }
+    .ob-day1-connector { width: 2px; background: var(--border); flex: 1; min-height: 24px; margin: 4px 0; }
+    .ob-day1-item:last-child .ob-day1-connector { display: none; }
+    .ob-day1-content { padding-bottom: 1.25rem; flex: 1; }
+    .ob-day1-activity { font-size: 0.875rem; font-weight: 500; color: var(--text-primary); }
+    .ob-day1-who { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* Chat drawer */
+    .ob-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; }
+    .ob-overlay.open { display: block; }
+    .ob-chat-drawer { position: fixed; right: -460px; top: 0; width: 440px; height: 100vh; background: white; z-index: 101; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); transition: right 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .ob-chat-drawer.open { right: 0; }
+    .ob-drawer-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-sidebar); }
+    .ob-drawer-title { font-weight: 700; font-size: 1rem; color: white; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ob-drawer-close { background: transparent; border: none; color: rgba(255,255,255,0.6); font-size: 1.25rem; cursor: pointer; line-height: 1; }
+    .ob-drawer-close:hover { color: white; }
+    .ob-chat-msgs { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .ob-msg { max-width: 85%; padding: 0.75rem 1rem; border-radius: 12px; font-size: 0.875rem; line-height: 1.5; }
+    .ob-msg.bot { background: var(--bg-hover); color: var(--text-primary); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .ob-msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .ob-quick-replies { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem 1.25rem 0; }
+    .ob-qr-btn { padding: 0.375rem 0.875rem; border: 1.5px solid var(--primary); border-radius: 9999px; background: transparent; color: var(--primary); font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .ob-qr-btn:hover { background: var(--primary); color: white; }
+    .ob-chat-input-row { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+    .ob-chat-input-row input { flex: 1; padding: 0.625rem 1rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.875rem; font-family: 'Inter', sans-serif; outline: none; }
+    .ob-chat-input-row input:focus { border-color: var(--primary); }
+    .ob-send-btn { padding: 0.625rem 1rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.875rem; }
+    .ob-send-btn:hover { background: var(--primary-dark); }
+
     /* Top Bar */
     .top-bar {
       display: none;
@@ -603,11 +719,11 @@
           </a>
         </div>
         <div class="nav-item">
-          <a href="/onboarding/" class="nav-link">
-            <span class="nav-icon">🎉</span>
+          <button class="nav-link" onclick="showSection('onboarding')">
+            <span class="nav-icon">📋</span>
             Onboarding
             <span class="nav-badge live">LIVE</span>
-          </a>
+          </button>
         </div>
         <div class="nav-item">
           <span class="nav-link" style="cursor: not-allowed; opacity: 0.6;">
@@ -801,6 +917,28 @@
         </div>
       </section>
 
+      <!-- Onboarding Section -->
+      <section class="section" id="onboardingSection">
+        <!-- Admin View -->
+        <div id="ob-admin-view">
+          <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;padding:2rem 3rem 1.5rem;">
+            <div>
+              <h2 class="section-title">Onboarding</h2>
+              <p class="section-subtitle">Manage new hire onboarding journeys</p>
+            </div>
+            <button class="btn btn-primary" onclick="obOpenChat()">+ Add New Employee</button>
+          </div>
+          <div style="padding:0 3rem 3rem;">
+            <div id="ob-list" class="ob-grid"></div>
+          </div>
+        </div>
+        <!-- Employee View -->
+        <div id="ob-emp-view" style="display:none;padding:2rem 3rem 3rem;">
+          <button class="ob-back-btn" onclick="obShowAdmin()">← Back to All Onboardings</button>
+          <div id="ob-emp-content"></div>
+        </div>
+      </section>
+
       <!-- Settings Section -->
       <section class="section" id="settingsSection">
         <div class="section-header">
@@ -899,8 +1037,23 @@
     </div>
   </main>
 
+  <!-- Onboarding Chat Drawer -->
+  <div id="ob-overlay" class="ob-overlay" onclick="obCloseChat()"></div>
+  <div id="ob-chat-drawer" class="ob-chat-drawer">
+    <div class="ob-drawer-header">
+      <span class="ob-drawer-title">📋 Add New Employee</span>
+      <button class="ob-drawer-close" onclick="obCloseChat()">✕</button>
+    </div>
+    <div id="ob-chat-msgs" class="ob-chat-msgs"></div>
+    <div id="ob-quick-replies" class="ob-quick-replies"></div>
+    <div class="ob-chat-input-row">
+      <input id="ob-chat-input" type="text" placeholder="Type a message..." onkeydown="if(event.key==='Enter')obSend()">
+      <button class="ob-send-btn" onclick="obSend()">Send</button>
+    </div>
+  </div>
+
   <script>
-    const API_URL = '/platform/api';
+    const API_URL = '/api';
     let employees = [];
     let departments = [];
 
@@ -918,11 +1071,12 @@
       {
         id: 'onboarding',
         name: 'Onboarding Agent',
-        icon: '🎉',
-        desc: 'HR-triggered onboarding wizard. IT setup checklist, Pantas Academy tracking, Day 1 schedule, and welcome email generation.',
+        icon: '📋',
+        desc: 'HR-triggered onboarding. IT setup checklist, Pantas Academy tracking, Day 1 schedule, and step-by-step guides for new hires.',
         status: 'live',
         statusText: 'Live',
-        url: '/onboarding/'
+        url: null,
+        action: "showSection('onboarding')"
       },
       {
         id: 'leave',
@@ -1029,27 +1183,432 @@
     function showSection(section) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-      
+
       const targetSection = document.getElementById(section + 'Section');
-      if (targetSection) {
-        targetSection.classList.add('active');
+      if (targetSection) targetSection.classList.add('active');
+
+      document.querySelectorAll(`.nav-link[onclick*="'${section}'"]`).forEach(n => n.classList.add('active'));
+
+      if (section === 'onboarding') {
+        document.getElementById('ob-admin-view').style.display = 'block';
+        document.getElementById('ob-emp-view').style.display = 'none';
+        obLoadList();
       }
-      
-      event.target.closest('.nav-link')?.classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const section = params.get('section');
+      if (section) showSection(section);
+    });
+
+    // ===== ONBOARDING =====
+
+    const OB_API = '/onboarding-api';
+    let obSessionId = localStorage.getItem('ob_session') || (() => {
+      const id = 'sess_' + Math.random().toString(36).slice(2);
+      localStorage.setItem('ob_session', id);
+      return id;
+    })();
+    let allOnboardings = [];
+    let currentObId = null;
+    let activeObTab = 'setup';
+
+    const SETUP_ITEMS_DEF = [
+      { key: 'pantas_email',       label: 'Pantas email setup',                   contact: 'Eong' },
+      { key: 'google_calendar',    label: 'Google Calendar invites',               contact: 'Eong / Manager' },
+      { key: 'slack',              label: 'Slack account + channels (2FA)',        contact: 'Eong' },
+      { key: 'jira',               label: 'JIRA access + BD Ops Board',            contact: 'Eong / BD Manager' },
+      { key: 'pantas_platform',    label: 'Pantas platform access',                contact: 'Eong / BD Manager' },
+      { key: 'facial_recognition', label: 'Facial recognition registration',       contact: 'Joshua' },
+      { key: 'laptop_check',       label: 'Laptop assigned & ready',               contact: 'Eong' },
+      { key: 'epf_submission',     label: 'EPF number collected',                  contact: 'Syaheedah' },
+      { key: 'lhdn_submission',    label: 'LHDN number collected',                 contact: 'Syaheedah' },
+      { key: 'bank_details',       label: 'Bank account details collected',        contact: 'Syaheedah' },
+      { key: 'employee_handbook',  label: 'Employee Handbook signed',              contact: 'Syaheedah' },
+      { key: 'financial_policy',   label: 'Financial Data Handling Policy signed', contact: 'Eong' },
+    ];
+
+    const DOC_ITEMS_DEF = [
+      { key: 'ic_passport',        label: 'IC / Passport copy' },
+      { key: 'emergency_contact',  label: 'Emergency contact info' },
+      { key: 'education_certs',    label: 'Education certificates' },
+    ];
+
+    const ACADEMY_MODULES_DEF = {
+      intern: [
+        { key: 'starter',      label: 'Starter Module',      duration: '5 days (Days 3–7)',   hasQuiz: true,  quizUrl: 'https://forms.gle/hj896cq3Nuny9HTb9', icon: '🌱' },
+        { key: 'intermediate', label: 'Intermediate Module', duration: '5 days (Days 11–15)', hasQuiz: true,  quizUrl: 'https://forms.gle/Yf1wJLhpR7eXsT377', icon: '📈' },
+      ],
+      'full-time': [
+        { key: 'starter',      label: 'Starter Module',       duration: '5 days (Days 3–7)',   hasQuiz: true,  quizUrl: 'https://forms.gle/hj896cq3Nuny9HTb9', icon: '🌱' },
+        { key: 'intermediate', label: 'Intermediate Module',  duration: '5 days (Days 11–15)', hasQuiz: true,  quizUrl: 'https://forms.gle/Yf1wJLhpR7eXsT377', icon: '📈' },
+        { key: 'advanced',     label: 'Advanced Module',      duration: '5 days (Days 16–20)', hasQuiz: true,  quizUrl: 'https://forms.gle/zr4DtYe5EgtHNzHg9', icon: '🚀' },
+        { key: 'software',     label: 'Software Module',      duration: '5 days (Days 21–25)', hasQuiz: false, icon: '💻' },
+        { key: 'utilities',    label: 'Utilities Module',     duration: '4 days (Days 26–29)', hasQuiz: false, icon: '⚙️' },
+      ],
+    };
+
+    const DAY1_SCHEDULE_DEF = [
+      { time: '9:00 AM',  activity: 'Welcome & company overview presentation', contact: 'Syaheedah' },
+      { time: '10:00 AM', activity: 'HR onboarding (paperwork, SOPs, culture deck)', contact: 'Syaheedah' },
+      { time: '11:00 AM', activity: 'Office tour', contact: 'Team' },
+      { time: '12:00 PM', activity: 'Welcome lunch', contact: 'Team' },
+      { time: '2:00 PM',  activity: 'Workstation & IT setup', contact: 'Eong' },
+      { time: '3:00 PM',  activity: 'Facial recognition registration', contact: 'Joshua' },
+      { time: '4:00 PM',  activity: 'Role, project & supervisor introduction', contact: 'Manager' },
+      { time: '5:00 PM',  activity: 'Wrap up + Day 2 overview', contact: 'Manager' },
+    ];
+
+    const SETUP_MATERIALS = {
+      pantas_email:       { what: 'Your official Pantas work email (firstname@pantas.com) — used for all communications, calendar invites, and app logins.', steps: ['Provide your full name, personal email, and phone number to Eong (IT)', 'IT will create your account within 24 hours of Day 1', 'Enable 2-Factor Authentication via Google Authenticator', 'Log in at mail.google.com with your new @pantas.com credentials'], contact: 'Eong (IT)', time: '~30 min on Day 1' },
+      google_calendar:    { what: 'Access to shared company calendars, team standups, and sprint meetings so you always know what\'s on.', steps: ['Your Google Calendar links to your @pantas.com email — activates once email is set up', 'Your manager or Eong will invite you to relevant recurring meetings', 'Key recurring: BD/Engineering Standup, Sprint Planning, Sprint Review', 'Accept invites — they appear in your Gmail inbox'], contact: 'Eong / Your Manager', time: '~15 min' },
+      slack:              { what: 'Pantas\'s main communication tool. All team channels, announcements, and day-to-day chat happen here.', steps: ['Download Slack from slack.com/downloads', 'Sign in with your @pantas.com email — auto-joins the Pantas workspace', 'Enable 2FA in Slack account settings', 'Join your department channel plus #general and #announcements', 'Introduce yourself in #general!'], contact: 'Eong (IT)', time: '~20 min' },
+      jira:               { what: 'Pantas\'s project and task management tool for tracking work, bugs, and sprints.', steps: ['Visit pantas.atlassian.net/jira', 'Request access from Eong or your BD Manager', 'Accept the email invitation to join', 'Your manager will add you to the relevant project board'], contact: 'Eong / BD Manager', time: '~30 min' },
+      pantas_platform:    { what: 'Access to the Pantas product platform — the core product you\'ll be working with.', steps: ['Production: beta.pantas.com', 'Admin panel: pantas.com/admin', 'Request credentials from Eong or your BD Manager', 'Your role determines your access level in the system'], contact: 'Eong / BD Manager', time: '~20 min' },
+      facial_recognition: { what: 'Registers your face for the office entry system — required to independently access the building.', steps: ['Find Joshua from the Security team (usually at reception)', 'He will guide you through the facial scan — under 5 minutes', 'Scheduled on Day 1 at 3:00 PM during your IT setup block', 'Before registration, reception can manually let you in'], contact: 'Joshua (Security)', time: '~5 min, Day 1 at 3 PM' },
+      laptop_check:       { what: 'Your work laptop, pre-configured with essential software by IT.', steps: ['Eong checks laptop availability before your start date', 'Day 1 at 2:00 PM — head to your workstation for IT setup', 'Required software will be installed: Slack, browser, dev tools as needed', 'If anything is missing, raise it with Eong immediately'], contact: 'Eong (IT)', time: 'Day 1, 2:00 PM' },
+      epf_submission:     { what: 'Your EPF (Employees Provident Fund) number for payroll setup — Malaysia\'s mandatory retirement savings scheme.', steps: ['Email syaheedah@pantas.com — Subject: "EPF Number - [Your Name]"', 'CC nadzim@pantas.com and arman@pantas.com', 'Attach a photo of your EPF card or statement showing your member number', 'No EPF number yet? Notify Syaheedah — she\'ll guide you through registration'], contact: 'Syaheedah (HR)', time: 'Within first week' },
+      lhdn_submission:    { what: 'Your LHDN (Inland Revenue Board) income tax number for tax deduction calculations.', steps: ['Include in the same email as your EPF submission', 'Tax number is on your MyTax portal or previous EA form', 'No number yet? Visit mytax.hasil.gov.my to register', 'First-time earner? Syaheedah can advise on the registration process'], contact: 'Syaheedah (HR)', time: 'Within first week' },
+      bank_details:       { what: 'Your bank account details for salary payment — paid on the 25th of each month.', steps: ['Email account name (must match IC exactly) and account number to Syaheedah', 'Supported: Maybank, CIMB, Public Bank, RHB, and all major Malaysian banks', 'Include a photo of your bank book or online banking screenshot for verification'], contact: 'Syaheedah (HR)', time: 'Within first week' },
+      employee_handbook:  { what: 'The Pantas Employee Handbook covers company policies, code of conduct, leave policies, and working guidelines.', steps: ['Syaheedah hands you the handbook on Day 1 during HR onboarding at 10:00 AM', 'Read carefully — covers leave entitlements, dress code, and performance expectations', 'Sign and return a copy to Syaheedah to acknowledge receipt', 'Always available on Notion under HR > Policies'], contact: 'Syaheedah (HR)', time: 'Day 1, 10:00 AM' },
+      financial_policy:   { what: 'Financial Data Handling Policy — ensures all team members handle sensitive financial data responsibly.', steps: ['Eong will provide this document during your IT setup session', 'Read all sections: data classification, sharing rules, and security requirements', 'Sign and return a copy to Eong to confirm you\'ve read and understood it', 'Mandatory for all team members, not just finance roles'], contact: 'Eong (IT)', time: 'Within first week' },
+    };
+
+    const DOC_MATERIALS = {
+      ic_passport:       { what: 'A copy of your IC (MyKad) or passport for employment records and regulatory compliance.', steps: ['Scan or photograph both sides of your IC clearly', 'Email to Syaheedah or submit physically on Day 1', 'Ensure all text and the photo are clearly visible'] },
+      emergency_contact: { what: 'Emergency contact details kept on file in case we need to reach someone on your behalf.', steps: ['Provide: full name, relationship, phone number, and email address', 'Submit via email to Syaheedah or on the Day 1 HR form'] },
+      education_certs:   { what: 'Copies of your highest qualification certificates for employment records.', steps: ['Provide certified or clear photocopies of your degree or diploma', 'Recent graduate with pending cert? Submit your transcript and an official letter from your university'] },
+    };
+
+    const ACADEMY_MATERIALS = {
+      starter:      { what: 'Foundation course covering Pantas products, our market, core processes, and company culture.', topics: ['What Pantas does and who we serve', 'Product overview and key features', 'Company culture and values', 'Communication & collaboration norms'] },
+      intermediate: { what: 'Deeper dive into departmental processes, workflows, and cross-team collaboration.', topics: ['Deep-dive into your department\'s role', 'Client interaction standards', 'Project management workflows in Jira', 'Using Notion effectively'] },
+      advanced:     { what: 'Advanced topics in strategy, data interpretation, and business operations.', topics: ['Business strategy and OKR framework', 'Data literacy fundamentals', 'Financial awareness for non-finance roles', 'Decision-making and escalation frameworks'] },
+      software:     { what: 'Hands-on training with the software stack used at Pantas.', topics: ['Core software walkthrough', 'Integration between tools', 'Automation basics', 'Tool-specific best practices'] },
+      utilities:    { what: 'Utilities, admin tools, and operational systems used day-to-day.', topics: ['HR systems navigation', 'Expense and leave tools', 'Calendar and scheduling best practices', 'Security and access management'] },
+    };
+
+    async function obLoadList() {
+      try {
+        const res = await fetch(OB_API + '/onboardings');
+        allOnboardings = await res.json();
+        obRenderList();
+      } catch (e) { console.error('obLoadList error:', e); }
+    }
+
+    function obRenderList() {
+      const list = document.getElementById('ob-list');
+      if (!list) return;
+      if (!allOnboardings.length) {
+        list.innerHTML = `<div class="ob-empty"><div style="font-size:3rem;margin-bottom:1rem">📋</div><p style="font-size:1.125rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem">No active onboardings</p><p>Click "+ Add New Employee" to start an onboarding journey.</p></div>`;
+        return;
+      }
+      list.innerHTML = allOnboardings.map(ob => {
+        const p = ob.progress;
+        const initials = ob.employee.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const typeClass = ob.employee.type === 'intern' ? 'intern' : 'full-time';
+        const typeLabel = ob.employee.type === 'intern' ? 'Intern' : 'Full-time';
+        const startStr = new Date(ob.employee.startDate).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+        return `<div class="ob-card" onclick="obShowEmployee('${ob.id}')">
+          <div class="ob-card-header">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <div class="ob-avatar">${initials}</div>
+              <div>
+                <div class="ob-name">${ob.employee.name}</div>
+                <div class="ob-meta">${ob.employee.role}</div>
+                <div class="ob-meta">${ob.employee.department}</div>
+              </div>
+            </div>
+            <span class="ob-type-badge ${typeClass}">${typeLabel}</span>
+          </div>
+          <div class="ob-progress-bar"><div class="ob-progress-fill" style="width:${p.pct}%"></div></div>
+          <div class="ob-progress-label"><span>Overall progress</span><span>${p.pct}%</span></div>
+          <div class="ob-stats-row">
+            <div class="ob-stat-mini"><div class="ob-stat-mini-num">${p.setup.done}/${p.setup.total}</div><div class="ob-stat-mini-label">Setup</div></div>
+            <div class="ob-stat-mini"><div class="ob-stat-mini-num">${p.academy.done}/${p.academy.total}</div><div class="ob-stat-mini-label">Academy</div></div>
+            <div class="ob-stat-mini"><div class="ob-stat-mini-num">${p.docs.done}/${p.docs.total}</div><div class="ob-stat-mini-label">Docs</div></div>
+          </div>
+          <div class="ob-meta" style="margin-top:0.875rem">Started ${startStr}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function obShowEmployee(id) {
+      currentObId = id;
+      activeObTab = 'setup';
+      document.getElementById('ob-admin-view').style.display = 'none';
+      document.getElementById('ob-emp-view').style.display = 'block';
+      obRenderEmployee();
+    }
+
+    function obShowAdmin() {
+      currentObId = null;
+      document.getElementById('ob-admin-view').style.display = 'block';
+      document.getElementById('ob-emp-view').style.display = 'none';
+      obLoadList();
+    }
+
+    function obSwitchTab(tab) {
+      activeObTab = tab;
+      obRenderEmployee();
+    }
+
+    function obRenderEmployee() {
+      const ob = allOnboardings.find(o => o.id === currentObId);
+      if (!ob) return;
+      const p = ob.progress;
+      const typeModules = ACADEMY_MODULES_DEF[ob.employee.type] || ACADEMY_MODULES_DEF['full-time'];
+      const academyDone = typeModules.filter(m => ob.academy[m.key]?.completed).length;
+      const startStr = new Date(ob.employee.startDate).toLocaleDateString('en-MY', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const circumference = 2 * Math.PI * 40;
+
+      document.getElementById('ob-emp-content').innerHTML = `
+        <div class="ob-hero">
+          <div class="ob-hero-text">
+            <div style="font-size:0.8125rem;color:rgba(255,255,255,0.65);margin-bottom:0.25rem">Welcome to Pantas!</div>
+            <div class="ob-hero-name">${ob.employee.name}</div>
+            <div class="ob-hero-sub">${ob.employee.role} &middot; ${ob.employee.department} &middot; ${ob.employee.type === 'intern' ? 'Intern' : 'Full-time'}</div>
+            <div class="ob-hero-dates">Started: ${startStr}</div>
+          </div>
+          <div class="ob-ring-wrap">
+            <svg class="ob-ring-svg" width="100" height="100">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="8" stroke-linecap="round"
+                stroke-dasharray="${circumference}" stroke-dashoffset="${circumference * (1 - p.pct / 100)}"/>
+            </svg>
+            <div class="ob-ring-label"><div class="ob-ring-pct">${p.pct}%</div><div class="ob-ring-text">Complete</div></div>
+          </div>
+        </div>
+
+        <div class="ob-tabs-bar">
+          <button class="ob-tab-btn ${activeObTab === 'setup' ? 'active' : ''}" onclick="obSwitchTab('setup')">Setup <span class="ob-tab-badge">${p.setup.done}/${p.setup.total}</span></button>
+          <button class="ob-tab-btn ${activeObTab === 'academy' ? 'active' : ''}" onclick="obSwitchTab('academy')">Academy <span class="ob-tab-badge">${academyDone}/${typeModules.length}</span></button>
+          <button class="ob-tab-btn ${activeObTab === 'documents' ? 'active' : ''}" onclick="obSwitchTab('documents')">Documents <span class="ob-tab-badge">${p.docs.done}/${p.docs.total}</span></button>
+          <button class="ob-tab-btn ${activeObTab === 'day1' ? 'active' : ''}" onclick="obSwitchTab('day1')">Day 1 Schedule</button>
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'setup' ? 'active' : ''}">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Complete all setup tasks to get fully onboarded. Click any item to see step-by-step instructions.</p>
+          ${SETUP_ITEMS_DEF.map(item => obRenderSetupItem(item, ob.setup[item.key])).join('')}
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'academy' ? 'active' : ''}">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Complete Pantas Academy modules in order. Each module builds on the previous one. Expand any module to see topics and track progress.</p>
+          ${typeModules.map(mod => obRenderAcademyCard(mod, ob.academy[mod.key] || {})).join('')}
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'documents' ? 'active' : ''}">
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Submit the following documents to HR to complete your employment records.</p>
+          ${DOC_ITEMS_DEF.map(item => obRenderDocItem(item, ob.documents[item.key])).join('')}
+        </div>
+
+        <div class="ob-tab-content ${activeObTab === 'day1' ? 'active' : ''}">
+          <div class="card" style="margin-bottom:1.5rem">
+            <h3 class="card-title">Your Day 1 Schedule</h3>
+            <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.5rem">Here's what to expect on your first day. Arrive by 9:00 AM sharp!</p>
+            <div class="ob-day1-timeline">
+              ${DAY1_SCHEDULE_DEF.map(s => `
+                <div class="ob-day1-item">
+                  <div class="ob-day1-time-col"><div class="ob-day1-time">${s.time}</div></div>
+                  <div class="ob-day1-line-col"><div class="ob-day1-dot"></div><div class="ob-day1-connector"></div></div>
+                  <div class="ob-day1-content">
+                    <div class="ob-day1-activity">${s.activity}</div>
+                    <div class="ob-day1-who">with ${s.contact}</div>
+                  </div>
+                </div>`).join('')}
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="card-title" style="margin-bottom:1rem">What to bring on Day 1</h3>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem">
+              ${['Your IC or passport (original + copy)', 'Bank account details (name & number)', 'EPF & LHDN numbers if available', 'Education certificates', 'Emergency contact information', 'Any signed documents sent in advance'].map(i => `<li style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem"><span style="color:var(--success);font-weight:700">✓</span>${i}</li>`).join('')}
+            </ul>
+          </div>
+        </div>`;
+    }
+
+    function obRenderSetupItem(item, done) {
+      const mat = SETUP_MATERIALS[item.key] || {};
+      return `<div class="ob-item-row">
+        <div class="ob-item-header" onclick="obToggleDetails('ob-sdet-${item.key}')">
+          <div class="ob-item-check ${done ? 'done' : ''}" onclick="event.stopPropagation();obToggleSetup('${item.key}')">${done ? '✓' : ''}</div>
+          <span class="ob-item-label ${done ? 'done' : ''}">${item.label}</span>
+          <span class="ob-item-contact">${item.contact}</span>
+          <button class="ob-item-expand-btn">Details ↕</button>
+        </div>
+        <div id="ob-sdet-${item.key}" class="ob-item-details">
+          <p class="ob-detail-what">${mat.what || ''}</p>
+          <ol class="ob-detail-steps">${(mat.steps || []).map(s => `<li>${s}</li>`).join('')}</ol>
+          <div class="ob-detail-meta">
+            <span class="ob-detail-chip">👤 ${mat.contact || item.contact}</span>
+            ${mat.time ? `<span class="ob-detail-chip">⏱ ${mat.time}</span>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function obRenderDocItem(item, done) {
+      const mat = DOC_MATERIALS[item.key] || {};
+      return `<div class="ob-item-row">
+        <div class="ob-item-header" onclick="obToggleDetails('ob-ddet-${item.key}')">
+          <div class="ob-item-check ${done ? 'done' : ''}" onclick="event.stopPropagation();obToggleDoc('${item.key}')">${done ? '✓' : ''}</div>
+          <span class="ob-item-label ${done ? 'done' : ''}">${item.label}</span>
+          <span class="ob-item-contact">→ Syaheedah (HR)</span>
+          <button class="ob-item-expand-btn">Details ↕</button>
+        </div>
+        <div id="ob-ddet-${item.key}" class="ob-item-details">
+          <p class="ob-detail-what">${mat.what || ''}</p>
+          <ol class="ob-detail-steps">${(mat.steps || []).map(s => `<li>${s}</li>`).join('')}</ol>
+          <div class="ob-detail-meta"><span class="ob-detail-chip">👤 Syaheedah (HR)</span></div>
+        </div>
+      </div>`;
+    }
+
+    function obRenderAcademyCard(mod, record) {
+      const mat = ACADEMY_MATERIALS[mod.key] || {};
+      const status = record.completed ? 'completed' : record.started ? 'in-progress' : 'not-started';
+      const statusLabel = { 'not-started': 'Not Started', 'in-progress': 'In Progress', 'completed': 'Completed' }[status];
+      return `<div class="ob-academy-card">
+        <div class="ob-academy-header" onclick="obToggleDetails('ob-acad-${mod.key}')">
+          <div class="ob-academy-title-wrap">
+            <div class="ob-academy-icon">${mod.icon}</div>
+            <div>
+              <div class="ob-academy-name">${mod.label}</div>
+              <div class="ob-academy-duration">${mod.duration}</div>
+            </div>
+          </div>
+          <span class="ob-status-pill ${status}">${statusLabel}</span>
+        </div>
+        <div id="ob-acad-${mod.key}" class="ob-academy-body">
+          <p class="ob-academy-desc">${mat.what || ''}</p>
+          <div class="ob-topics">${(mat.topics || []).map(t => `<span class="ob-topic-tag">${t}</span>`).join('')}</div>
+          <div class="ob-academy-actions">
+            <label class="ob-academy-check"><input type="checkbox" ${record.started ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','started')"> Started</label>
+            <label class="ob-academy-check"><input type="checkbox" ${record.completed ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','completed')"> Completed</label>
+            ${mod.hasQuiz && mod.quizUrl ? `<label class="ob-academy-check"><input type="checkbox" ${record.quizPassed ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','quizPassed')"> Quiz Passed</label>
+            <a href="${mod.quizUrl}" target="_blank" class="ob-quiz-btn">Take Quiz →</a>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function obToggleDetails(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('open');
+    }
+
+    async function obToggleSetup(key) {
+      const res = await fetch(`${OB_API}/onboardings/${currentObId}/setup/${key}`, { method: 'PATCH' });
+      const updated = await res.json();
+      const idx = allOnboardings.findIndex(o => o.id === currentObId);
+      if (idx >= 0) allOnboardings[idx] = updated;
+      obRenderEmployee();
+    }
+
+    async function obToggleDoc(key) {
+      const res = await fetch(`${OB_API}/onboardings/${currentObId}/documents/${key}`, { method: 'PATCH' });
+      const updated = await res.json();
+      const idx = allOnboardings.findIndex(o => o.id === currentObId);
+      if (idx >= 0) allOnboardings[idx] = updated;
+      obRenderEmployee();
+    }
+
+    async function obToggleAcademy(module, field) {
+      const res = await fetch(`${OB_API}/onboardings/${currentObId}/academy/${module}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ field })
+      });
+      const updated = await res.json();
+      const idx = allOnboardings.findIndex(o => o.id === currentObId);
+      if (idx >= 0) allOnboardings[idx] = updated;
+      obRenderEmployee();
+    }
+
+    // Chat drawer
+    function obOpenChat() {
+      document.getElementById('ob-overlay').classList.add('open');
+      document.getElementById('ob-chat-drawer').classList.add('open');
+      if (!document.getElementById('ob-chat-msgs').children.length) obInitChat();
+    }
+
+    function obCloseChat() {
+      document.getElementById('ob-overlay').classList.remove('open');
+      document.getElementById('ob-chat-drawer').classList.remove('open');
+    }
+
+    async function obInitChat() {
+      const res = await fetch(`${OB_API}/chat`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'hi', sessionId: obSessionId })
+      });
+      const data = await res.json();
+      obAddMsg('bot', data.reply);
+      obSetQR(data.quickReplies || []);
+    }
+
+    async function obSend() {
+      const input = document.getElementById('ob-chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+      input.value = '';
+      obAddMsg('user', msg);
+      obSetQR([]);
+      const res = await fetch(`${OB_API}/chat`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, sessionId: obSessionId })
+      });
+      const data = await res.json();
+      obAddMsg('bot', data.reply);
+      obSetQR(data.quickReplies || []);
+      if (data.newOnboarding) {
+        obLoadList();
+        setTimeout(() => {
+          document.getElementById('ob-chat-msgs').innerHTML = '';
+          obSetQR([]);
+          obSessionId = 'sess_' + Math.random().toString(36).slice(2);
+          localStorage.setItem('ob_session', obSessionId);
+        }, 4000);
+      }
+    }
+
+    function obAddMsg(role, text) {
+      const msgs = document.getElementById('ob-chat-msgs');
+      const div = document.createElement('div');
+      div.className = `ob-msg ${role}`;
+      div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function obSetQR(qrs) {
+      document.getElementById('ob-quick-replies').innerHTML = qrs.map(q => `<button class="ob-qr-btn" onclick="obQRClick('${q}')">${q}</button>`).join('');
+    }
+
+    function obQRClick(text) {
+      document.getElementById('ob-chat-input').value = text;
+      obSend();
     }
 
     // Render agent card
     function renderAgentCard(agent) {
       const isLive = agent.status === 'live';
+      const clickHandler = isLive
+        ? (agent.action ? `onclick="${agent.action}"` : `onclick="window.location.href='${agent.url}'"`)
+        : '';
+      const launchEl = isLive
+        ? (agent.action
+            ? `<button onclick="${agent.action}" class="agent-link" style="background:none;border:none;padding:0;cursor:pointer;font-size:0.875rem;font-weight:600;color:var(--primary)">Open in Platform →</button>`
+            : `<a href="${agent.url}" class="agent-link">Launch Agent →</a>`)
+        : '';
       return `
-        <div class="agent-card ${agent.status}" ${isLive ? `onclick="window.location.href='${agent.url}'"` : ''}>
+        <div class="agent-card ${agent.status}" style="${isLive ? 'cursor:pointer' : ''}" ${clickHandler}>
           <div class="agent-header">
             <div class="agent-icon">${agent.icon}</div>
             <span class="agent-status ${agent.status}">${agent.statusText}</span>
           </div>
           <h3 class="agent-name">${agent.name}</h3>
           <p class="agent-desc">${agent.desc}</p>
-          ${isLive ? `<a href="${agent.url}" class="agent-link">Launch Agent →</a>` : ''}
+          ${launchEl}
         </div>
       `;
     }

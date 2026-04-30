@@ -21,8 +21,7 @@ const epBotPath = path.join(epBotFullPath, 'public');
 
 // Serve EP Agent files
 app.use('/ep', express.static(epBotPath));
-app.use('/chat.html', express.static(path.join(epBotFullPath, 'public', 'chat.html')));
-app.use('/api', express.static(path.join(epBotFullPath, 'public')));
+app.get('/chat.html', (req, res) => res.sendFile(path.join(epBotPath, 'chat.html')));
 
 // EP Agent API proxy (simple implementation)
 const epBotServer = require('express')();
@@ -121,6 +120,70 @@ epBotServer.get('/api/myfuturejobs/template/xlsx', (req, res) => {
 
 // Mount EP Bot API
 app.use('/ep-api', epBotServer);
+
+// Mirror EP API at /api/* so chat.html calls work without path changes
+const epTemplateFiles = {
+  'MyFutureJobs_Expat_Form_Template.docx': 'templates/LAPORAN PENGAMBILAN PEKERJA TEMPATAN (Filled in) (1).docx',
+  'GP_Checklist_Template.docx': 'templates/GP Checklist - EP (New) - MDEC.docx',
+  'SSM_Documents.zip': '03_Company_Documents/2026_SSM_Docs_as_of_Mar_10_2026 (1).zip',
+  'DBKL_License.pdf': '03_Company_Documents/DBKL_License.pdf',
+  'JTKSM_Approval.pdf': '03_Company_Documents/JTKSM Approval.pdf',
+  'SOCSO_Guide.pdf': '03_Company_Documents/SOCSO (Perkeso) approval. Steps (2025).pdf',
+  'MyFutureJobs_Expat_Form_Example.pdf': '03_Company_Documents/Sustainability Data Analyst_72b9e4e7c14542d09b03fd4fbc04147b (1) (1).pdf'
+};
+
+app.post('/api/chat', upload.single('file'), async (req, res) => {
+  try {
+    const { message } = req.body;
+    let reply = analyzeMessage(message || '');
+    if (req.file) {
+      const fileName = req.file.originalname;
+      let docType = 'Unknown';
+      if (fileName.toLowerCase().includes('passport')) docType = 'Passport';
+      else if (/cv|resume/i.test(fileName)) docType = 'CV';
+      else if (fileName.toLowerCase().includes('cert')) docType = 'Certificate';
+      else if (fileName.toLowerCase().includes('photo')) docType = 'Photo';
+      reply += `\n\n📎 **File Detected:** ${fileName}\n**Type:** ${docType}`;
+      fs.promises.unlink(req.file.path).catch(console.error);
+    }
+    res.json({ reply });
+  } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+app.get('/api/templates', (req, res) => {
+  res.json({ templates: Object.keys(epTemplateFiles).map(name => ({ name, url: `/api/templates/${encodeURIComponent(name)}` })) });
+});
+
+app.get('/api/templates/:filename', async (req, res) => {
+  const rel = epTemplateFiles[req.params.filename];
+  if (!rel) return res.status(404).json({ error: 'Not found' });
+  const filePath = path.join(epBotFullPath, rel);
+  try {
+    await fs.promises.access(filePath);
+    res.setHeader('Content-Disposition', `attachment; filename="${req.params.filename}"`);
+    res.send(await fs.promises.readFile(filePath));
+  } catch { res.status(404).json({ error: 'File not found on disk' }); }
+});
+
+app.get('/api/myfuturejobs/template/csv', (req, res) => {
+  const wb = XLSX.utils.book_new();
+  const headers = ['BIL','IC/Passport','Nama','Telefon','Emel','Jantina','Pendidikan','Keputusan','Ulasan'];
+  const ws = XLSX.utils.aoa_to_sheet([headers, ['1','900515-01-1234','Ahmad bin Abdullah','+60 12-345-6789','ahmad@email.com','Lelaki','Bachelor Computer Science - UM','Tidak Berjaya','Lacks SQL/Power BI experience']]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Interview Template');
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename="MyFutureJobs_Interview_Template.csv"');
+  res.send(XLSX.utils.sheet_to_csv(ws));
+});
+
+app.get('/api/myfuturejobs/template/xlsx', (req, res) => {
+  const wb = XLSX.utils.book_new();
+  const headers = ['BIL','IC/Passport','Nama','Telefon','Emel','Jantina','Pendidikan','Keputusan','Ulasan'];
+  const ws = XLSX.utils.aoa_to_sheet([headers, ['1','900515-01-1234','Ahmad bin Abdullah','+60 12-345-6789','ahmad@email.com','Lelaki','Bachelor Computer Science - UM','Tidak Berjaya','Lacks SQL/Power BI experience']]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Interview Template');
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename="MyFutureJobs_Interview_Template.xlsx"');
+  res.send(XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
+});
 
 // ── Onboarding Agent ──
 const onboardingAgentPath = path.join(__dirname, '..', '02 - Onboarding Agent');
@@ -472,11 +535,11 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
 
 // ========== EMPLOYEE ROUTES ==========
 
-app.get('/api/employees', authMiddleware, (req, res) => {
+app.get('/api/employees', (req, res) => {
   res.json(db.employees);
 });
 
-app.get('/api/employees/:id', authMiddleware, (req, res) => {
+app.get('/api/employees/:id', (req, res) => {
   const employee = db.employees.find(e => e.id === req.params.id);
   if (!employee) {
     return res.status(404).json({ error: 'Employee not found' });
@@ -484,7 +547,7 @@ app.get('/api/employees/:id', authMiddleware, (req, res) => {
   res.json(employee);
 });
 
-app.get('/api/employees/stats/summary', authMiddleware, (req, res) => {
+app.get('/api/employees/stats/summary', (req, res) => {
   const stats = {
     total: db.employees.length,
     byDepartment: {},
@@ -503,23 +566,23 @@ app.get('/api/employees/stats/summary', authMiddleware, (req, res) => {
 
 // ========== DEPARTMENT ROUTES ==========
 
-app.get('/api/departments', authMiddleware, (req, res) => {
+app.get('/api/departments', (req, res) => {
   res.json(db.departments);
 });
 
 // ========== COMPANY ROUTES ==========
 
-app.get('/api/company', authMiddleware, (req, res) => {
+app.get('/api/company', (req, res) => {
   res.json(db.companies[0]);
 });
 
 // ========== TEAM ROUTES ==========
 
-app.get('/api/teams', authMiddleware, (req, res) => {
+app.get('/api/teams', (req, res) => {
   res.json(db.teams);
 });
 
-app.get('/api/teams/:id', authMiddleware, (req, res) => {
+app.get('/api/teams/:id', (req, res) => {
   const team = db.teams.find(t => t.id === req.params.id);
   if (!team) {
     return res.status(404).json({ error: 'Team not found' });
@@ -534,9 +597,8 @@ app.get('/api/teams/:id', authMiddleware, (req, res) => {
 
 // ========== DASHBOARD ROUTES ==========
 
-app.get('/api/dashboard/stats', authMiddleware, (req, res) => {
-  const user = db.users.find(u => u.id === req.session.userId);
-  const employee = db.employees.find(e => e.id === user.employeeId);
+app.get('/api/dashboard/stats', (req, res) => {
+  const employee = db.employees[0];
 
   const stats = {
     leave: {
