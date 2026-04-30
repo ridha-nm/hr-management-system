@@ -1417,6 +1417,8 @@
       education_certs:   { what: 'Copies of your highest qualification certificates for employment records.', steps: ['Provide certified or clear photocopies of your degree or diploma', 'Recent graduate with pending cert? Submit your transcript and an official letter from your university'] },
     };
 
+    const NOTEBOOK_LM_URL = 'https://notebooklm.google.com/notebook/abde8c75-7eb2-4d38-b07f-8cf19d59227d';
+
     const ACADEMY_MATERIALS = {
       starter:      { what: 'Foundation course covering Pantas products, our market, core processes, and company culture.', topics: ['What Pantas does and who we serve', 'Product overview and key features', 'Company culture and values', 'Communication & collaboration norms'] },
       intermediate: { what: 'Deeper dive into departmental processes, workflows, and cross-team collaboration.', topics: ['Deep-dive into your department\'s role', 'Client interaction standards', 'Project management workflows in Jira', 'Using Notion effectively'] },
@@ -1530,7 +1532,16 @@
         </div>
 
         <div class="ob-tab-content ${activeObTab === 'academy' ? 'active' : ''}">
-          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Complete Pantas Academy modules in order. Each module builds on the previous one. Expand any module to see topics and track progress.</p>
+          <div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem;position:relative;overflow:hidden">
+            <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2280%22 cy=%2220%22 r=%2240%22 fill=%22rgba(255,255,255,0.03)%22/><circle cx=%2210%22 cy=%2280%22 r=%2230%22 fill=%22rgba(255,255,255,0.02)%22/></svg>');pointer-events:none"></div>
+            <div style="width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🎓</div>
+            <div style="flex:1;min-width:0">
+              <div style="color:#fff;font-weight:700;font-size:1rem;margin-bottom:0.25rem;font-family:'Plus Jakarta Sans',sans-serif">Pantas Academy — NotebookLM</div>
+              <div style="color:rgba(255,255,255,0.65);font-size:0.8125rem;line-height:1.5">All course materials, guides, and knowledge base live in our NotebookLM notebook. Open it to study, ask questions, and explore topics — it knows everything about Pantas.</div>
+            </div>
+            <a href="${NOTEBOOK_LM_URL}" target="_blank" style="flex-shrink:0;background:#fff;color:#1a1a2e;font-weight:700;font-size:0.8125rem;padding:0.6rem 1.1rem;border-radius:10px;text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:0.4rem;transition:opacity 0.15s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Open NotebookLM ↗</a>
+          </div>
+          <p style="font-size:0.875rem;color:var(--text-secondary);margin-bottom:1.25rem">Complete modules in order — each builds on the previous. Use NotebookLM to study the material, then mark progress below.</p>
           ${typeModules.map(mod => obRenderAcademyCard(mod, ob.academy[mod.key] || {})).join('')}
         </div>
 
@@ -1620,10 +1631,13 @@
           <p class="ob-academy-desc">${mat.what || ''}</p>
           <div class="ob-topics">${(mat.topics || []).map(t => `<span class="ob-topic-tag">${t}</span>`).join('')}</div>
           <div class="ob-academy-actions">
+            <a href="${NOTEBOOK_LM_URL}" target="_blank" class="ob-quiz-btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border:none">📖 Study in NotebookLM ↗</a>
+            ${mod.hasQuiz && mod.quizUrl ? `<a href="${mod.quizUrl}" target="_blank" class="ob-quiz-btn">Take Quiz →</a>` : ''}
+          </div>
+          <div style="display:flex;gap:1.5rem;margin-top:0.875rem;padding-top:0.875rem;border-top:1px solid var(--border)">
             <label class="ob-academy-check"><input type="checkbox" ${record.started ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','started')"> Started</label>
             <label class="ob-academy-check"><input type="checkbox" ${record.completed ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','completed')"> Completed</label>
-            ${mod.hasQuiz && mod.quizUrl ? `<label class="ob-academy-check"><input type="checkbox" ${record.quizPassed ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','quizPassed')"> Quiz Passed</label>
-            <a href="${mod.quizUrl}" target="_blank" class="ob-quiz-btn">Take Quiz →</a>` : ''}
+            ${mod.hasQuiz && mod.quizUrl ? `<label class="ob-academy-check"><input type="checkbox" ${record.quizPassed ? 'checked' : ''} onchange="obToggleAcademy('${mod.key}','quizPassed')"> Quiz Passed</label>` : ''}
           </div>
         </div>
       </div>`;
