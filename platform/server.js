@@ -200,6 +200,8 @@ const { processMessage: obProcessMessage, calcProgress: obCalcProgress } = requi
 const mammoth = require('mammoth');
 const standupManagerPath = path.join(__dirname, '..', '03 - Standup Agent', 'src', 'standupManager');
 const { createSession: sdCreateSession, markAttendance: sdMarkAttendance, submitUpdate: sdSubmitUpdate, closeSession: sdCloseSession, calcAnalytics: sdCalcAnalytics, getTodayKey: sdGetTodayKey, parseTranscript: sdParseTranscript, detectAccounts: sdDetectAccounts } = require(standupManagerPath);
+const { getTeamSprintData, resolveTeamAccountIds, isConfigured: jiraIsConfigured } = require(path.join(__dirname, '..', '03 - Standup Agent', 'src', 'jira'));
+const { generateCooSummary, extractGeminiHighlights } = require(path.join(__dirname, '..', '03 - Standup Agent', 'src', 'cooSummary'));
 
 const SD_DATA_DIR = path.join(__dirname, '..', '03 - Standup Agent', 'data');
 if (!fs.existsSync(SD_DATA_DIR)) fs.mkdirSync(SD_DATA_DIR, { recursive: true });
@@ -440,6 +442,84 @@ sdRouter.get('/analytics', (req, res) => {
   const sessions = loadSDFile('standups.json');
   const team = loadSDFile('team.json');
   res.json(sdCalcAnalytics(sessions, team));
+});
+
+// ── Jira integration ──────────────────────────────────────────────────────────
+
+// GET /standup-api/jira/status — is Jira configured?
+sdRouter.get('/jira/status', (req, res) => {
+  res.json({ configured: jiraIsConfigured() });
+});
+
+// POST /standup-api/jira/resolve-team — look up Jira account IDs for team members by email
+sdRouter.post('/jira/resolve-team', async (req, res) => {
+  try {
+    const team = loadSDFile('team.json');
+    const results = await resolveTeamAccountIds(team);
+    // Persist resolved account IDs back to team.json
+    results.forEach(({ memberId, jiraAccountId }) => {
+      const member = team.find(m => m.id === memberId);
+      if (member) member.jiraAccountId = jiraAccountId;
+    });
+    saveSDFile('team.json', team);
+    res.json({ resolved: results.length, team });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /standup-api/jira/sprint — fetch current sprint issues for BD team
+sdRouter.get('/jira/sprint', async (req, res) => {
+  const team = loadSDFile('team.json');
+  const result = await getTeamSprintData(team);
+  if (!result.ok) return res.status(503).json({ error: result.error });
+  // Convert Map to plain object for JSON serialisation
+  const byMember = {};
+  result.byMember.forEach((issues, memberId) => { byMember[memberId] = issues; });
+  res.json({ total: result.total, byMember });
+});
+
+// POST /standup-api/jira/config — save Jira credentials
+sdRouter.post('/jira/config', (req, res) => {
+  const { domain, email, token, projectKey, boardId } = req.body;
+  const cfgPath = path.join(SD_DATA_DIR, 'config.json');
+  let cfg = {};
+  try { cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8')); } catch { /* new */ }
+  cfg.jira = { domain: domain || cfg.jira?.domain || '', email: email || cfg.jira?.email || '',
+    token: token || cfg.jira?.token || '', projectKey: projectKey || cfg.jira?.projectKey || 'BO',
+    boardId: boardId || cfg.jira?.boardId || 113 };
+  fs.writeFileSync(cfgPath, JSON.stringify(cfg, null, 2));
+  res.json({ ok: true });
+});
+
+// ── COO Summary ───────────────────────────────────────────────────────────────
+
+// POST /standup-api/sessions/:id/coo-summary
+// Body: { geminiText? }  — optional raw Gemini Notes text for highlights
+sdRouter.post('/sessions/:id/coo-summary', async (req, res) => {
+  const sessions = loadSDFile('standups.json');
+  const session  = sessions.find(s => s.id === req.params.id);
+  if (!session) return res.status(404).json({ error: 'Session not found' });
+
+  const team     = loadSDFile('team.json');
+  const accounts = loadSDFile('accounts.json');
+  const geminiText = req.body?.geminiText || null;
+
+  // Fetch Jira data (optional — gracefully skip if not configured)
+  let jiraByMember = null;
+  const jiraResult = await getTeamSprintData(team);
+  if (jiraResult.ok) jiraByMember = jiraResult.byMember;
+
+  // Parse Gemini notes if provided
+  let geminiParsed     = null;
+  let geminiHighlights = [];
+  if (geminiText) {
+    geminiParsed     = sdParseTranscript(geminiText, team, accounts);
+    geminiHighlights = extractGeminiHighlights(geminiText);
+  }
+
+  const summary = generateCooSummary({ session, team, jiraByMember, geminiParsed, geminiHighlights, accounts });
+  res.json({ summary, jiraConfigured: jiraIsConfigured() });
 });
 
 app.use('/standup-api', sdRouter);
