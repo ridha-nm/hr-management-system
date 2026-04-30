@@ -56,12 +56,13 @@ function markAttendance(session, memberId, status) {
   return session;
 }
 
-function submitUpdate(session, memberId, { yesterday, today, blockers, tickets }) {
+function submitUpdate(session, memberId, { yesterday, today, blockers, tickets, accounts }) {
   session.updates[memberId] = {
     yesterday: yesterday || '',
     today: today || '',
     blockers: blockers || '',
     tickets: tickets || [],
+    accounts: accounts || [],
     submittedAt: new Date().toISOString()
   };
   return session;
@@ -186,7 +187,24 @@ function calcAnalytics(sessions, team) {
  *
  * Returns array of { memberId, name, yesterday, today, blockers, tickets }
  */
-function parseTranscript(text, team) {
+/**
+ * Given a text string and the accounts list, return canonical account names
+ * mentioned anywhere in the text.
+ */
+function detectAccounts(text, accounts) {
+  if (!text || !accounts || !accounts.length) return [];
+  const found = new Set();
+  accounts.forEach(acc => {
+    const terms = [acc.name, ...(acc.aliases || [])];
+    const pattern = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+    try {
+      if (new RegExp(`\\b(${pattern})\\b`, 'i').test(text)) found.add(acc.name);
+    } catch (_) { /* ignore */ }
+  });
+  return [...found];
+}
+
+function parseTranscript(text, team, accounts) {
   if (!text || !team.length) return [];
 
   const norm = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
@@ -218,6 +236,7 @@ function parseTranscript(text, team) {
         txYesterdayChunks: [], // from Transcript (speaker utterances)
         blockerChunks: [],
         tickets: new Set(),
+        accountsSet: new Set(),
       };
     }
     return results[member.id];
@@ -225,6 +244,25 @@ function parseTranscript(text, team) {
 
   function extractTickets(str) {
     return (str.match(/\bBO-\d+\b/gi) || []).map(t => t.toUpperCase());
+  }
+
+  // Build account-matching regexes — use word boundaries to avoid partial matches
+  const accountMatchers = []; // [{ name: string, re: RegExp }]
+  if (accounts && accounts.length) {
+    accounts.forEach(acc => {
+      const terms = [acc.name, ...(acc.aliases || [])];
+      // Escape special regex chars, wrap each term in word boundaries
+      const pattern = terms
+        .map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('|');
+      try {
+        accountMatchers.push({ name: acc.name, re: new RegExp(`\\b(${pattern})\\b`, 'i') });
+      } catch (_) { /* ignore bad patterns */ }
+    });
+  }
+
+  function extractAccounts(str) {
+    return accountMatchers.filter(a => a.re.test(str)).map(a => a.name);
   }
 
   const YESTERDAY_KW = ['yesterday', 'completed', 'finished', 'done', 'wrapped up', 'sent over', 'sent out', 'reviewed', 'finalized', 'from yesterday'];
@@ -250,6 +288,7 @@ function parseTranscript(text, team) {
       const r = getOrCreate(member);
       r.todayItems.push(m[2].trim());
       extractTickets(m[2]).forEach(t => r.tickets.add(t));
+      extractAccounts(m[2]).forEach(a => r.accountsSet.add(a));
     });
   }
 
@@ -289,6 +328,7 @@ function parseTranscript(text, team) {
         r.txYesterdayChunks.push(chunk);
       }
       extractTickets(chunk).forEach(t => r.tickets.add(t));
+      extractAccounts(chunk).forEach(a => r.accountsSet.add(a));
     }
 
     lines.forEach(rawLine => {
@@ -365,6 +405,7 @@ function parseTranscript(text, team) {
       const detailsBlockerKW = ['blocked', 'waiting for', 'unable to', 'cannot proceed', 'delay'];
       if (detailsBlockerKW.some(kw => sl.includes(kw))) r.blockerChunks.push(sentence);
       extractTickets(sentence).forEach(t => r.tickets.add(t));
+      extractAccounts(sentence).forEach(a => r.accountsSet.add(a));
     });
   }
 
@@ -376,9 +417,10 @@ function parseTranscript(text, team) {
     const yesterday = allYesterday.slice(0, 2).join('. ');
     const blockers  = [...new Set(r.blockerChunks)].slice(0, 2).join('. ');
     const tickets   = [...r.tickets];
+    const accounts  = [...r.accountsSet];
 
     if (!today && !yesterday && !blockers && !tickets.length) return null;
-    return { memberId: r.memberId, name: r.name, yesterday, today, blockers, tickets };
+    return { memberId: r.memberId, name: r.name, yesterday, today, blockers, tickets, accounts };
   }).filter(Boolean);
 }
 
@@ -394,4 +436,5 @@ module.exports = {
   closeSession,
   calcAnalytics,
   parseTranscript,
+  detectAccounts,
 };

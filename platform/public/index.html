@@ -1861,7 +1861,8 @@
             ${update.yesterday ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Yesterday</div><p style="font-size:0.875rem">${update.yesterday}</p></div>` : ''}
             ${update.today ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">Today</div><p style="font-size:0.875rem">${update.today}</p></div>` : ''}
             ${update.blockers ? `<div><div style="font-size:0.75rem;font-weight:600;color:var(--danger);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem">🚫 Blocker</div><p style="font-size:0.875rem">${update.blockers}</p></div>` : ''}
-            ${update.tickets?.length ? `<div style="display:flex;gap:0.375rem;flex-wrap:wrap">${update.tickets.map(t=>`<span class="sd-ticket-chip">${t}</span>`).join('')}</div>` : ''}
+            ${update.tickets?.length ? `<div style="display:flex;gap:0.375rem;flex-wrap:wrap;margin-top:0.25rem">${update.tickets.map(t=>`<span class="sd-ticket-chip">${t}</span>`).join('')}</div>` : ''}
+            ${update.accounts?.length ? `<div style="display:flex;gap:0.375rem;flex-wrap:wrap;margin-top:0.25rem">${update.accounts.map(a=>`<span style="font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:20px;background:rgba(37,99,235,0.1);color:var(--primary);font-weight:600">🏢 ${a}</span>`).join('')}</div>` : ''}
           </div>
         </div>`;
       }
@@ -2289,9 +2290,13 @@
             <div class="sd-parsed-label">🚫 Blockers</div>
             <input class="sd-parsed-input" id="sdp-block-${i}" value="${(m.blockers||'').replace(/"/g,'&quot;')}" placeholder="Any blockers">
           </div>
-          ${m.tickets.length ? `<div class="sd-parsed-field">
+          ${m.tickets && m.tickets.length ? `<div class="sd-parsed-field">
             <div class="sd-parsed-label">🎫 Tickets</div>
             <div style="display:flex;gap:0.375rem;flex-wrap:wrap">${m.tickets.map(t=>`<span class="sd-ticket-chip">${t}</span>`).join('')}</div>
+          </div>` : ''}
+          ${m.accounts && m.accounts.length ? `<div class="sd-parsed-field">
+            <div class="sd-parsed-label">🏢 Accounts</div>
+            <div style="display:flex;gap:0.375rem;flex-wrap:wrap">${m.accounts.map(a=>`<span style="font-size:0.75rem;padding:0.2rem 0.6rem;border-radius:20px;background:rgba(37,99,235,0.1);color:var(--primary);font-weight:600">${a}</span>`).join('')}</div>
           </div>` : ''}
         </div>
       `).join('');
@@ -2311,6 +2316,7 @@
         today: document.getElementById(`sdp-today-${i}`)?.value || m.today,
         blockers: document.getElementById(`sdp-block-${i}`)?.value || m.blockers,
         tickets: m.tickets,
+        accounts: m.accounts || [],
       }));
 
       // Submit each member's update and mark present

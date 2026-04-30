@@ -199,7 +199,7 @@ const { processMessage: obProcessMessage, calcProgress: obCalcProgress } = requi
 // ── Standup Agent ──
 const mammoth = require('mammoth');
 const standupManagerPath = path.join(__dirname, '..', '03 - Standup Agent', 'src', 'standupManager');
-const { createSession: sdCreateSession, markAttendance: sdMarkAttendance, submitUpdate: sdSubmitUpdate, closeSession: sdCloseSession, calcAnalytics: sdCalcAnalytics, getTodayKey: sdGetTodayKey, parseTranscript: sdParseTranscript } = require(standupManagerPath);
+const { createSession: sdCreateSession, markAttendance: sdMarkAttendance, submitUpdate: sdSubmitUpdate, closeSession: sdCloseSession, calcAnalytics: sdCalcAnalytics, getTodayKey: sdGetTodayKey, parseTranscript: sdParseTranscript, detectAccounts: sdDetectAccounts } = require(standupManagerPath);
 
 const SD_DATA_DIR = path.join(__dirname, '..', '03 - Standup Agent', 'data');
 if (!fs.existsSync(SD_DATA_DIR)) fs.mkdirSync(SD_DATA_DIR, { recursive: true });
@@ -273,6 +273,7 @@ app.use('/onboarding-api', obRouter);
 const sdRouter = express.Router();
 
 sdRouter.get('/team', (req, res) => res.json(loadSDFile('team.json')));
+sdRouter.get('/accounts', (req, res) => res.json(loadSDFile('accounts.json')));
 
 sdRouter.post('/team', (req, res) => {
   const { name, role } = req.body;
@@ -338,12 +339,12 @@ sdRouter.patch('/sessions/:id/attendance', (req, res) => {
 });
 
 sdRouter.post('/sessions/:id/updates', (req, res) => {
-  const { memberId, yesterday, today, blockers, tickets } = req.body;
+  const { memberId, yesterday, today, blockers, tickets, accounts } = req.body;
   if (!memberId) return res.status(400).json({ error: 'memberId required' });
   const sessions = loadSDFile('standups.json');
   const idx = sessions.findIndex(s => s.id === req.params.id);
   if (idx < 0) return res.status(404).json({ error: 'Not found' });
-  sdSubmitUpdate(sessions[idx], memberId, { yesterday, today, blockers, tickets });
+  sdSubmitUpdate(sessions[idx], memberId, { yesterday, today, blockers, tickets, accounts });
   if (blockers && blockers.trim()) {
     const blockerList = loadSDFile('blockers.json');
     blockerList.push({
@@ -426,7 +427,8 @@ sdRouter.post('/parse-transcript', sdMemUpload.single('file'), async (req, res) 
     } else {
       return res.status(400).json({ error: 'Provide text body or upload a .docx / .txt file' });
     }
-    const members = sdParseTranscript(text, team);
+    const accounts = loadSDFile('accounts.json');
+    const members = sdParseTranscript(text, team, accounts);
     res.json({ members });
   } catch (err) {
     console.error('parse-transcript error:', err);
